@@ -37,7 +37,7 @@
     "react-redux": "^7.2.0",
     "react-responsive": "^8.0.3",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.2",
     "redux": "^4.0.5",
     "redux-beacon": "^2.1.0",
@@ -97,7 +97,7 @@
     "@storybook/addon-links": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/preset-create-react-app": "^2.1.1",
-    "@storybook/react": "^5.3.18",
+    "@storybook/react": "^6.5.14",
     "run-script-os": "^1.1.6"
   }
 }
