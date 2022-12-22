@@ -11,6 +11,7 @@ import {
 } from "@blueprintjs/core";
 import { GoogleAnalytics } from "features/VidyoConnector";
 import * as actionCreators from "../actions/creators";
+import StatsAnalyzerLink from "./StatsAnalyzerLink";
 import { useMediaQuery } from "react-responsive";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -30,12 +31,11 @@ const AdvancedSettings = ({
   isAudioOnlyModeEnabled,
   isCompositorFixedParticipantsEnabled,
   isConnectorApiLoggingEnabled,
+  isScreenShareSimulcastEnabled,
   isSimpeApiLoggingEnabled,
-  isSimulcastEnabled,
   isStatsDisabled,
   isStatsOverlayDisplayed,
-  isTransportCcEnabled,
-  isUnifiedPlanEnabled,
+  isVideoSimulcastEnabled,
   maxReconnectAttempts,
   reconnectBackoff,
   participantLimit,
@@ -45,9 +45,8 @@ const AdvancedSettings = ({
   setAutoReconnect,
   setCompositorFixedParticipants,
   setConnectorApiLogging,
-  setSimulcast,
-  setTransportCc,
-  setUnifiedPlan,
+  setVideoSimulcast,
+  setScreenShareSimulcast,
   setSimpeApiLogging,
   setMaxReconnectAttempts,
   setReconnectBackoff,
@@ -93,22 +92,18 @@ const AdvancedSettings = ({
             label={"Enable Compositor Fixed Participants"}
           />
           <Checkbox
-            checked={isSimulcastEnabled}
-            onChange={() => setSimulcast(!isSimulcastEnabled)}
+            checked={isVideoSimulcastEnabled}
+            onChange={() => setVideoSimulcast(!isVideoSimulcastEnabled)}
             className={Classes.INTENT_PRIMARY}
-            label={"Enable Simulcast"}
+            label={"Enable Video Simulcast"}
           />
           <Checkbox
-            checked={isTransportCcEnabled}
-            onChange={() => setTransportCc(!isTransportCcEnabled)}
+            checked={isScreenShareSimulcastEnabled}
+            onChange={() =>
+              setScreenShareSimulcast(!isScreenShareSimulcastEnabled)
+            }
             className={Classes.INTENT_PRIMARY}
-            label={"Enable Transport CC"}
-          />
-          <Checkbox
-            checked={isUnifiedPlanEnabled}
-            onChange={() => setUnifiedPlan(!isUnifiedPlanEnabled)}
-            className={Classes.INTENT_PRIMARY}
-            label={"Enable UnifiedPlan"}
+            label={"Enable Screen Share Simulcast"}
           />
           <Checkbox
             checked={isStatsDisabled}
@@ -196,6 +191,9 @@ const AdvancedSettings = ({
               fill={true}
             />
           </Popover>
+        </fieldset>
+        <fieldset className="stats-analyzer-link">
+          <StatsAnalyzerLink />
         </fieldset>
       </div>
     </Popover>

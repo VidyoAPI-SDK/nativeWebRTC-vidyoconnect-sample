@@ -26,7 +26,7 @@ const AdHocRoomDialogs = ({ onJoin }) => {
       <Dialog isOpen={true} className="adhoc-room-dialog__success">
         <center className={Classes.DIALOG_BODY}>
           <h4>{t("Creating room...")}</h4>
-          <Spinner className="bp3-intent-white" />
+          <Spinner className="bp4-intent-white" />
         </center>
       </Dialog>
     );

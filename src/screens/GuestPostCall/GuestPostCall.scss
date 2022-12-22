@@ -15,26 +15,23 @@
   .content {
     width: 100%;
     width: 224px;
-    color: white;
+    color: #51575c;
     font-size: 20px;
     text-align: center;
-
-    .main-logo-white {
-      width: 100%;
-    }
 
     .guest-bottom-text {
       min-width: 224px;
     }
 
     .guest-logout-message-title {
-      font-weight: 300;
-      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: 400;
+      font-size: 14px;
     }
 
     .guest-logout-message-description {
-      font-weight: 300;
-      font-size: 15px;
+      font-weight: 400;
+      font-size: 14px;
       a {
         color: #0080ff;
       }
@@ -48,7 +45,7 @@
     }
 
     #guest-logout-message {
-      padding: 12px 0;
+      padding: 15px 0;
     }
   }
 }

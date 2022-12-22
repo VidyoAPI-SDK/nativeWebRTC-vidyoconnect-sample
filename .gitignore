@@ -12,6 +12,7 @@
 /build
 /out
 .next
+www/app/vidyoconnector
 
 # misc
 .DS_Store

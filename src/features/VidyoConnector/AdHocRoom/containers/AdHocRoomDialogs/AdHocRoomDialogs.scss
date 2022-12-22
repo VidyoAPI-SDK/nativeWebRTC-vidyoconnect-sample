@@ -2,19 +2,19 @@
   &__success {
     background-color: #333 !important;
 
-    .bp3-dialog-header {
+    .bp4-dialog-header {
       background-color: #333 !important;
 
-      .bp3-icon {
+      .bp4-icon {
         color: white;
       }
 
-      .bp3-icon-info-sign {
+      .bp4-icon-info-sign {
         color: #aaa;
       }
     }
 
-    .bp3-dialog-body {
+    .bp4-dialog-body {
       color: white !important;
 
       pre,
@@ -30,7 +30,7 @@
       }
     }
 
-    .bp3-button.bp3-intent-success {
+    .bp4-button.bp4-intent-success {
       text-transform: uppercase;
       margin-top: 32px;
     }

@@ -156,9 +156,9 @@ export function replaceInJson(json, replacements) {
   return JSON.parse(string);
 }
 
-export function getPortalRefreshTokenUrl() {
-  const { portal } = storage.getItem("user") || {};
-  return `${portal}/api/v1/refreshToken`;
+export function getPortalRefreshTokenUrl(portal) {
+  const _portal = portal || storage.getItem("user")["portal"] || {};
+  return `${_portal}/api/v1/refreshToken`;
 }
 
 /**
@@ -171,4 +171,56 @@ export function isStethoscope(microphone) {
       microphone?.name.toString().includes(name)
     );
   }
+}
+
+/**
+ *
+ * @param {window1.document} sourceDoc
+ * @param {window2.document} targetDoc
+ *
+ * This function copies styles from one window.document to another window2.document(new window)
+ *
+ * When use React.CreatePortal and target is a new window we don't have styles in this window, so we need to copy them
+ */
+export function copyStyles(sourceDoc, targetDoc) {
+  Array.from(sourceDoc.styleSheets).forEach((styleSheet) => {
+    try {
+      if (styleSheet.cssRules) {
+        const newStyleEl = sourceDoc.createElement("style");
+
+        Array.from(styleSheet.cssRules).forEach((cssRule) => {
+          newStyleEl.appendChild(sourceDoc.createTextNode(cssRule.cssText));
+        });
+
+        targetDoc.head.appendChild(newStyleEl);
+      } else {
+        const newLinkEl = sourceDoc.createElement("link");
+
+        newLinkEl.rel = "stylesheet";
+        newLinkEl.href = styleSheet.href;
+        targetDoc.head.appendChild(newLinkEl);
+      }
+    } catch (e) {
+      console.log(`Error while copy styles ${e}`);
+    }
+  });
+}
+
+/**
+ * Simple helper to avoid sending unnecessary requests.
+ *
+ * Helpful if u have requests with JWT token that can be refreshed.
+ * Is some cases, when JWT token was updated and your request is in "retry" mode, new request can be sended because of depends on JWT token.
+ * Using this hook u can save this request in the queue and check if it in-progress now and prevent duplicating
+ *
+ * NOTE: Don't use it if you request might be send few times in parallel, it will allow only first request.
+ */
+const requestsInProgress = new Set();
+export function useRequestsInProgress() {
+  const isRequestInProgress = (request) => requestsInProgress.has(request);
+  const addRequestInProgress = (request) => requestsInProgress.add(request);
+  const deleteRequestInProgress = (request) =>
+    requestsInProgress.delete(request);
+
+  return [isRequestInProgress, addRequestInProgress, deleteRequestInProgress];
 }

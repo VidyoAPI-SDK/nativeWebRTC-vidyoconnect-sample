@@ -6,7 +6,7 @@ export function useExtDataLogin(rejoin) {
   let extDataLoginParametersExist = false;
 
   const searchParams = new URLSearchParams(window.location.search);
-  const rawPortal = searchParams.get("portal");
+  const rawPortal = decodeURIComponent(searchParams.get("portal")||'');
   const extData = (searchParams.get("extData") || "").replace(/\s/gi, "+");
   const extDataType = searchParams.get("extDataType");
   const ap = searchParams.get("AP");
@@ -52,7 +52,12 @@ export function useExtDataLogin(rejoin) {
         }),
       })
         .then((response) => response.json())
-        .then((data) => data.data.loginResponse)
+        .then((data) => {
+          if (data.status === "failure") {
+            setExtDataLoginResponse(data.error.message);
+          }
+          return data.data.loginResponse;
+        })
         .then((loginResponse) => {
           let { authToken } = loginResponse;
           return myAccountRequest(portal, authToken).then((user) => {

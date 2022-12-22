@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  color: #fff;
+  color: #51575c;
 
   .content {
     width: 100%;
@@ -19,18 +19,14 @@
     a:active,
     a:visited,
     a:focus {
-      color: #fff;
+      color: #51575c;
       text-decoration: underline;
-    }
-    .main-logo-white {
-      img {
-        width: 224px;
-      }
     }
     .message,
     .action-bar {
-      padding: 30px 25px;
+      padding: 20px 25px;
       text-align: center;
+      font-size: 12px;
     }
   }
 
@@ -43,31 +39,31 @@
   }
 }
 
-.bp3-portal {
-  .bp3-alert.iosAlert {
+.bp4-portal {
+  .bp4-alert.iosAlert {
     max-width: calc(100% - 25px);
     width: 355px;
 
-    .bp3-alert-contents {
+    .bp4-alert-contents {
       margin-top: 10px;
     }
 
-    .bp3-alert-contents .message-content,
-    .bp3-alert-contents .message-header {
+    .bp4-alert-contents .message-content,
+    .bp4-alert-contents .message-header {
       font-weight: normal;
       color: #464646;
       line-height: 1.1;
     }
 
-    .bp3-alert-contents .message-content {
+    .bp4-alert-contents .message-content {
       font-size: 16px;
       padding-top: 12px;
     }
 
-    .bp3-alert-footer {
+    .bp4-alert-footer {
       margin-top: 0;
 
-      button.bp3-button {
+      button.bp4-button {
         font-size: 16px;
         background-color: #666666;
         width: 120px;

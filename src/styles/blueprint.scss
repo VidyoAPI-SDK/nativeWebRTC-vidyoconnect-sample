@@ -3,94 +3,93 @@
 @import "~@blueprintjs/select/lib/css/blueprint-select.css";
 @import "./variables.scss";
 
-.bp3-button {
-  &[class*="bp3-intent-"] {
-    height: 38px;
-    border-radius: 3px;
+.bp4-button {
+  &[class*="bp4-intent-"] {
+    height: 36px;
+    border-radius: 10px;
     font-size: 14px;
-    line-height: 18px;
     color: $button-text-color;
     background-image: none;
     box-shadow: none;
     outline: none;
     border: none;
 
-    &:not(.bp3-fill) {
+    &:not(.bp4-fill) {
       width: 150px;
 
-      &.bp3-small {
+      &.bp4-small {
         width: 82px;
       }
-      &.bp3-large {
+      &.bp4-large {
         width: 224px;
       }
     }
 
-    &.bp3-small {
+    &.bp4-small {
       height: 24px;
     }
 
     &:hover,
     &:active,
-    &.bp3-active {
+    &.bp4-active {
       box-shadow: none;
     }
 
     &:disabled,
-    &.bp3-disabled {
+    &.bp4-disabled {
       background-image: none;
       pointer-events: all;
       box-shadow: none;
     }
   }
 
-  &.bp3-intent-primary {
+  &.bp4-intent-primary {
     background-color: $button-intent-primary;
     &:hover {
       background-color: $button-intent-primary-hover;
     }
     &:active,
-    &.bp3-active {
+    &.bp4-active {
       background-color: $button-intent-primary-active;
     }
     &:disabled,
-    &.bp3-disabled {
+    &.bp4-disabled {
       background-color: $button-intent-primary-disabled;
     }
   }
 
-  &.bp3-intent-success {
+  &.bp4-intent-success {
     background-color: $button-intent-success;
     &:hover {
       background-color: $button-intent-success-hover;
     }
     &:active,
-    &.bp3-active {
+    &.bp4-active {
       background-color: $button-intent-success-active;
     }
     &:disabled,
-    &.bp3-disabled {
+    &.bp4-disabled {
       background-color: $button-intent-success-disabled;
     }
   }
 
-  &.bp3-intent-danger {
+  &.bp4-intent-danger {
     background-color: $button-intent-danger;
     &:hover {
       background-color: $button-intent-danger-hover;
     }
     &:active,
-    &.bp3-active {
+    &.bp4-active {
       background-color: $button-intent-danger-active;
     }
     &:disabled,
-    &.bp3-disabled {
+    &.bp4-disabled {
       background-color: $button-intent-danger-disabled;
     }
   }
 
-  &.bp3-intent-secondary,
-  &.bp3-outlined {
+  &.bp4-intent-secondary,
+  &.bp4-outlined {
     border: 1px solid rgba(255, 255, 255, 0.5);
     background-color: transparent;
     color: $button-text-color;
@@ -99,12 +98,12 @@
       background-color: rgba(0, 0, 0, 0.5);
     }
     &:active,
-    &.bp3-active {
+    &.bp4-active {
       border: 1px solid rgba(255, 255, 255, 1);
       background-color: transparent;
     }
     &:disabled,
-    &.bp3-disabled {
+    &.bp4-disabled {
       border: 1px solid rgba(255, 255, 255, 1);
       background-color: transparent;
       color: $button-text-color;
@@ -112,34 +111,34 @@
     }
   }
 
-  &.bp3-intent-share {
+  &.bp4-intent-share {
     background-color: $button-intent-share;
     color: $button-text-color;
     &:hover {
       background-color: $button-intent-share-hover;
     }
     &:active,
-    &.bp3-active {
+    &.bp4-active {
       background-color: $button-intent-share-active;
     }
     &:disabled,
-    &.bp3-disabled {
+    &.bp4-disabled {
       background-color: $button-intent-share-disabled;
       color: $button-text-color;
     }
   }
 }
 
-.bp3-control {
-  &.bp3-checkbox {
-    .bp3-control-indicator {
+.bp4-control {
+  &.bp4-checkbox {
+    .bp4-control-indicator {
       width: 16px;
       height: 16px;
       border-radius: 2px;
       box-shadow: none;
       outline: none;
     }
-    input:checked ~ .bp3-control-indicator {
+    input:checked ~ .bp4-control-indicator {
       border-radius: 3px;
       box-shadow: none;
       outline: none;
@@ -154,25 +153,25 @@
         outline: none;
       }
     }
-    input:not(:disabled):active:checked ~ .bp3-control-indicator {
+    input:not(:disabled):active:checked ~ .bp4-control-indicator {
       background: white;
       box-shadow: none;
       outline: none;
       border: none;
     }
-    input:active ~ .bp3-control-indicator {
+    input:active ~ .bp4-control-indicator {
       background: white;
       box-shadow: none;
       outline: none;
     }
 
-    &.bp3-intent-primary {
-      .bp3-control-indicator {
+    &.bp4-intent-primary {
+      .bp4-control-indicator {
         background: white;
         border: 2px solid $checkbox-intent-primary;
         outline: none;
       }
-      input:checked ~ .bp3-control-indicator {
+      input:checked ~ .bp4-control-indicator {
         background: white;
         &::before {
           mask-image: url(../assets/images/buttons/checked-white-fill.svg);
@@ -181,13 +180,13 @@
       }
     }
 
-    &.bp3-intent-success {
-      .bp3-control-indicator {
+    &.bp4-intent-success {
+      .bp4-control-indicator {
         background: white;
         border: 2px solid $checkbox-intent-success;
         outline: none;
       }
-      input:checked ~ .bp3-control-indicator {
+      input:checked ~ .bp4-control-indicator {
         background: white;
         &::before {
           mask-image: url(../assets/images/buttons/checked-white-fill.svg);
@@ -196,14 +195,14 @@
       }
     }
 
-    &.bp3-intent-white {
+    &.bp4-intent-white {
       color: white;
-      .bp3-control-indicator {
+      .bp4-control-indicator {
         background: transparent;
         border: 2px solid $checkbox-intent-white;
         outline: none;
       }
-      input:checked ~ .bp3-control-indicator {
+      input:checked ~ .bp4-control-indicator {
         background: transparent;
         &:hover,
         &:active {
@@ -214,79 +213,83 @@
           background: $checkbox-intent-white;
         }
       }
-      input:not(:disabled):active:checked ~ .bp3-control-indicator {
+      input:not(:disabled):active:checked ~ .bp4-control-indicator {
         background: transparent;
       }
-      input:active ~ .bp3-control-indicator {
+      input:active ~ .bp4-control-indicator {
         background: transparent;
       }
     }
 
-    &.bp3-disabled {
+    &.bp4-disabled {
       opacity: 0.5;
     }
   }
 }
 
-.bp3-popover {
-  &.bp3-tooltip {
-    .bp3-popover-content {
+.bp4-popover {
+  &.bp4-tooltip {
+    .bp4-popover-content {
       font-size: 15px;
       line-height: 15px;
       color: #3c3c3c;
       background: #e7e7e7;
     }
-    .bp3-popover-arrow-border,
-    .bp3-popover-arrow-fill {
+    .bp4-popover-arrow-border,
+    .bp4-popover-arrow-fill {
       fill: #e7e7e7;
     }
-    &.bp3-intent-text {
-      .bp3-popover-arrow-fill {
+    &.bp4-intent-text {
+      .bp4-popover-arrow-fill {
         fill: #cdcdcd;
       }
-      .bp3-popover-content {
+      .bp4-popover-content {
         background-color: #cdcdcd;
         color: #464646;
       }
     }
 
-    &.bp3-intent-menu {
-      .bp3-popover-arrow-fill {
+    &.bp4-intent-menu {
+      .bp4-popover-arrow-fill {
         fill: #5a5a5a;
       }
-      .bp3-popover-content {
+      .bp4-popover-content {
         background-color: #5a5a5a;
         color: #f5f8fa;
       }
     }
 
-    &.bp3-intent-call {
-      .bp3-popover-arrow-fill {
+    &.bp4-intent-call {
+      .bp4-popover-arrow-fill {
         fill: #1f3c59;
       }
-      .bp3-popover-content {
+      .bp4-popover-content {
         background-color: #1f3c59;
         color: #f5f8fa;
       }
     }
 
-    &.bp3-intent-call-menu {
-      .bp3-popover-arrow-fill {
+    &.bp4-intent-call-menu {
+      .bp4-popover-arrow-fill {
         fill: #3d5878;
       }
-      .bp3-popover-content {
+      .bp4-popover-content {
         background-color: #3d5878;
         color: #f5f8fa;
       }
     }
+    &.bp4-intent-danger .bp4-popover-content {
+      background-color: #e4281b;
+      color: #fff;
+    }
   }
 }
 
-.bp3-select-list {
-  .bp3-popover-target {
+.bp4-select-list {
+  .bp4-popover-target {
     display: flex;
 
-    .bp3-button {
+    .bp4-button {
       height: 26px;
       -webkit-tap-highlight-color: transparent;
       background-color: #fbfbfb;
@@ -294,7 +297,7 @@
       border-radius: 3px;
       outline: none;
 
-      .bp3-button-text {
+      .bp4-button-text {
         width: 100%;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -304,34 +307,34 @@
   }
 }
 
-.bp3-spinner {
-  &.bp3-intent-primary {
-    .bp3-spinner-head {
+.bp4-spinner {
+  &.bp4-intent-primary {
+    .bp4-spinner-head {
       stroke: $intent-primary;
     }
-    .bp3-spinner-track {
+    .bp4-spinner-track {
       stroke: rgba($color: $intent-primary, $alpha: 0.2);
     }
   }
-  &.bp3-intent-success {
-    .bp3-spinner-head {
+  &.bp4-intent-success {
+    .bp4-spinner-head {
       stroke: $intent-success;
     }
-    .bp3-spinner-track {
+    .bp4-spinner-track {
       stroke: rgba($color: $intent-success, $alpha: 0.2);
     }
   }
-  &.bp3-intent-white {
-    .bp3-spinner-head {
+  &.bp4-intent-white {
+    .bp4-spinner-head {
       stroke: white;
     }
-    .bp3-spinner-track {
+    .bp4-spinner-track {
       stroke: rgba($color: white, $alpha: 0.2);
     }
   }
 }
 
-.bp3-alert.bp3-dialog {
+.bp4-alert.bp4-dialog {
   width: 370px;
   @media screen and (max-width: 400px) {
     width: 335px;
@@ -339,10 +342,10 @@
   min-height: 200px;
   color: #666;
   background: $alert-backround;
-  .bp3-alert-footer {
+  .bp4-alert-footer {
     flex-direction: row;
     justify-content: center;
-    .bp3-button {
+    .bp4-button {
       display: inline-block;
       vertical-align: middle;
       margin: 8px 5px;
@@ -355,14 +358,14 @@
       background-image: none;
       text-align: center;
     }
-    .bp3-intent-danger {
+    .bp4-intent-danger {
       background-color: #d40e00;
     }
   }
 }
 
 // Call moderation popups
-.bp3-dialog-container .bp3-alert.cm-popup {
+.bp4-dialog-container .bp4-alert.cm-popup {
   max-width: 400px;
   width: 400px;
   min-height: 170px;
@@ -371,7 +374,7 @@
     max-width: calc(100% - 30px);
   }
 
-  .bp3-alert-footer {
+  .bp4-alert-footer {
     flex-direction: row-reverse;
     justify-content: space-between;
     width: 100%;
@@ -382,7 +385,7 @@
     font-size: 17px;
   }
 
-  .bp3-button {
+  .bp4-button {
     max-width: 240px;
     box-sizing: border-box;
     cursor: pointer;
@@ -395,7 +398,7 @@
   }
 }
 
-.bp3-dialog-container .bp3-alert.cm-popup--center {
+.bp4-dialog-container .bp4-alert.cm-popup--center {
   .message-content {
     text-align: center;
   }

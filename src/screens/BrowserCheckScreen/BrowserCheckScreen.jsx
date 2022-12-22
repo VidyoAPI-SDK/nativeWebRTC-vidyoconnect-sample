@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import MainLogoWhite from "components/MainLogoWhite";
@@ -28,13 +28,13 @@ const mapDispatchToProps = (dispatch) => ({
 
 const BrowserCheckScreen = ({ browserIsNotSupported }) => {
   const { t } = useTranslation();
-  let history = useHistory();
+  let navigate = useNavigate();
   const languageDirection = useLanguageDirection();
   const [waitForParams, setWaitForParams] = useState(true);
   const [ios15message, setIOS15message] = useState(null);
   const showActionBar = false;
   const continueAnyway = () => {
-    history.push("/InitialScreen");
+    navigate("/InitialScreen");
   };
 
   const [formatMessage] = useHTMLMessageFormatting();
@@ -42,7 +42,7 @@ const BrowserCheckScreen = ({ browserIsNotSupported }) => {
   useEffect(() => {
     if (isIOS15) {
       const searchParams = new URLSearchParams(window.location.search);
-      const portal = searchParams.get("portal");
+      const portal = decodeURIComponent(searchParams.get("portal")||'');
 
       if (!portal) {
         console.error("No portal adress for sending customParams request");
@@ -65,6 +65,15 @@ const BrowserCheckScreen = ({ browserIsNotSupported }) => {
           setWaitForParams(false);
         });
     }
+    return () => {
+      if (
+        isIOS15 &&
+        sessionStorage.getItem("isIOS15PopupShown") &&
+        window.location.search.includes("sessionToken")
+      ) {
+        sessionStorage.removeItem("isIOS15PopupShown");
+      }
+    };
   }, []);
 
   if (window.location.protocol !== "https:") {
@@ -115,7 +124,7 @@ const BrowserCheckScreen = ({ browserIsNotSupported }) => {
             <div className="action-bar">
               <button
                 onClick={continueAnyway}
-                className="bp3-button bp3-intent-secondary"
+                className="bp4-button bp4-intent-secondary"
               >
                 {t("CONTINUE_ANYWAY")}
               </button>
@@ -126,7 +135,16 @@ const BrowserCheckScreen = ({ browserIsNotSupported }) => {
     );
   }
 
-  if (isIOS15 && waitForParams) {
+  if (
+    isIOS15 &&
+    waitForParams &&
+    !sessionStorage.getItem("isIOS15PopupShown")
+  ) {
+    if (ios15message) {
+      // temporary save the flag to avoid showing IOS 15 pop up twice.
+      // The second time it heppend after we receive invocation params from a portal and refresh the page
+      sessionStorage.setItem("isIOS15PopupShown", true);
+    }
     return (
       <div
         className="browser-not-supported-screen"
@@ -148,14 +166,14 @@ const BrowserCheckScreen = ({ browserIsNotSupported }) => {
           </div>
         ) : (
           <div className="spinner-box">
-            <Spinner className="bp3-intent-white" />
+            <Spinner className="bp4-intent-white" />
           </div>
         )}
       </div>
     );
   }
 
-  return <Redirect to={{ pathname: "/InitialScreen" }} />;
+  return <Navigate replace to={"/InitialScreen"} />;
 };
 
 export default connect(null, mapDispatchToProps)(BrowserCheckScreen);

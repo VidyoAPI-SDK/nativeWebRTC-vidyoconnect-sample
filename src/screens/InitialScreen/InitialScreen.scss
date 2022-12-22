@@ -4,12 +4,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #51575c;
 
   .content {
     width: 224px;
-
+    min-height: 200px;
     .initial-loader {
       margin-top: 20px;
+      .message {
+        text-align: center;
+        padding: 20px 0;
+        font-size: 12px;
+      }
     }
   }
 }

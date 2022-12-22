@@ -10,8 +10,10 @@ import { test } from "utils/helpers";
 import DeviceMenu from "../../DeviceMenu/DeviceMenu";
 import { Position, Tooltip } from "@blueprintjs/core";
 import { useState } from "react";
-import { useMobileDimension, useModerationStatuses } from "utils/hooks";
+import { useModerationStatuses, useIsTouchScreen } from "utils/hooks";
 import { deviceDisableReason, deviceTooltipTimeout } from "utils/constants";
+import { isMobile } from "react-device-detect";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
 
 const mapStateToProps = ({ devices, config }) => ({
   microphones: devices.microphones,
@@ -42,15 +44,18 @@ const MicrophoneToggle = ({
   showTooltip = true,
   microphoneModerationState,
   tooltipPosition,
+  deviceMenuStyle,
 }) => {
   const { t } = useTranslation();
-  const [isMobileDimension] = useMobileDimension();
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [tooltipContent, setTooltipContent] = useState("");
   const showEnergyLevel = false;
   const { isUserAdmin, isUserRoomOwner } = useModerationStatuses();
   const prevState = useRef();
-
+  const isTouchScreen =
+    useIsTouchScreen() ||
+    isMobile ||
+    OperatingSystemInfoProvider.IsTabletDevice();
   const microphoneOnClick = (e) => {
     if (e.target.classList.contains("inactive")) {
       return e.preventDefault();
@@ -94,7 +99,7 @@ const MicrophoneToggle = ({
   };
 
   const getMicrophoneStateText = () => {
-    if (isMobileDimension) return;
+    if (isTouchScreen) return;
 
     return (
       <span
@@ -145,9 +150,9 @@ const MicrophoneToggle = ({
       (microphoneModerationState?.moderationType ===
         deviceDisableReason.SOFT_MUTED &&
         microphoneModerationState?.state) ||
-      (microphoneModerationState?.moderationType ===
-        deviceDisableReason.HARD_MUTED &&
-        (isUserAdmin || isUserRoomOwner))
+        (microphoneModerationState?.moderationType ===
+          deviceDisableReason.HARD_MUTED &&
+          (isUserAdmin || isUserRoomOwner))
     ) {
       setTooltipContent(
         microphoneModerationState?.state ? (
@@ -179,6 +184,7 @@ const MicrophoneToggle = ({
     microphoneModerationState,
     t,
     isMicrophoneTurnedOn,
+    isTouchScreen,
   ]);
 
   const isButtondisabled =
@@ -199,7 +205,7 @@ const MicrophoneToggle = ({
         isOpen={isTooltipOpen}
         onClosed={onTooltipClosed}
         portalClassName="device-tooltip"
-        position={tooltipPosition || Position.TOP_CENTER}
+        position={tooltipPosition || Position.TOP_RIGHT}
         disabled={!showTooltip || !tooltipContent || isMicrophoneDisabled}
       >
         <DeviceToggle
@@ -223,12 +229,12 @@ const MicrophoneToggle = ({
           )}
         </DeviceToggle>
       </Tooltip>
-
       <DeviceMenu
         deviceType="microphone"
         menuHeader={t("SELECT_MICROPHONE")}
         disabled={!microphones.length || isMicrophoneDisabled}
         active={!isButtondisabled}
+        deviceMenuStyle={deviceMenuStyle}
       >
         <button
           type="button"
@@ -237,14 +243,17 @@ const MicrophoneToggle = ({
         />
       </DeviceMenu>
       {showLabel && (
-        <div className="toggle-label">
-          {isMicrophoneDisabled
-            ? t("MICROPHONE_DISABLED")
-            : selectedMicrophone
-            ? selectedMicrophone.name
-            : microphones.length
-            ? t("NO_ACTIVE_MICROPHONE")
-            : t("NO_MICROPHONE")}
+        <div className="device-wrapper">
+          <label>{t("MICROPHONE")}</label>
+          <div className="toggle-label">
+            {isMicrophoneDisabled
+              ? t("MICROPHONE_DISABLED")
+              : selectedMicrophone
+              ? selectedMicrophone.name
+              : microphones.length
+              ? t("NO_ACTIVE_MICROPHONE")
+              : t("NO_MICROPHONE")}
+          </div>
         </div>
       )}
     </div>

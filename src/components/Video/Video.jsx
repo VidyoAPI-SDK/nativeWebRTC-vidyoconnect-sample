@@ -6,13 +6,7 @@ const Video = ({ stream, ...props }) => {
   useEffect(() => {
     const currentVideo = videoRef.current;
     if (stream) {
-      if (window.banuba?.blurBackground && !stream.fromCache) {
-        window.banuba.blurBackground(stream, true).then((blurredStream) => {
-          currentVideo.srcObject = blurredStream;
-        });
-      } else {
-        currentVideo.srcObject = stream;
-      }
+      currentVideo.srcObject = stream;
       if (props.autoPlay !== false) {
         currentVideo.play().catch(() => {});
       }

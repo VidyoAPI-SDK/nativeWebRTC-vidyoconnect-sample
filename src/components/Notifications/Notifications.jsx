@@ -21,10 +21,14 @@ export const Classes = Object.freeze({
   UNDISMISSABLE: "undismissable",
 });
 
-export const showNotification = (type, data) => {
+const customToasters = new WeakMap();
+
+export const showNotification = (type, data, customContainer) => {
   if (!data) {
     return null;
   }
+  let _notification = Notification;
+
   const key = (++index + Date.now() * Math.random()).toString();
   let className = toastsAdditionalClasses[type] || "";
 
@@ -32,13 +36,28 @@ export const showNotification = (type, data) => {
     className += ` ${data.className.trim()}`;
   }
 
-  return Notification.show(
+  if (customContainer) {
+    if (customToasters.has(customContainer)) {
+      _notification = customToasters.get(customContainer);
+    } else {
+      _notification = Toaster.create(
+        {
+          className: "notification",
+          position: Position.TOP_RIGHT,
+        },
+        customContainer
+      );
+      customToasters.set(customContainer, _notification);
+    }
+  }
+
+  return _notification.show(
     {
       message: (
         <Templates
           type={type}
           data={data}
-          closeNotification={() => Notification.dismiss(key)}
+          closeNotification={() => _notification.dismiss(key)}
         />
       ),
       className: className,

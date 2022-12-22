@@ -4,7 +4,13 @@ import * as callActionTypes from "store/actions/types/call";
 
 function* shareStartFailed(action) {
   if (action.message === "Permission denied by system") {
-    yield put(setShareSystemPermissionError(true));
+    yield put(
+      setShareSystemPermissionError({ value: true, shareErrorType: "system" })
+    );
+  } else {
+    yield put(
+      setShareSystemPermissionError({ value: true, shareErrorType: "other" })
+    );
   }
 }
 

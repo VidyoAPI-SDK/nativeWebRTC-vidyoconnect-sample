@@ -326,7 +326,7 @@ const CallModeration = () => {
       {
         label:
           t("CM_OPEN_WEB_MODERATION") +
-          (roomInfo.RoomMode.roomPIN
+          (roomInfo.RoomMode.roomPIN && isBecomeModerator
             ? ` (PIN: ${roomInfo.RoomMode.roomPIN})`
             : ""),
         labelActive: t("CM_OPEN_WEB_MODERATION"),
@@ -357,6 +357,7 @@ const CallModeration = () => {
     t,
     unLockRoomHandler,
     userInfo.entityID,
+    isBecomeModerator,
   ]);
 
   if (isTablet) {

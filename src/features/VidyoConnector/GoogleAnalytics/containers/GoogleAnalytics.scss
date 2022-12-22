@@ -23,7 +23,7 @@
     align-items: baseline;
     height: 85px;
 
-    .bp3-input-group {
+    .bp4-input-group {
       width: 100%;
     }
 
@@ -66,15 +66,15 @@
       overflow: hidden;
     }
 
-    .bp3-control {
+    .bp4-control {
       margin-bottom: 0;
     }
   }
 }
 
-.bp3-popover {
-  &.bp3-popover-content-sizing {
-    .bp3-popover-content {
+.bp4-popover {
+  &.bp4-popover-content-sizing {
+    .bp4-popover-content {
       max-width: fit-content !important;
     }
   }

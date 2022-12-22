@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { useLocation, Redirect } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import * as devicesActionCreators from "store/actions/devices";
 import * as configActionCreators from "store/actions/config";
@@ -15,8 +15,6 @@ import Sidebar from "components/Sidebar";
 import Chat from "containers/Chat";
 import ChatToggle from "containers/Chat/Toggle";
 import ShareButton from "containers/Share/Button";
-import EndShare from "containers/Share/EndButton";
-import SelfView from "containers/SelfView";
 import RecorderStatus from "containers/RecorderStatus";
 import CallQualityIndicator from "containers/CallQualityIndicator";
 import SecureConnectionStatus from "containers/SecureConnectionStatus";
@@ -55,6 +53,7 @@ import {
   useTabletDimension,
   useModerationStatuses,
   useCurrentUser,
+  useInsightServerUrl,
 } from "utils/hooks";
 import "./GuestInCall.scss";
 import { SettingsButton } from "components/SettingsButton/SettingsButton";
@@ -72,6 +71,10 @@ import { updateUser } from "store/actions/user";
 import { CSSTransition } from "react-transition-group";
 import ParticipantsList from "containers/ParticipantsList/ParticipantsList";
 import SidebarModeratorControls from "containers/SidebarModeratorControls/SidebarModeratorControls";
+import { getCallAPIProvider } from "services/CallAPIProvider";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
+import { loadScript } from "utils/loaders.js";
+import { isBackgroundEffectSupported } from "utils/useBackgroundEffect";
 
 const mapStateToProps = ({ devices, call, config, user, chat }) => ({
   isCallActive: call.active,
@@ -100,16 +103,21 @@ const mapStateToProps = ({ devices, call, config, user, chat }) => ({
   urlWaitingRoomVideoContent: config.urlWaitingRoomVideoContent,
   urlWaitingRoomAudioContent: config.urlWaitingRoomAudioContent,
   urlWaitingRoomBackgroundContent: config.urlWaitingRoomBackgroundContent,
-  urlStatsServer: config.urlStatsServer,
+  urlDoNotSaveDisplayName: config.urlDoNotSaveDisplayName,
   extData: config.extData,
   hasExtData: config.hasExtData,
   extDataType: config.extDataType,
-  urlExtData: config.urlExtData,
-  urlExtDataType: config.urlExtDataType,
   cameraModerationState: devices.cameraModerationState,
   microphoneModerationState: devices.microphoneModerationState,
   chatSpecialMessage: chat.specialMessage,
   urlModeratorPin: config.urlModeratorPin,
+  localWindowShares: call.localWindowShares,
+  remoteWindowShares: call.remoteWindowShares,
+  pinnedParticipant: call.participants?.pinned,
+  remoteCameras: devices.remoteCameras,
+  compositorTiles: call.compositorTiles,
+  isWebViewEnabled: config.urlInitializeWebView.value,
+  isFeccOpen: call.feccOpen,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -141,7 +149,6 @@ const GuestInCall = ({
   enablePreview,
   isStatisticsOverlaySet,
   setStatisticsOverlay,
-  exitAfterAloneInCall,
   leftPanelToggle,
   getCustomParameters,
   customParameters,
@@ -157,7 +164,7 @@ const GuestInCall = ({
   urlWaitingRoomVideoContent,
   urlWaitingRoomAudioContent,
   urlWaitingRoomBackgroundContent,
-  urlStatsServer,
+  urlDoNotSaveDisplayName,
   extData,
   extDataType,
   cameraModerationState,
@@ -170,7 +177,21 @@ const GuestInCall = ({
   urlModeratorPin,
   qaEpicWaitingRoomMediaContent,
   closeModerationPanel,
+  localWindowShares,
+  remoteWindowShares,
+  showSharePreview,
+  pinParticipantSuccess,
+  resetPinParticipant,
+  pinnedParticipant,
+  remoteCameras,
+  setDisableTabletParticipantLimitRestrictions,
+  setFeccPresetsLabel,
+  setFeccPresetsSelectLabel,
+  compositorTiles,
+  isWebViewEnabled,
+  isFeccOpen,
 }) => {
+  const feccPanel = useRef();
   const location = useLocation();
   const { t } = useTranslation();
   const renderer = "renderer";
@@ -185,7 +206,7 @@ const GuestInCall = ({
   const [invitePopupOpened, setInvitePopupOpened] = useState(false);
   const [dataForAudioVideoContent, setDataForAudioVideoContent] =
     useState(null);
-  const callName = callProperties.callName || location.state.roomKey;
+  const callName = callProperties.callName || location.state?.roomKey;
   const afterCallStarted = (new Date().getTime() - callStartedTime) / 1000 > 5;
   const ONLY_PARTICIPANT_CALL_END_TIME = 15;
   const [isTablet] = useTabletDimension();
@@ -196,16 +217,20 @@ const GuestInCall = ({
   const isEpicServiceEnabled = isCustomParamEnabled(
     customParameters.registered?.epicServiceEnabled
   );
-
+  const inactivityTimer =
+    customParameters?.[userIsRegistered ? "registered" : "unregistered"]
+      ?.InactivityTimer;
   const showInviteButton =
-    isUserAuthorized(location.state.host) && (isUserAdmin || isUserRoomOwner);
+    isUserAuthorized(location.state?.host) && (isUserAdmin || isUserRoomOwner);
 
   const currentUser = useCurrentUser();
 
-  const insightServerUrl =
-    urlStatsServer.value ||
+  const insightServerUrl = useInsightServerUrl();
+
+  const isCallQualityIndicatorEnabled =
     customParameters?.[userIsRegistered ? "registered" : "unregistered"]
-      ?.insightServerUrl;
+      ?.callQualityIndicatorEnabled === "1";
+
   useLoki(isCallActive, insightServerUrl);
 
   function handleEndCallClick() {
@@ -247,7 +272,24 @@ const GuestInCall = ({
   }, [cameraTurnOff, isCameraTurnedOn, isBackground, isBlurred]);
 
   useEffect(() => {
-    if (location.state.isCameraTurnedOn) {
+    if (selectedCamera && selectedCamera.SetPreviewTag) {
+      selectedCamera.SetPreviewTag({ previewTag: t("YOU") });
+    }
+  }, [selectedCamera, t]);
+
+  useEffect(() => {
+    if (localWindowShares?.length) {
+      localWindowShares.forEach((share) => {
+        share.SetPreviewLabel({ previewLabel: t("MY_SHARE") });
+        if (share.SetEndShareLabel) {
+          share.SetEndShareLabel({ endLabel: t("END_SHARE") });
+        }
+      });
+    }
+  }, [localWindowShares, t]);
+
+  useEffect(() => {
+    if (location.state?.isCameraTurnedOn) {
       cameraTurnOn({ selectedCamera });
     } else {
       cameraTurnOff({ selectedCamera });
@@ -274,7 +316,18 @@ const GuestInCall = ({
   ]);
 
   useEffect(() => {
-    if (location.state.isMicrophoneTurnedOn) {
+    remoteWindowShares.forEach((share) => {
+      const shareLabel = document.querySelector(
+        `.application-type.remote-track[data-participant-id="${share?.participant?.id}"] .video-display-name-main`
+      );
+      if (shareLabel) {
+        shareLabel.innerHTML = `${share.participant.name} (${t("SHARE_NOUN")})`;
+      }
+    });
+  }, [remoteWindowShares, t]);
+
+  useEffect(() => {
+    if (location.state?.isMicrophoneTurnedOn) {
       microphoneTurnOn();
     } else {
       microphoneTurnOff();
@@ -300,14 +353,13 @@ const GuestInCall = ({
   ]);
 
   useEffect(() => {
-    if (location.state.isSpeakerTurnedOn) {
+    if (location.state?.isSpeakerTurnedOn) {
       speakerTurnOn();
     } else {
       speakerTurnOff();
     }
   }, [location, speakerTurnOn, speakerTurnOff]);
 
-  let showPreview = isMobileSafari || isMobileDimension;
   useEffect(() => {
     assignVideoRenderer({
       viewId: renderer,
@@ -315,14 +367,15 @@ const GuestInCall = ({
   }, [assignVideoRenderer]);
 
   useEffect(() => {
-    enablePreview(showPreview);
-  }, [showPreview, enablePreview]);
+    enablePreview(true);
+    showSharePreview(true);
+  }, [enablePreview, showSharePreview]);
 
   useEffect(() => {
-    if (isCallActive) {
-      storage.addItem("displayName", location.state.displayName);
+    if (isCallActive && !urlDoNotSaveDisplayName.value) {
+      storage.addItem("displayName", location.state?.displayName);
     }
-  }, [location, isCallActive]);
+  }, [location, isCallActive, urlDoNotSaveDisplayName.value]);
 
   useEffect(() => {
     const participant = participants.participantJoined;
@@ -339,7 +392,7 @@ const GuestInCall = ({
 
   useEffect(() => {
     const participant = participants.participantLeft;
-    if (participant && !participant.isLocal && isCallActive) {
+    if (participant && !participant.isLocal && isCallActive && !isCallLeaving) {
       showNotification("banner", {
         title: unsafeParseTextFromHTMLString(participant.name),
         message: t("LEFT_THE_CONFERENCE"),
@@ -349,25 +402,26 @@ const GuestInCall = ({
     }
     // eslint-disable-next-line
   }, [participants.participantLeft]);
-
+  const INACTIVITY_TIME_OUT =
+    inactivityTimer / 60 || ONLY_PARTICIPANT_CALL_END_TIME;
   useEffect(() => {
     if (participants.list.length === 1) {
       let onlyParticipantLastTime = new Date().getTime();
       const interval = setInterval(() => {
         if (
           (new Date().getTime() - onlyParticipantLastTime) / 1000 / 60 >
-          ONLY_PARTICIPANT_CALL_END_TIME
+          INACTIVITY_TIME_OUT
         ) {
           logger.warn(
-            `User is alone in the call more than ${ONLY_PARTICIPANT_CALL_END_TIME} minutes. Exiting.`
+            `User is alone in the call more than ${INACTIVITY_TIME_OUT} minutes. Exiting.`
           );
+          getCallAPIProvider().exitAfterAloneInCall = true;
           endCall();
-          exitAfterAloneInCall();
         }
       }, 10000);
       return () => clearInterval(interval);
     }
-  }, [participants, endCall, exitAfterAloneInCall]);
+  }, [participants, endCall, INACTIVITY_TIME_OUT]);
 
   useEffect(() => {
     return () => {
@@ -377,11 +431,67 @@ const GuestInCall = ({
 
   useEffect(() => {
     const host = location.state.host || portal;
-    if (isUserAuthorized(host)) {
-      getCustomParameters({ host, authToken });
-    } else {
-      getCustomParameters({ host });
-    } // eslint-disable-next-line
+    const isUserAuthorizedValue = isUserAuthorized(host);
+    console.log("Is user authorized:", isUserAuthorizedValue);
+
+    if (location.state.isCustomParamsReceived && !isUserAuthorizedValue) return;
+
+    const reqParams = {
+      host,
+    };
+    if (isUserAuthorizedValue) {
+      reqParams["authToken"] = authToken;
+    }
+    getCustomParameters(reqParams, (customParams) => {
+      if (!customParams || isWebViewEnabled || !isBackgroundEffectSupported)
+        return;
+      const backgroundEffectDisabledByUser =
+        storage.getItem("clearCameraEffect");
+      const customParamList =
+        customParams?.[isUserAuthorizedValue ? "registered" : "unregistered"];
+      let defaultPortalBackground = customParamList
+        ? customParamList.DefaultCameraEffect
+        : "";
+      if (
+        !["BLUR", "NONE"].includes(defaultPortalBackground) &&
+        (isMobileDevice || OperatingSystemInfoProvider.IsTabletDevice())
+      ) {
+        defaultPortalBackground = "";
+      }
+      const onChangePortalBackground = () => {
+        window.banuba.aplplyDefaultPortalEffect(
+          defaultPortalBackground,
+          storage
+        );
+      };
+
+      if (window.banubaPluginReady) {
+        onChangePortalBackground();
+      } else if (window.banubaIsLoaded) {
+        window.addEventListener(
+          "BanubaPluginReady",
+          onChangePortalBackground,
+          false
+        );
+      } else if (
+        defaultPortalBackground &&
+        defaultPortalBackground !== "NONE" &&
+        !backgroundEffectDisabledByUser
+      ) {
+        loadScript("./banuba/BanubaPlugin.js", true);
+        window.banubaIsLoaded = true;
+        window.addEventListener(
+          "BanubaPluginReady",
+          onChangePortalBackground,
+          false
+        );
+        if (defaultPortalBackground === "BLUR") {
+          storage.addItem("selectedCameraEffect", { id: "blur" });
+          storage.addItem("defaultPortalBackground", true);
+        }
+      }
+    });
+    // eslint-disable-next-line
   }, [getCustomParameters, isUserAuthorized]);
 
   useEffect(() => {
@@ -400,6 +510,8 @@ const GuestInCall = ({
   useEffect(() => {
     // allow receiving of special HUNTER messages in VidyoClient
     addMessageClass("MSGCLASS_HUNTER");
+
+    setDisableTabletParticipantLimitRestrictions(true);
 
     if (userIsRegistered) {
       getEntityByRoomKey(portal, authToken, location.state?.roomKey).then(
@@ -490,7 +602,7 @@ const GuestInCall = ({
         };
 
         const matchedData = Object.keys(data).filter((item) => {
-          if (!!data[item]) return true;
+          if (data[item]) return true;
           console.error(
             `Not matched data in custom parameters for ${mappedInvocationParams[item]} parameter (${item})`
           );
@@ -540,7 +652,7 @@ const GuestInCall = ({
   };
 
   useEffect(() => {
-    if (roomInfo?.entityID && isUserAdmin) {
+    if (roomInfo?.entityID && isUserAdmin && +roomInfo?.RoomMode?.roomPIN) {
       getLectureModeParticipantsRequest(
         portal,
         authToken,
@@ -556,7 +668,7 @@ const GuestInCall = ({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [participants.list]);
+  }, [participants.list, isUserAdmin, roomInfo?.RoomMode?.roomPIN]);
 
   useKeyboardShortcut(
     {
@@ -627,14 +739,124 @@ const GuestInCall = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatSpecialMessage]);
 
+  useEffect(() => {
+    /**
+     * Handle click on Tile pin button
+     */
+    const tilePinButtonHandler = (event) => {
+      const pinBtn = event?.target?.closest?.(".pin-participant");
+      const feccBtn = event?.target?.closest?.(".control-participant");
+
+      if (pinBtn || feccBtn) {
+        const tile = event.target.closest(".video-container");
+        const participantID = tile?.dataset?.participantId;
+
+        if (!tile || !participantID) return;
+
+        if (tile.classList.contains("pinned-video")) {
+          if (pinBtn) {
+            resetPinParticipant();
+          }
+        } else {
+          const participant = participants.list.find(
+            (p) => p.id === participantID
+          );
+          pinParticipantSuccess(participant);
+        }
+      }
+    };
+
+    document.addEventListener("click", tilePinButtonHandler, true);
+
+    return () => {
+      document.removeEventListener("click", tilePinButtonHandler, true);
+    };
+  }, [participants.list, pinParticipantSuccess, resetPinParticipant]);
+
+  /**
+   * Resetting participant pin(local state) when he was pinned and his camera has been turned off
+   */
+  useEffect(() => {
+    if (pinnedParticipant) {
+      if (
+        !remoteCameras.some((c) => c?.participant?.id === pinnedParticipant?.id)
+      ) {
+        resetPinParticipant();
+      }
+    }
+  }, [remoteCameras, pinnedParticipant, resetPinParticipant]);
+
+  useEffect(() => {
+    setFeccPresetsLabel(t("CAMERA_PRESET"));
+    setFeccPresetsSelectLabel(t("SELECT_PRESET"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t]);
+
+  useEffect(() => {
+    compositorTiles.forEach(({ element }) => {
+      let feccTooltip = element.querySelector(".js-fecc-tooltip");
+      const feccButton = element.querySelector(
+        ".tile-control.control-participant"
+      );
+
+      if (!feccTooltip) {
+        if (
+          !element.classList.contains("video-muted") &&
+          !element.classList.contains("local-track")
+        ) {
+          if (feccButton) {
+            feccTooltip = document.createElement("div");
+            feccTooltip.classList.add(
+              "vc-compositor-tooltip",
+              "js-fecc-tooltip"
+            );
+            feccTooltip.textContent = t("ADJUST_CAMERA");
+            feccButton.appendChild(feccTooltip);
+          }
+        }
+      } else {
+        feccTooltip.textContent = t("ADJUST_CAMERA");
+      }
+    });
+  }, [compositorTiles, t]);
+
+  useEffect(() => {
+    /**
+     * On small epic monitor sizes fecc panel overflows screen
+     * workaround for setting compact view
+     */
+    const setCompactView = () => {
+      if (feccPanel.current) {
+        feccPanel.current.SetCompactView(true);
+      }
+    };
+
+    if (isWebViewEnabled && isFeccOpen) {
+      feccPanel.current = document.querySelector("fecc-controls-view");
+      if (feccPanel.current) {
+        setCompactView();
+      } else {
+        setTimeout(() => {
+          feccPanel.current = document.querySelector("fecc-controls-view");
+          setCompactView();
+        }, 1000);
+      }
+
+      window.addEventListener("resize", setCompactView);
+    } else {
+      window.removeEventListener("resize", setCompactView);
+      feccPanel.current = null;
+    }
+
+    return () => {
+      window.removeEventListener("resize", setCompactView);
+      feccPanel.current = null;
+    };
+  }, [isFeccOpen, isWebViewEnabled]);
+
   if (isCallLeaving || disconnectReason) {
     return (
-      <Redirect
-        to={{
-          pathname: "/LeavingCallScreen",
-          state: location.state,
-        }}
-      />
+      <Navigate replace to={"/LeavingCallScreen"} state={location.state} />
     );
   }
 
@@ -663,42 +885,62 @@ const GuestInCall = ({
           toggleSidebar={toggleSidebar}
         />
       </CSSTransition>
-      <div className="call-screen">
-        <div className="header">
-          <Tooltip
-            content={t("PARTICIPANTS")}
-            position={Position.RIGHT}
-            disabled={isTouchScreen}
-          >
-            <div
-              className={`side-bar-toggle ${isSidebarOpen ? "close" : ""}`}
-              {...test("ROSTER_BUTTON")}
-              onClick={toggleSidebar}
-              hidden={!leftPanelToggle}
-            ></div>
-          </Tooltip>
-          <div className="participants-count" {...test("PARTICIPANTS_AMOUNT")}>
-            {participants.list.length}
-          </div>
-          <div className="room-name" {...test("CONFERENCE_NAME")}>
-            {callName}
-          </div>
-          <div className="header-section-right">
-            {!isMobileDimension && (
-              <Icon
-                icon="info-sign"
-                size={28}
-                onClick={() => setAdHocRoomInfoRendered(true)}
-              />
+      <div
+        className={`call-screen ${
+          isWebViewEnabled ? "call-screen--webview" : ""
+        }`}
+      >
+        {isWebViewEnabled ? (
+          <div className="header">
+            {leftPanelToggle && (
+              <div
+                className={`side-bar-toggle ${isSidebarOpen ? "close" : ""}`}
+                {...test("ROSTER_BUTTON")}
+                onClick={toggleSidebar}
+              ></div>
             )}
-            {!isMobileDimension &&
-              (<VidyoConnector.AdHocRoom.RoomLink /> || <RoomLink />)}
-            <SecureConnectionStatus />
-            <RecorderStatus />
-            <CallQualityIndicator />
-            <SettingsButton toggleSettings={toggleSettings} />
           </div>
-        </div>
+        ) : (
+          <div className="header">
+            <Tooltip
+              content={t("PARTICIPANTS")}
+              position={Position.RIGHT}
+              disabled={isTouchScreen}
+              portalClassName="device-tooltip"
+            >
+              <div
+                className={`side-bar-toggle ${isSidebarOpen ? "close" : ""}`}
+                {...test("ROSTER_BUTTON")}
+                onClick={toggleSidebar}
+                hidden={!leftPanelToggle}
+              ></div>
+            </Tooltip>
+            <div
+              className="participants-count"
+              {...test("PARTICIPANTS_AMOUNT")}
+            >
+              {participants.list.length}
+            </div>
+            <div className="room-name" {...test("CONFERENCE_NAME")}>
+              {callName}
+            </div>
+            <div className="header-section-right">
+              {!isMobileDimension && (
+                <Icon
+                  icon="info-sign"
+                  size={28}
+                  onClick={() => setAdHocRoomInfoRendered(true)}
+                />
+              )}
+              {!isMobileDimension &&
+                (<VidyoConnector.AdHocRoom.RoomLink /> || <RoomLink />)}
+              <SecureConnectionStatus />
+              <RecorderStatus />
+              {isCallQualityIndicatorEnabled && <CallQualityIndicator />}
+              <SettingsButton toggleSettings={toggleSettings} />
+            </div>
+          </div>
+        )}
         <div
           className={`render-container${
             (isMobileDevice || isMobileDimension) && dataForAudioVideoContent
@@ -720,69 +962,86 @@ const GuestInCall = ({
           )}
           <div id="renderer"></div>
           <Stethoscope.ControlPanel />
-          <EndShare />
         </div>
-        <div className="call-controls">
-          <div className="left-side-controls">
-            <Tooltip
-              content={t("LEAVE_THE_CALL")}
-              disabled={isTouchScreen}
-              position={Position.TOP}
-            >
-              <Button
-                className="end-call-button"
-                {...test("END_CALL_BUTTON")}
-                onClick={handleEndCallClick}
-              />
-            </Tooltip>
-          </div>
-
-          <div className="main-controls">
-            <div className="main-controls-block-left">
-              <SpeakerToggle />
-              <MicrophoneToggle />
+        {isWebViewEnabled ? (
+          <div className="call-controls">
+            <div className="webview-end-call-button">
+              <Tooltip
+                content={t("LEAVE_THE_CALL")}
+                disabled={isTouchScreen}
+                position={Position.TOP}
+                portalClassName="device-tooltip"
+              >
+                <Button
+                  className="end-call-button"
+                  {...test("END_CALL_BUTTON")}
+                  onClick={handleEndCallClick}
+                />
+              </Tooltip>
             </div>
-            {!showPreview && (
-              <div className="in-call-self-view">
-                <SelfView />
+          </div>
+        ) : (
+          <div className="call-controls">
+            <div className="left-side-controls">
+              <Tooltip
+                content={t("LEAVE_THE_CALL")}
+                disabled={isTouchScreen}
+                position={Position.TOP}
+                portalClassName="device-tooltip"
+              >
+                <Button
+                  className="end-call-button"
+                  {...test("END_CALL_BUTTON")}
+                  onClick={handleEndCallClick}
+                />
+              </Tooltip>
+            </div>
+
+            <div className="main-controls">
+              <div className="main-controls-block-left">
+                <SpeakerToggle />
+                <MicrophoneToggle />
               </div>
-            )}
-            <div className="main-controls-block-right">
-              <CameraToggle />
-              {(isMobileSafari || isAndroid || isMobileDimension) && (
-                <FlipCameraButton />
+              <div className="main-controls-block-right">
+                <CameraToggle />
+                {(isMobileSafari || isAndroid || isMobileDimension) && (
+                  <FlipCameraButton />
+                )}
+              </div>
+            </div>
+
+            <div className="right-side-controls">
+              {showInviteButton && (
+                <Tooltip
+                  content={t("INVITE_TO_CALL")}
+                  disabled={isTouchScreen}
+                  position={Position.TOP}
+                  portalClassName="device-tooltip"
+                >
+                  <InviteToCallButton onClick={toggleInviteToCallPopup} />
+                </Tooltip>
               )}
+              {!dataForAudioVideoContent && (
+                <Tooltip
+                  content={t("SHARE_APPLICATIONS")}
+                  disabled={isTouchScreen}
+                  position={Position.TOP}
+                  portalClassName="device-tooltip"
+                >
+                  <ShareButton />
+                </Tooltip>
+              )}
+              <Tooltip
+                content={t("IN_CALL_CHAT")}
+                disabled={isTouchScreen}
+                position={Position.TOP}
+                portalClassName="device-tooltip"
+              >
+                <ChatToggle isChatOpen={isChatOpen} onClick={toggleChat} />
+              </Tooltip>
             </div>
           </div>
-
-          <div className="right-side-controls">
-            {showInviteButton && (
-              <Tooltip
-                content={t("INVITE_TO_CALL")}
-                disabled={isTouchScreen}
-                position={Position.TOP}
-              >
-                <InviteToCallButton onClick={toggleInviteToCallPopup} />
-              </Tooltip>
-            )}
-            {!dataForAudioVideoContent && (
-              <Tooltip
-                content={t("SHARE_APPLICATIONS")}
-                disabled={isTouchScreen}
-                position={Position.TOP}
-              >
-                <ShareButton />
-              </Tooltip>
-            )}
-            <Tooltip
-              content={t("IN_CALL_CHAT")}
-              disabled={isTouchScreen}
-              position={Position.TOP}
-            >
-              <ChatToggle isChatOpen={isChatOpen} onClick={toggleChat} />
-            </Tooltip>
-          </div>
-        </div>
+        )}
       </div>
       <Chat isChatOpen={isChatOpen} toggleChat={toggleChat} />
       <Modal>

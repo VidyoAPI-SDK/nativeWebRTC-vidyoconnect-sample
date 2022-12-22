@@ -20,23 +20,31 @@
     #{$b} {
       &__container {
         pointer-events: none;
+      }
 
-        &::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 10;
-          background-color: rgba(0, 0, 0, 0.5);
-          background-image: url("../../assets/images/others/spinner.gif");
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: 60px;
-        }
+      &__loader {
+        display: block;
       }
     }
+  }
+
+  &__loader {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+  }
+
+  &__loader-box {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
   }
 
   &__box {
@@ -74,7 +82,7 @@
     button {
       width: 20px;
       height: 20px;
-      background-image: url("../../assets/images/buttons/white_x.svg");
+      background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='100 -100 300 300' style='enable-background:new 100 -100 300 300;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23FFFFFF;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='349.6,129.7 269.8,49.9 348.5,-30.5 328.6,-50.4 249.9,30 170.5,-49.4 150.4,-29.7 230.2,50.1 151.5,130.5 171.4,150.4 250.1,70 329.5,149.4 '/%3E%3C/svg%3E%0A");
       background-repeat: no-repeat;
       background-position: center center;
       border: none;

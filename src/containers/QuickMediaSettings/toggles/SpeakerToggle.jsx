@@ -9,13 +9,16 @@ import { test } from "utils/helpers";
 import DeviceMenu from "../../DeviceMenu/DeviceMenu";
 import SpeakerTestEnergyLevel from "../../../components/EnergyLevel/SpeakerTestEnergyLevel/SpeakerTestEnergyLevel";
 import { Tooltip, Position } from "@blueprintjs/core";
-import { useMobileDimension } from "utils/hooks";
+import { useIsTouchScreen } from "utils/hooks";
+import { isMobile } from "react-device-detect";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
 
-const mapStateToProps = ({ devices }) => ({
+const mapStateToProps = ({ devices, config }) => ({
   speakers: devices.speakers,
   selectedSpeaker: devices.selectedSpeaker,
   isSpeakerTurnedOn: devices.isSpeakerTurnedOn,
   isSpeakerDisabled: devices.isSpeakerDisabled,
+  speakerMuteControlToggle: config.urlShowAudioMuteControl.value,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -35,10 +38,14 @@ const SpeakerToggle = ({
   showTestSound,
   showTooltip = true,
   tooltipPosition,
+  deviceMenuStyle,
+  speakerMuteControlToggle,
 }) => {
   const { t } = useTranslation();
-  const [isMobileDimension] = useMobileDimension();
-
+  const isTouchScreen =
+    useIsTouchScreen() ||
+    isMobile ||
+    OperatingSystemInfoProvider.IsTabletDevice();
   const speakerOnClick = () => {
     isSpeakerTurnedOn ? speakerTurnOff() : speakerTurnOn();
   };
@@ -49,19 +56,8 @@ const SpeakerToggle = ({
     }
   };
 
-  const onPlayTestSound = () => {
-    if (!isSpeakerTurnedOn) return;
-
-    const iconSpeakerEnergyLevel = document.querySelector(
-      "icon-speaker-test-energy-level"
-    );
-    iconSpeakerEnergyLevel.setAttribute(
-      "play",
-      iconSpeakerEnergyLevel.getAttribute("play") === "true" ? "false" : "true"
-    );
-  };
   const getSpeakerStateText = () => {
-    if (isMobileDimension) return;
+    if (isTouchScreen) return;
 
     return (
       <span
@@ -75,11 +71,16 @@ const SpeakerToggle = ({
       ></span>
     );
   };
+
+  if (!speakerMuteControlToggle) {
+    return null;
+  }
+
   return (
     <div className="device-toggle">
       <Tooltip
         content={getSpeakerStateText()}
-        position={tooltipPosition || Position.TOP_CENTER}
+        position={tooltipPosition || Position.TOP}
         portalClassName="device-tooltip"
         disabled={!showTooltip || isSpeakerDisabled}
       >
@@ -99,6 +100,7 @@ const SpeakerToggle = ({
                 speakerId={selectedSpeaker && selectedSpeaker.id}
                 isDisabled={!isSpeakerTurnedOn}
                 playButtonId="speaker-test-btn"
+                labelId="speaker-test-label"
               />
             )}
         </DeviceToggle>
@@ -107,6 +109,7 @@ const SpeakerToggle = ({
         deviceType="speaker"
         menuHeader={t("SELECT_SPEAKER")}
         disabled={!speakers.length || isSpeakerDisabled}
+        deviceMenuStyle={deviceMenuStyle}
       >
         <button
           type="button"
@@ -116,6 +119,14 @@ const SpeakerToggle = ({
       </DeviceMenu>
       {showLabel && (
         <div className="toggle-label">
+          {showTestSound &&
+            speakers.length &&
+            selectedSpeaker &&
+            !isSpeakerDisabled && (
+              <div className="device-wrapper">
+                <label>{t("SPEAKER")}</label>
+              </div>
+            )}
           <span>
             {isSpeakerDisabled
               ? t("SPEAKER_DISABLED")
@@ -125,31 +136,6 @@ const SpeakerToggle = ({
               ? t("NO_ACTIVE_SPEAKER")
               : t("NO_SPEAKER")}
           </span>
-          {showTestSound &&
-            speakers.length &&
-            selectedSpeaker &&
-            !isSpeakerDisabled && (
-              <div className="speaker-test-wrapper">
-                <Tooltip
-                  content={t("TO_TEST_SOUND_UNMUTE_SPEAKER")}
-                  position={Position.TOP}
-                  disabled={isSpeakerTurnedOn}
-                >
-                  <button
-                    type="button"
-                    id="speaker-test-btn"
-                    onClick={onPlayTestSound}
-                    {...test("SPEAKER_TEST_BUTTON")}
-                  />
-                </Tooltip>
-                <span
-                  className="speaker-test-label"
-                  {...test("SPEAKER_TEST_LABEL")}
-                >
-                  {t("TEST_SOUND")}
-                </span>
-              </div>
-            )}
         </div>
       )}
     </div>

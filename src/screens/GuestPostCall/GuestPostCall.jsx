@@ -3,14 +3,18 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { bindActionCreators } from "redux";
 import * as callActionCreators from "store/actions/call";
-//import { useHistory } from "react-router-dom";
+import * as devicesActionCreators from "store/actions/devices";
+//import { useNavigate } from "react-router-dom";
+//import { Button } from "@blueprintjs/core";
 import GuestSettingsIcon from "components/GuestSettingsIcon";
 import MainLogoWhite from "components/MainLogoWhite";
 import Settings from "containers/Settings";
 import Modal from "components/Modal";
 import { test } from "utils/helpers";
+//import { isAndroid } from "react-device-detect";
 import * as googleAnalytics from "../../store/actions/googleAnalytics";
 import Alert from "components/Alert";
+import CallQualityRating from "../../components/CallQualityRating";
 
 import "./GuestPostCall.scss";
 
@@ -18,11 +22,13 @@ const mapStateToProps = ({ config, call, user }) => ({
   disconnectReason: call.disconnectReason,
   customParameters: config.customParameters,
   userIsRegistered: user.isRegistered,
+  isWebViewEnabled: config.urlInitializeWebView.value
 });
 
 const mapDispatchToProps = (dispatch) => ({
   ...bindActionCreators(callActionCreators, dispatch),
   ...bindActionCreators(googleAnalytics, dispatch),
+  ...bindActionCreators(devicesActionCreators, dispatch),
 });
 //let postCallUrlTimer = null;
 //const postCallUrlDelay = 5000;
@@ -33,9 +39,11 @@ const GuestPostCall = ({
   customParameters,
   userIsRegistered,
   gaOpenPostCallURL,
+  resetHardwareCheckDevicesState,
+  isWebViewEnabled
 }) => {
   const [isAlertOpen, setIsAlertOpen] = useState(true);
-  //const history = useHistory();
+  //const navigate = useNavigate();
   const { t } = useTranslation();
   const [areSettingsRendered, setSettingsRenderState] = useState(false);
   const [isPostCallUrlOpened, showPostCallUrl] = useState(false);
@@ -43,16 +51,24 @@ const GuestPostCall = ({
   const isFailed = // TODO: support different providers
     disconnectReason !== "VIDYO_CONNECTORDISCONNECTREASON_Disconnected";
 
-  /*function handleClick() {
+  /*
+  function handleClick() {
     clearTimeout(postCallUrlTimer);
     if (isAndroid) {
-      window.location.reload();
+      let href = window.location.href;
+      if (href.search("&hwt=1") !== -1) {
+        href = href.replace("&hwt=1", "");
+        window.location.href = href;
+      } else {
+        window.location.reload();
+      }
     } else {
       rejoinCall();
-      history.entries.length = 0;
-      history.push("/InitialScreen", { rejoin: true });
+      resetHardwareCheckDevicesState();
+      navigate("/InitialScreen", {state: { rejoin: true }});
     }
-  }*/
+  } 
+  */
 
   function toggleSettings() {
     setSettingsRenderState(!areSettingsRendered);
@@ -71,9 +87,11 @@ const GuestPostCall = ({
       if (reURL.test(postCallURL)) {
         const openWindow = window.open(postCallURL, "_blank");
         if (!openWindow) {
-          /*postCallUrlTimer = setTimeout(() => {
+          /*
+          postCallUrlTimer = setTimeout(() => {
             window.location.href = postCallURL;
-          }, postCallUrlDelay);*/
+          }, postCallUrlDelay);
+          */
         }
         gaOpenPostCallURL(postCallURL);
         showPostCallUrl(true);
@@ -111,6 +129,37 @@ const GuestPostCall = ({
         break;
     }
     return errorText;
+  }
+
+  let feedback = {
+    isOpen: true,
+    message: {
+      header: t("PERMISSION_ALERT_HEADER"),
+      html: "",
+    },
+  };
+  const [feedbackForm, setFeedfackForm] = useState(feedback);
+  const callQualityRatingEnabled = customParameters?.[userIsRegistered ? "registered" : "unregistered"]?.callQualityRatingEnabled;
+
+  if (callQualityRatingEnabled === "1" && !isWebViewEnabled && (
+    (isAlertOpen &&
+      feedbackForm.isOpen &&
+      window.appConfig.REACT_APP_CALL_QUALITY_RATING_POPUP_ENABLED &&
+      !isFailed) ||
+    (isFailed &&
+      !isAlertOpen &&
+      feedbackForm.isOpen &&
+      window.appConfig.REACT_APP_CALL_QUALITY_RATING_POPUP_ENABLED))
+  ) {
+    return (
+      <CallQualityRating
+        buttonText={t("PERMISSION_ALERT_BUTTON")}
+        onCancel={() => {
+          setFeedfackForm({ isOpen: false });
+        }}
+        isOpen={feedbackForm.isOpen}
+      />
+    );
   }
 
   return (

@@ -1,6 +1,6 @@
-import * as VidyoConnector from "./VidyoConnector";
+module.exports.VidyoConnector = require("./VidyoConnector");
 
-const Stethoscope =
+module.exports.Stethoscope =
   process.env.REACT_APP_FEATURE_STETHOSCOPE_DISABLED !== "true"
     ? require("./Stethoscope")
     : {
@@ -10,4 +10,7 @@ const Stethoscope =
         ParticipantListMenuItem: () => null,
       };
 
-export { VidyoConnector, Stethoscope };
+module.exports.FullscreenToggle =
+  process.env.REACT_APP_FEATURE_FULLSCREEN_DISABLED !== "true"
+    ? require("./Fullscreen").Toggle
+    : () => null;

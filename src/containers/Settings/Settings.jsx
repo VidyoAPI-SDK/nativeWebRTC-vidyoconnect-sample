@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import TabSwitcher from "components/TabSwitcher";
 import {
-  AboutTab,
-  AccountTab,
   GeneralTab,
   HelpTab,
-  IntegrationsTab,
   MediaTab,
 } from "./Tabs";
 import GeneralTabIcon from "assets/images/settings/icon_settings.svg";
 import MediaTabIcon from "assets/images/settings/icon_audiovideo.svg";
-import IntegrationsTabIcon from "assets/images/settings/icon_integrations.svg";
-import AccountTabIcon from "assets/images/settings/icon_account.svg";
-import AboutTabIcon from "assets/images/settings/icon_about.svg";
 import HelpTabIcon from "assets/images/settings/icon_help.svg";
 import { isMobileSafari, isAndroid } from "react-device-detect";
 import { useMediaQuery } from "react-responsive";
@@ -26,6 +21,9 @@ const Settings = ({ ...props }) => {
   const { t } = useTranslation();
   const [isMobileDimension] = useMobileDimension();
   const isNarrowScreen = useMediaQuery({ maxWidth: 690 });
+  const isWebViewEnabled = useSelector(
+    (state) => state.config.urlInitializeWebView.value
+  );
 
   const isMobileClass = isMobileDimension || isNarrowScreen;
 
@@ -43,27 +41,6 @@ const Settings = ({ ...props }) => {
       content: <MediaTab />,
       hideInMobileView: true,
       disabled: isMobileSafari || isAndroid,
-    },
-    {
-      label: t("SETTINGS_ACCOUNT"),
-      icon: AccountTabIcon,
-      id: "account",
-      content: <AccountTab />,
-      disabled: process.env.REACT_APP_SETTINGS_ACCOUNT_TAB_DISABLED === "true",
-    },
-    {
-      label: t("SETTINGS_INTEGRATIONS"),
-      icon: IntegrationsTabIcon,
-      id: "integrations",
-      content: <IntegrationsTab />,
-      disabled: true,
-      hideInMobileView: true,
-    },
-    {
-      label: t("SETTINGS_ABOUT"),
-      icon: AboutTabIcon,
-      id: "about",
-      content: <AboutTab />,
     },
     {
       label: t("SETTINGS_HELP"),
@@ -109,6 +86,7 @@ const Settings = ({ ...props }) => {
         changeTab={changeTab}
         tabs={tabs}
         bottom={isMobileClass}
+        className={isWebViewEnabled ? "webview" : ""}
       />
     </div>
   );

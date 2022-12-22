@@ -26,7 +26,7 @@ export const Text = () => (
   <Tooltip
     isOpen={boolean("isOpen", true)}
     content={text("Content", "Text tooltip")}
-    popoverClassName="bp3-intent-text"
+    popoverClassName="bp4-intent-text"
     position={Position.TOP}
   >
     <span>target</span>
@@ -37,7 +37,7 @@ export const InCall = () => (
   <Tooltip
     isOpen={boolean("isOpen", true)}
     content={text("Content", "In call tooltip")}
-    popoverClassName="bp3-intent-call"
+    popoverClassName="bp4-intent-call"
     position={Position.TOP}
   >
     <span>target</span>
@@ -48,7 +48,7 @@ export const InCallMenu = () => (
   <Tooltip
     isOpen={boolean("isOpen", true)}
     content={text("Content", "In call menu")}
-    popoverClassName="bp3-intent-call-menu"
+    popoverClassName="bp4-intent-call-menu"
     position={Position.TOP}
   >
     <span>target</span>

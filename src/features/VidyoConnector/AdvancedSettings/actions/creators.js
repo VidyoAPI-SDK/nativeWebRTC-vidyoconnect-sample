@@ -6,9 +6,8 @@ import {
   SET_COMPOSITOR_FIXED_PARTICIPANTS,
   SET_CONNECTOR_API_LOGGING,
   SET_SIMPLE_API_LOGGING,
-  SET_SIMULCAST,
-  SET_TRANSPORT_CC,
-  SET_UNIFIED_PLAN,
+  SET_VIDEO_SIMULCAST,
+  SET_SCREENSHARE_SIMULCAST,
   SET_MAX_RECONNECT_ATTEMPTS,
   SET_PARTICIPANT_LIMIT,
   SET_RECONNECT_BACKOFF,
@@ -50,18 +49,13 @@ export const setSimpeApiLogging = (enabled) => ({
   enabled,
 });
 
-export const setSimulcast = (enabled) => ({
-  type: SET_SIMULCAST,
+export const setVideoSimulcast = (enabled) => ({
+  type: SET_VIDEO_SIMULCAST,
   enabled,
 });
 
-export const setTransportCc = (enabled) => ({
-  type: SET_TRANSPORT_CC,
-  enabled,
-});
-
-export const setUnifiedPlan = (enabled) => ({
-  type: SET_UNIFIED_PLAN,
+export const setScreenShareSimulcast = (enabled) => ({
+  type: SET_SCREENSHARE_SIMULCAST,
   enabled,
 });
 

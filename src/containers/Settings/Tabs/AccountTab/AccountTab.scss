@@ -153,7 +153,7 @@
     }
   }
 
-  .bp3-intent-orange {
+  .bp4-intent-orange {
     min-width: 224px;
     width: auto;
     height: 40px;
@@ -176,5 +176,9 @@
       background-color: #9b9b9b;
       color: #ddd;
     }
+  }
+  .bp4-button.bp4-intent-success {
+    background-color: #83c36d;
+    border-radius: 3px;
   }
 }

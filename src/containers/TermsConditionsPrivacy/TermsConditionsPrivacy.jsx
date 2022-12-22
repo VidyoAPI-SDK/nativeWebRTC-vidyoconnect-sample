@@ -94,7 +94,7 @@ const TermsConditionsPrivacy = (props) => {
     return true;
   };
 
-  const parseJSON = () => {
+  const parseJSON = useCallback(() => {
     let links = {};
     (jsonData.links || []).forEach((item) => {
       if (
@@ -106,7 +106,7 @@ const TermsConditionsPrivacy = (props) => {
     });
     setLinks(links);
     return links;
-  };
+  }, [jsonData]);
 
   const toggleTermsConditionBlock = (json) => {
     if (Object.keys(json).length) {
@@ -137,9 +137,9 @@ const TermsConditionsPrivacy = (props) => {
     [time]
   );
 
-  const acceptedTC = (value) => {
+  const acceptedTC = useCallback((value) => {
     props.acceptedTC(value);
-  };
+  }, [props]);
 
   const setJson = function () {
     list()
@@ -166,15 +166,16 @@ const TermsConditionsPrivacy = (props) => {
       });
   };
 
+  // eslint-disable-next-line
   useEffect(setJson, []);
 
-  useEffect(initGuest, [jsonData]);
+  useEffect(initGuest, [jsonData, parseJSON]);
 
   const checkTCAccept = function () {
     acceptedTC(userAgreement);
   };
 
-  useEffect(checkTCAccept, [userAgreement]);
+  useEffect(checkTCAccept, [userAgreement, acceptedTC]);
 
   return (
     <div className="terms-and-privacy">

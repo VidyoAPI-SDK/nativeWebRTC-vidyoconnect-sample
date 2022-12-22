@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useExtDataLogin } from "utils/useExtDataLogin";
 import logger from "utils/logger";
 import { bindActionCreators } from "redux";
@@ -10,11 +10,13 @@ import MainLogoWhite from "components/MainLogoWhite";
 import LoadingBlock from "components/LoadingBlock";
 import * as callActionCreators from "store/actions/call";
 import * as userActionCreators from "store/actions/user";
+import * as webViewActionCreators from "store/actions/webView";
 import storage from "utils/storage";
 import { getPortalFeatures } from "../../services/SoapAPIProvider/soapAPIRequests/PortalFeatures";
 import { myAccountRequest } from "../../services/SoapAPIProvider/soapAPIRequests/myAccount";
 import { getAuthToken, isUserAuthorized } from "utils/login";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import "./InitialScreen.scss";
 
 if (!storage.getItem("waitingLogin")) {
@@ -29,6 +31,7 @@ const mapStateToProps = ({ app, config, call, devices }) => ({
   disconnectReason: call.disconnectReason,
   hasMicrophonePermission:
     !devices.microphoneDisableReasons.includes("NO_PERMISSION"),
+  isWebViewEnabled: config.urlInitializeWebView.value,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -36,6 +39,7 @@ const mapDispatchToProps = (dispatch) => ({
   ...bindActionCreators(appActionCreators, dispatch),
   ...bindActionCreators(configActionCreators, dispatch),
   ...bindActionCreators(userActionCreators, dispatch),
+  ...bindActionCreators(webViewActionCreators, dispatch),
 });
 
 export const getInitParams = () => {
@@ -71,8 +75,10 @@ const InitialScreen = ({
   setUser,
   getEndpointBehaviour,
   setEndpointBehaviour,
+  isWebViewEnabled,
+  initializeWebView,
 }) => {
-  let history = useHistory();
+  let navigate = useNavigate();
   let location = useLocation();
   let { inited, tabIsDisabled } = app;
   let {
@@ -100,19 +106,12 @@ const InitialScreen = ({
   const displayName =
     urlDisplayName.value || storage.getItem("displayName") || "";
   const permissionTimeout = useRef(null);
-
+  const { t } = useTranslation();
   useEffect(
     () => {
       if (!rejoin) {
         init(getInitParams());
       }
-      history.listen((location) => {
-        logger.warn(
-          `URL changed to ${location.pathname}: ${JSON.stringify(
-            location.state || {}
-          )}`
-        );
-      });
       setUrlParams(window.location.search);
     },
     // eslint-disable-next-line
@@ -120,6 +119,28 @@ const InitialScreen = ({
       /* on mount only */
     ]
   );
+
+  useEffect(() => {
+    if (!window?.chrome?.webview) {
+      console.log(
+        "WebView was not initialized since window.chrome.webview = ",
+        window?.chrome?.webview
+      );
+      return undefined;
+    }
+    console.log(`isWebViewEnabled = ${isWebViewEnabled}`);
+    if (isWebViewEnabled) {
+      initializeWebView();
+    }
+  }, [initializeWebView, isWebViewEnabled]);
+
+  useEffect(() => {
+    logger.warn(
+      `URL changed to ${location.pathname}: ${JSON.stringify(
+        location.state || {}
+      )}`
+    );
+  }, [location]);
 
   useEffect(() => {
     const getPortalConfigs = (url) => {
@@ -136,7 +157,7 @@ const InitialScreen = ({
     if (extDataLoginParametersExist && extDataLoginInProgress) {
       // wait for extDataLogin
     } else if (searchParams.get("portal") && searchParams.get("token")) {
-      const portal = searchParams.get("portal");
+      const portal = decodeURIComponent(searchParams.get("portal")||'');
       const token = searchParams.get("token");
       console.log(
         `Getting invocation parameters: ${portal}/api/v1/invokeParameters?token=${token}`
@@ -164,12 +185,13 @@ const InitialScreen = ({
                 invocationParameters[key]
               )}`;
             })
-            .join("&");
+            .join("&")
+            .concat("&", `sessionToken=${token}`);
 
           const newUrl = `${
             window.location.href.split("?")[0]
           }?${newUrlParams}`;
-          window.location = newUrl;
+          window.location.replace(newUrl);
         })
         .catch((err) => {
           console.error(`Error during receiving invocation parameters: ${err}`);
@@ -195,17 +217,18 @@ const InitialScreen = ({
           displayName,
           roomPin: urlPin.value || "",
           hasExtData: urlExtData.value && urlExtDataType.value === "1",
+          hideHWTOnRejoin: rejoin,
         };
 
         if (!hasMicrophonePermission) {
           clearTimeout(permissionTimeout.current);
           setTimeout(() => {
-            history.push("/GuestBeautyScreen", locationState);
+            navigate("/GuestBeautyScreen", {state: locationState});
           }, 1000);
         } else if (extDataLoginError) {
           clearTimeout(permissionTimeout.current);
           setTimeout(() => {
-            history.push("/GuestBeautyScreen", locationState);
+            navigate("/GuestBeautyScreen", {state: locationState});
           }, 1000);
         } else if (extDataLoginResponse) {
           setUser();
@@ -221,14 +244,14 @@ const InitialScreen = ({
           permissionTimeout.current = setTimeout(() => {
             startCall(locationState);
           }, 3000);
-        } else if (!urlWelcomePage.value) {
+        } else if (!urlWelcomePage.value && displayName !== "") {
           permissionTimeout.current = setTimeout(() => {
             startCall(locationState);
           }, 3000);
         } else {
           clearTimeout(permissionTimeout.current);
           setTimeout(() => {
-            history.push("/GuestBeautyScreen", locationState);
+            navigate("/GuestBeautyScreen", {state: locationState});
           }, 1000);
         }
       }
@@ -236,16 +259,17 @@ const InitialScreen = ({
       // start login with
       // https://login.vidyoclouddev.com/oauth?grant_type=authorization_code&response_type=code&client_id=VidyoConnectWebRTC&redirect_uri=https://localhost.webrtc.com/&state=%3Fportal%3Dhttps%3A%2F%2Fglo.alpha.vidyo.com%26roomKey%3Deod0xjJY
       if (inited && !tabIsDisabled) {
+        let portal = decodeURIComponent(searchParams.get("portal")||'');
         getAuthToken(searchParams.get("code"))
           .then(({ access_token, expires_in, token_type }) => {
             return myAccountRequest(
-              searchParams.get("portal"),
+              portal,
               access_token
             ).then((user) => {
               storage.addItem("user", {
                 source: "oauth",
                 authToken: access_token,
-                portal: searchParams.get("portal"),
+                portal,
               });
               storage.addItem("displayName", user.displayName);
               return user;
@@ -257,16 +281,16 @@ const InitialScreen = ({
           })
           .catch((err) => {
             console.error(err);
-            history.push("/GuestInitialScreen");
+            navigate("/GuestInitialScreen");
           });
       }
     } else if (storageUser) {
-      history.push("/UserHomeScreen");
+      navigate("/UserHomeScreen");
     } else {
-      history.push("/GuestInitialScreen");
+      navigate("/GuestInitialScreen");
     }
   }, [
-    history,
+    navigate,
     init,
     setExtData,
     enableDebugLogLevel,
@@ -290,21 +314,21 @@ const InitialScreen = ({
     setUser,
     setEndpointBehaviour,
     getEndpointBehaviour,
+    rejoin,
   ]);
 
   if (isCallJoining) {
     return (
-      <Redirect
-        to={{
-          pathname: "/JoiningCallScreen",
-          state: {
-            isCameraTurnedOn: !urlMuteCameraOnJoin.value,
-            isMicrophoneTurnedOn: !urlMuteMicrophoneOnJoin.value,
-            isSpeakerTurnedOn: true,
-            displayName,
-            host: urlPortal.value.replace("https://", ""),
-            roomKey: urlRoomKey.value,
-          },
+      <Navigate
+        replace
+        to={"/JoiningCallScreen"}
+        state={{
+          isCameraTurnedOn: !urlMuteCameraOnJoin.value,
+          isMicrophoneTurnedOn: !urlMuteMicrophoneOnJoin.value,
+          isSpeakerTurnedOn: true,
+          displayName,
+          host: urlPortal.value.replace("https://", ""),
+          roomKey: urlRoomKey.value,
         }}
       />
     );
@@ -316,6 +340,7 @@ const InitialScreen = ({
         <MainLogoWhite />
         <div className="initial-loader">
           <LoadingBlock />
+          <div className="message">{t("WAIT_WHILE_PAGE_LOADING")}</div>
         </div>
       </div>
     </div>

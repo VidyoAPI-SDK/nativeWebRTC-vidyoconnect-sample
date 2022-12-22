@@ -13,6 +13,11 @@
     padding: 10px;
     color: #fff;
     text-align: center;
+    min-width: 340px;
+
+    @media screen and (max-width: 845px) {
+      min-width: auto;
+    }
 
     &:after {
       content: " ";
@@ -64,14 +69,14 @@
   &__input-wrap {
     position: relative;
 
-    .bp3-popover-wrapper,
-    .bp3-popover-target {
+    .bp4-popover-wrapper,
+    .bp4-popover-target {
       width: 100%;
     }
   }
 
   &__error-msg {
-    .bp3-popover.bp3-tooltip .bp3-popover-content {
+    .bp4-popover.bp4-tooltip .bp4-popover-content {
       background-color: #fa0a0a;
       border-radius: 6px;
       font-size: 14px;
@@ -79,8 +84,8 @@
       padding: 12px 20px;
     }
 
-    .bp3-popover.bp3-tooltip .bp3-popover-arrow-border,
-    .bp3-popover.bp3-tooltip .bp3-popover-arrow-fill {
+    .bp4-popover.bp4-tooltip .bp4-popover-arrow-border,
+    .bp4-popover.bp4-tooltip .bp4-popover-arrow-fill {
       fill: #fa0a0a;
     }
   }

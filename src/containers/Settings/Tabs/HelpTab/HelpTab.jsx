@@ -33,7 +33,7 @@ const HelpTab = ({ inProgress, generateLogs }) => {
             <Button
               {...test("GENERATE_REPORT")}
               disabled={inProgress}
-              className={"bp3-intent-pink"}
+              className={"bp4-intent-pink"}
               onClick={() => generateLogs()}
             >
               {t("DOWNLOAD")}

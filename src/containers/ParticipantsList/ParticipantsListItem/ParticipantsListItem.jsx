@@ -67,6 +67,7 @@ const ParticipantsListItem = ({
                     content={t("CM_SOFT_MUTE_MIC_TIP")}
                     position={Position.BOTTOM}
                     openOnTargetFocus={false}
+                    portalClassName="device-tooltip"
                   >
                     <div
                       className="status-icon_mic active"
@@ -88,6 +89,7 @@ const ParticipantsListItem = ({
                     content={t("CM_SOFT_MUTE_CAM_TIP")}
                     position={Position.BOTTOM}
                     openOnTargetFocus={false}
+                    portalClassName="device-tooltip"
                   >
                     <div
                       className="status-icon_cam active"

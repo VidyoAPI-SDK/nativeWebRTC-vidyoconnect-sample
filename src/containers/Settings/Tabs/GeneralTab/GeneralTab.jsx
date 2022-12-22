@@ -3,12 +3,16 @@ import { withTranslation } from "react-i18next";
 import { Checkbox, MenuItem, Classes } from "@blueprintjs/core";
 import GeneralSelectList from "components/GeneralSelectList";
 import GlobIcon from "assets/images/settings/language.png";
-import { VidyoConnector } from "features";
+import { VidyoConnector, FullscreenToggle } from "features";
 import { test } from "utils/helpers";
+import { isMobileSafari, isAndroid } from "react-device-detect";
+import BlurBGCheckbox from "../BlurBGCheckbox";
+import { useSelector } from 'react-redux';
 
 import "./GeneralTab.scss";
 
 const GeneralTab = ({ i18n, t, ...props }) => {
+  const { urlInitializeWebView } = useSelector(state => state.config);
   const changeLanguage = (item) => {
     i18n.changeLanguage(item.value);
   };
@@ -137,7 +141,11 @@ const GeneralTab = ({ i18n, t, ...props }) => {
             />
           </div>
         )}
-
+        {(isAndroid || isMobileSafari) && !urlInitializeWebView.value && (
+          // show chackbox only on mobile devices due to disbled media tab on them
+          <BlurBGCheckbox t={t} />
+        )}
+        <FullscreenToggle className="checkbox-section" />
         <VidyoConnector.AdvancedSettings />
       </div>
     </div>

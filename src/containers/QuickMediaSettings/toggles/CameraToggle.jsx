@@ -8,8 +8,10 @@ import DeviceToggle from "components/DeviceToggle";
 import { test } from "utils/helpers";
 import DeviceMenu from "../../DeviceMenu/DeviceMenu";
 import { deviceDisableReason, deviceTooltipTimeout } from "utils/constants";
-import { useMobileDimension, useModerationStatuses } from "utils/hooks";
+import { useModerationStatuses, useIsTouchScreen } from "utils/hooks";
 import { Position, Tooltip } from "@blueprintjs/core";
+import { isMobile } from "react-device-detect";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
 
 const mapStateToProps = ({ devices, config }) => ({
   cameras: devices.cameras,
@@ -40,14 +42,17 @@ const CameraToggle = ({
   showTooltip = true,
   cameraModerationState,
   tooltipPosition,
+  deviceMenuStyle,
 }) => {
   const { t } = useTranslation();
-  const [isMobileDimension] = useMobileDimension();
   const { isUserAdmin, isUserRoomOwner } = useModerationStatuses();
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [tooltipContent, setTooltipContent] = useState("");
   const prevState = useRef();
-
+  const isTouchScreen =
+    useIsTouchScreen() ||
+    isMobile ||
+    OperatingSystemInfoProvider.IsTabletDevice();
   const cameraOnClick = (e) => {
     if (e.target.classList.contains("inactive")) {
       return e.preventDefault();
@@ -94,7 +99,7 @@ const CameraToggle = ({
   };
 
   const getCameraStateText = () => {
-    if (isMobileDimension) return;
+    if (isTouchScreen) return;
 
     return (
       <span
@@ -144,9 +149,9 @@ const CameraToggle = ({
       (cameraModerationState?.moderationType ===
         deviceDisableReason.SOFT_MUTED &&
         cameraModerationState?.state) ||
-      (cameraModerationState?.moderationType ===
-        deviceDisableReason.HARD_MUTED &&
-        (isUserAdmin || isUserRoomOwner))
+        (cameraModerationState?.moderationType ===
+          deviceDisableReason.HARD_MUTED &&
+          (isUserAdmin || isUserRoomOwner))
     ) {
       setTooltipContent(
         cameraModerationState?.state ? (
@@ -178,6 +183,7 @@ const CameraToggle = ({
     t,
     isUserRoomOwner,
     isCameraTurnedOn,
+    isTouchScreen,
   ]);
 
   const isButtondisabled =
@@ -197,7 +203,7 @@ const CameraToggle = ({
         isOpen={isTooltipOpen}
         onClosed={onTooltipClosed}
         portalClassName="device-tooltip"
-        position={tooltipPosition || Position.TOP_CENTER}
+        position={tooltipPosition || Position.TOP_LEFT}
         disabled={!showTooltip || !tooltipContent || isCameraDisabled}
       >
         <DeviceToggle
@@ -216,6 +222,7 @@ const CameraToggle = ({
         menuHeader={t("SELECT_CAMERA")}
         disabled={!cameras.length || isCameraDisabled}
         active={!isButtondisabled}
+        deviceMenuStyle={deviceMenuStyle}
       >
         <button
           type="button"
@@ -224,14 +231,17 @@ const CameraToggle = ({
         />
       </DeviceMenu>
       {showLabel && (
-        <div className="toggle-label">
-          {isCameraDisabled
-            ? t("CAMERA_DISABLED")
-            : selectedCamera
-            ? selectedCamera.name
-            : cameras.length
-            ? t("NO_ACTIVE_CAMERA")
-            : t("NO_CAMERA")}
+        <div className="device-wrapper">
+          <label>{t("CAMERA")}</label>
+          <div className="toggle-label">
+            {isCameraDisabled
+              ? t("CAMERA_DISABLED")
+              : selectedCamera
+              ? selectedCamera.name
+              : cameras.length
+              ? t("NO_ACTIVE_CAMERA")
+              : t("NO_CAMERA")}
+          </div>
         </div>
       )}
     </div>

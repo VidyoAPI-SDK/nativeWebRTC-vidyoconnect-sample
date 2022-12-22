@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Route, MemoryRouter, Switch, Redirect } from "react-router-dom";
+import { Route, MemoryRouter, Routes } from "react-router-dom";
 
 import InitialScreen from "screens/InitialScreen";
 import GuestInitialScreen from "screens/GuestInitialScreen";
@@ -20,26 +20,31 @@ class RouterComponent extends React.Component {
   render() {
     return (
       <MemoryRouter>
-        <Switch>
-          <Route path="/InitialScreen" component={InitialScreen} />
-          <Route path="/GuestInitialScreen" component={GuestInitialScreen} />
-          <Route path="/GuestBeautyScreen" component={GuestBeautyScreen} />
+        <Routes>
+          <Route path="/InitialScreen" element={<InitialScreen/>} />
+          <Route path="/GuestInitialScreen" element={<GuestInitialScreen/>} />
+          <Route path="/GuestBeautyScreen" element={<GuestBeautyScreen/>} />
           <Route
             path="/GuestAccessCodeScreen"
-            component={GuestAccessCodeScreen}
+            element={<GuestAccessCodeScreen/>}
           />
-          <Route path="/JoiningCallScreen" component={JoiningCallScreen} />
-          <Route path="/LeavingCallScreen" component={LeavingCallScreen} />
-          <Route path="/GuestInCall" component={GuestInCall} />
-          <Route path="/GuestPostCall" component={GuestPostCall} />
-          <Route path="/BrowserCheckScreen" component={BrowserCheckScreen} />
-          <Route path="/UserHomeScreen" component={UserHomeScreen} />
-          <Redirect to="/BrowserCheckScreen" />
-        </Switch>
+          <Route path="/JoiningCallScreen" element={<JoiningCallScreen/>} />
+          <Route path="/LeavingCallScreen" element={<LeavingCallScreen/>} />
+          <Route path="/GuestInCall" element={<GuestInCall/>} />
+          <Route path="/GuestPostCall" element={<GuestPostCall/>} />
+          <Route path="/BrowserCheckScreen" element={<BrowserCheckScreen/>} />
+          <Route path="/UserHomeScreen" element={<UserHomeScreen/>} />
+          <Route index element={<BrowserCheckScreen/>} />
+        </Routes>
         <VidyoConnector.GlobalMessages />
         <GlobalMessages />
       </MemoryRouter>
     );
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    //console.error(error, errorInfo);
   }
 }
 

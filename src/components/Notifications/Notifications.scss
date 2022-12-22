@@ -1,11 +1,11 @@
 // It shifts notifications down to avoid the settings button overlapping
-body div.bp3-toast-container-top.notification {
+body div.bp4-toast-container-top.notification {
   top: 35px;
   overflow-y: hidden;
 }
 
 .notification {
-  .bp3-toast {
+  .bp4-toast {
     width: 385px;
     min-height: 56px;
     background: #e7e7e7;
@@ -19,12 +19,12 @@ body div.bp3-toast-container-top.notification {
       transform: none !important;
     }
     &.hide-default-btn {
-      .bp3-button-group {
+      .bp4-button-group {
         display: none;
       }
     }
 
-    .bp3-toast-message {
+    .bp4-toast-message {
       display: block;
       padding: 0;
     }
@@ -61,14 +61,14 @@ body div.bp3-toast-container-top.notification {
 }
 
 .undismissable {
-  .bp3-button-group {
+  .bp4-button-group {
     display: none;
   }
 }
 
 @media screen and (max-width: 600px) {
   .notification {
-    .bp3-toast {
+    .bp4-toast {
       width: 335px;
     }
   }
@@ -76,7 +76,7 @@ body div.bp3-toast-container-top.notification {
 
 @media screen and (max-width: 320px) {
   .notification {
-    .bp3-toast {
+    .bp4-toast {
       width: 280px;
       min-width: 280px;
     }

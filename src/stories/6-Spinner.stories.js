@@ -44,7 +44,7 @@ export const BlueprintWhite = () => (
   <div style={{ padding: "50px 80px", background: "#0D6EBD" }}>
     <BlueprintSpinner
       size={number("Size", BlueprintSpinner.SIZE_STANDARD)}
-      className={"bp3-intent-white"}
+      className={"bp4-intent-white"}
     />
   </div>
 );

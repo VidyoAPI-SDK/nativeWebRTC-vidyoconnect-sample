@@ -61,27 +61,26 @@
 }
 
 .device-tooltip {
-  .bp3-transition-container {
-    padding-left: 5px;
-    .bp3-popover {
+  .bp4-transition-container {
+    .bp4-popover {
+      border-radius: 10px;
       max-width: 273px;
-      .bp3-popover-content {
-        background: #cdcdcd;
+      .bp4-popover-content {
+        border-radius: 10px;
+        background: #51575c;
+        color: #ffffff;
+        font-size: 12px;
+        line-height: 16px;
       }
-      .bp3-popover-arrow-border {
-        fill: #cdcdcd;
+      .bp4-popover-arrow-border {
+        fill: #51575c;
       }
-      .bp3-popover-arrow-fill {
-        fill: #cdcdcd;
+      .bp4-popover-arrow-fill {
+        fill: #51575c;
       }
-      .bp3-popover-content {
-        font-size: 14px;
-        line-height: 18px;
-      }
-      .bp3-popover-arrow {
-        svg {
-          top: -1px;
-          position: relative;
+      .bp4-popover-arrow {
+        &:before {
+          background-color: #51575c;
         }
       }
     }

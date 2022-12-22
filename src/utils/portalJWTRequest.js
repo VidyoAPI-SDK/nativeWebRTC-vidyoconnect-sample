@@ -52,7 +52,7 @@ const portalJWTRequest = (options) => {
           });
         }
 
-        if (error.config.url?.contains?.("/api/v1/refreshToken")) {
+        if (error.config.url?.includes?.("/api/v1/refreshToken")) {
           return new Promise((_, reject) => {
             console.log(
               `Portal JWT Request: Error on refresh token request for URL = ${error.config.url}`
@@ -76,9 +76,9 @@ const portalJWTRequest = (options) => {
           }
 
           const refreshToken = store.getState().config.refreshToken;
-
+          const portal = store.getState().config?.urlPortal?.value || null;
           const options = {
-            url: getPortalRefreshTokenUrl(),
+            url: getPortalRefreshTokenUrl(portal),
             method: "GET",
             headers: {
               Authorization: `Bearer ${refreshToken}`,

@@ -31,7 +31,7 @@ const UserHomeScreen = () => {
     <div className="user-screen user-home-screen">
       <div className="content">
         <h2>Logged in user</h2>
-        <pre className="bp3-code-block">
+        <pre className="bp4-code-block">
           <code>{response}</code>
         </pre>
       </div>

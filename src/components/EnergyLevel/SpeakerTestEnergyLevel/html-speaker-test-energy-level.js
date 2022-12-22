@@ -15,7 +15,7 @@ import "../energy-level-icon-template.js";
 
   class SpeakerEnergyLevel extends HTMLElement {
     static get observedAttributes() {
-      return ["disabled", "play", "play_btn_id", "speaker_id"];
+      return ["disabled", "play", "play_btn_id", "label_id", "speaker_id"];
     }
 
     constructor() {
@@ -25,6 +25,7 @@ import "../energy-level-icon-template.js";
       this.levels = [40];
       this.audioElement = new Audio(testAudio);
       this.playBtnElement = null;
+      this.labelElement = null;
     }
 
     resetSpeakerAnimation() {
@@ -57,6 +58,12 @@ import "../energy-level-icon-template.js";
         }, 100);
       }
 
+      if (name === "label_id") {
+        setTimeout(() => {
+          this.labelElement = document.getElementById(newValue);
+        }, 100);
+      }
+
       if (name === "speaker_id") {
         this.setAttribute("play", "false");
         if (this.audioElement.setSinkId) {
@@ -84,6 +91,7 @@ import "../energy-level-icon-template.js";
         };
         this.audioElement.play();
         if (this.playBtnElement) this.playBtnElement.classList.add("playing");
+        if (this.labelElement) this.labelElement.classList.add("playing");
       } else {
         console.log(
           `Speaker test audio element not found, skip testing speaker`
@@ -96,6 +104,7 @@ import "../energy-level-icon-template.js";
         this.audioElement.pause();
         this.audioElement.currentTime = 0;
         this.resetSpeakerAnimation();
+        if (this.labelElement) this.labelElement.classList.remove("playing");
         if (this.playBtnElement)
           this.playBtnElement.classList.remove("playing");
       } else {

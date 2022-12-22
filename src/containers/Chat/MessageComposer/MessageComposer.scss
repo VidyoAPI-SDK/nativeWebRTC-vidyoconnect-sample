@@ -3,16 +3,16 @@
   align-items: center;
   padding: 0 10px;
   flex: 1;
-  .bp3-popover-wrapper {
+  .bp4-popover-wrapper {
     width: 100%;
-    .bp3-popover-target {
+    .bp4-popover-target {
       width: 100%;
     }
   }
-  .bp3-input-group {
+  .bp4-input-group {
     display: contents;
 
-    .bp3-input {
+    .bp4-input {
       height: 36px;
       margin: 0 5px;
       box-shadow: none;
@@ -21,7 +21,7 @@
     }
   }
 
-  .bp3-button.send-message {
+  .bp4-button.send-message {
     width: 40px;
     height: 36px;
     &,
@@ -41,17 +41,17 @@
     }
   }
 }
-.bp3-tooltip.red-border,
-.bp3-tooltip.red-border .bp3-popover-arrow::before {
+.bp4-tooltip.red-border,
+.bp4-tooltip.red-border .bp4-popover-arrow::before {
   border: 1px solid #d40e00;
   border-radius: 4px;
 }
 
-.bp3-tooltip.red-border .bp3-popover-arrow {
+.bp4-tooltip.red-border .bp4-popover-arrow {
   top: 21px !important;
 }
 
-.bp3-tooltip.red-border .bp3-popover-arrow::before {
+.bp4-tooltip.red-border .bp4-popover-arrow::before {
   height: 17px;
   width: 16px;
 }

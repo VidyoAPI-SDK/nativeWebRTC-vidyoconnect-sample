@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useTranslation } from "react-i18next";
 import i18n from "translations/i18n";
@@ -71,9 +71,16 @@ export function useMobileDimension() {
 export function useLanguageDirection() {
   const [direction, setDirection] = useState(i18n.dir());
 
-  i18n.on("languageChanged", function (lng) {
+  const onLanguageChange = useCallback(() => {
     setDirection(i18n.dir());
-  });
+  }, []);
+
+  useEffect(() => {
+    i18n.on("languageChanged", onLanguageChange);
+    return () => {
+      i18n.off("languageChanged", onLanguageChange);
+    };
+  }, [onLanguageChange]);
 
   useEffect(() => {
     setDirection(i18n.dir());
@@ -257,26 +264,22 @@ export function useCurrentUser() {
   return (call.participants.list || []).find((p) => p.isLocal);
 }
 
-/**
- * Simple helper to avoid sending unnecessary requests.
- *
- * Helpful if u have requests with JWT token that can be refreshed.
- * Is some cases, when JWT token was updated and your request is in "retry" mode, new request can be sended because of depends on JWT token.
- * Using this hook u can save this request in the queue and check if it in-progress now and prevent duplicating
- *
- * NOTE: Don't use it if you request might be send few times in parallel, it will allow only first request.
- */
-export function useRequestsInProgress() {
-  const requestsInProgress = useRef(new Set());
+export function useInsightServerUrl() {
+  const userIsRegistered = useSelector((state) => state.user.isRegistered);
+  const customParameters = useSelector(
+    (state) => state.config.customParameters
+  );
+  const statsServerUrl = useSelector(
+    (state) =>
+      state.config.urlStatsServer.value ||
+      state.vc_advancedConfig?.statsServerUrl
+  );
 
-  const isRequestInProgress = (request) =>
-    requestsInProgress.current.has(request);
-  const addRequestInProgress = (request) =>
-    requestsInProgress.current.add(request);
-  const deleteRequestInProgress = (request) =>
-    requestsInProgress.current.delete(request);
-
-  return [isRequestInProgress, addRequestInProgress, deleteRequestInProgress];
+  return (
+    statsServerUrl ||
+    customParameters?.[userIsRegistered ? "registered" : "unregistered"]
+      ?.insightServerUrl
+  );
 }
 
 export function useHTMLMessageFormatting() {

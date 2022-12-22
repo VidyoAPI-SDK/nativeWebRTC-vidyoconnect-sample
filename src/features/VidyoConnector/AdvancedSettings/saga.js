@@ -39,21 +39,15 @@ function* handleAdvancedConfigChanges({ configName, configValue }) {
         enabled: configValue,
       });
       break;
-    case "enableSimulcast":
+    case "enableVideoSimulcast":
       yield put({
-        type: actionTypes.SIMULCAST_CHANGED,
+        type: actionTypes.VIDEO_SIMULCAST_CHANGED,
         enabled: configValue,
       });
       break;
-    case "enableTransportCc":
+    case "enableScreenShareSimulcast":
       yield put({
-        type: actionTypes.TRANSPORT_CC_CHANGED,
-        enabled: configValue,
-      });
-      break;
-    case "enableUnifiedPlan":
-      yield put({
-        type: actionTypes.UNIFIED_PLAN_CHANGED,
+        type: actionTypes.SCREENSHARE_SIMULCAST_CHANGED,
         enabled: configValue,
       });
       break;
@@ -207,40 +201,27 @@ function* setSimpleAPILogging(action) {
   }
 }
 
-function* setSimulcast(action) {
+function* setVideoSimulcast(action) {
   try {
     yield callProvider.setAdvancedConfiguration({
-      enableSimulcast: action.enabled,
+      enableVideoSimulcast: action.enabled,
     });
   } catch (e) {
     yield put({
-      type: actionTypes.SET_SIMULCAST_FAILED,
+      type: actionTypes.SET_VIDEO_SIMULCAST_FAILED,
       message: e.message || e,
     });
   }
 }
 
-function* setTransportCc(action) {
+function* setScreenShareSimulcast(action) {
   try {
     yield callProvider.setAdvancedConfiguration({
-      enableTransportCc: action.enabled,
+      enableScreenShareSimulcast: action.enabled,
     });
   } catch (e) {
     yield put({
-      type: actionTypes.SET_TRANSPORT_CC_FAILED,
-      message: e.message || e,
-    });
-  }
-}
-
-function* setUnifiedPlan(action) {
-  try {
-    yield callProvider.setAdvancedConfiguration({
-      enableUnifiedPlan: action.enabled,
-    });
-  } catch (e) {
-    yield put({
-      type: actionTypes.SET_UNIFIED_PLAN_FAILED,
+      type: actionTypes.SET_SCREENSHARE_SIMULCAST_FAILED,
       message: e.message || e,
     });
   }
@@ -324,9 +305,11 @@ export default function* actionWatcher() {
     setVidyoConnectorAPILogging
   );
   yield takeLatest(actionTypes.SET_SIMPLE_API_LOGGING, setSimpleAPILogging);
-  yield takeLatest(actionTypes.SET_SIMULCAST, setSimulcast);
-  yield takeLatest(actionTypes.SET_TRANSPORT_CC, setTransportCc);
-  yield takeLatest(actionTypes.SET_UNIFIED_PLAN, setUnifiedPlan);
+  yield takeLatest(actionTypes.SET_VIDEO_SIMULCAST, setVideoSimulcast);
+  yield takeLatest(
+    actionTypes.SET_SCREENSHARE_SIMULCAST,
+    setScreenShareSimulcast
+  );
   yield takeLatest(
     actionTypes.SET_MAX_RECONNECT_ATTEMPTS,
     setMaxReconnectAttempts

@@ -44,13 +44,13 @@ export const SelectMenu = () => (
   <Select
     items={items}
     itemRenderer={renderItem}
-    className={"bp3-select-list"}
+    className={"bp4-select-list"}
     onItemSelect={action("select")}
     disabled={boolean("Disabled", false)}
     filterable={boolean("Filterable", false)}
     noResults={<MenuItem disabled={true} text="No results" />}
     popoverProps={{
-      portalClassName: "bp3-select-list-portal",
+      portalClassName: "bp4-select-list-portal",
       minimal: boolean("Minimal", true),
     }}
   >
@@ -66,12 +66,12 @@ export const SelectMenu = () => (
 export const NoResults = () => (
   <Select
     items={[]}
-    className={"bp3-select-list"}
+    className={"bp4-select-list"}
     disabled={boolean("Disabled", false)}
     filterable={boolean("Filterable", false)}
     noResults={<MenuItem disabled={true} text="No results" />}
     popoverProps={{
-      portalClassName: "bp3-select-list-portal",
+      portalClassName: "bp4-select-list-portal",
       minimal: boolean("Minimal", true),
     }}
   >

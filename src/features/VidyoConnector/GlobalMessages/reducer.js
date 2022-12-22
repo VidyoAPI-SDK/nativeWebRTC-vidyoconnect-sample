@@ -2,6 +2,7 @@ import { SET_SHARE_SYSTEM_PERMISSION_ERROR } from "./actions/types";
 
 const initialState = {
   isShareSystemPermissionError: false,
+  shareErrorType: "",
 };
 
 const globalMessages = (state = initialState, action) => {
@@ -9,7 +10,8 @@ const globalMessages = (state = initialState, action) => {
     case SET_SHARE_SYSTEM_PERMISSION_ERROR:
       return {
         ...state,
-        isShareSystemPermissionError: action.payload,
+        isShareSystemPermissionError: action.payload.value,
+        shareErrorType: action.payload.shareErrorType,
       };
 
     default:

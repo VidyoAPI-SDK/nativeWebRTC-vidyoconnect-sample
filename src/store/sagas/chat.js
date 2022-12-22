@@ -95,6 +95,9 @@ function createChatChannel(action) {
 }
 
 function* handleChatMessages(payload) {
+  if (payload.message.type === "VIDYO_CHATMESSAGETYPE_PrivateChat") {
+    return;
+  }
   // checks if it is "Special" message and doesn't add it to history
   if (hunterChat.isSpecialMessage(payload?.message?.body)) {
     yield put({

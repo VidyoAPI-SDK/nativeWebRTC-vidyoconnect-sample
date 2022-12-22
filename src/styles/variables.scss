@@ -1,7 +1,7 @@
-$radial-gradient-background: radial-gradient(#4c97d9, #0d6ebd);
+$radial-gradient-background: #ffffff;
 
 $intent-primary: #094a80;
-$intent-success: #83c36d;
+$intent-success: #107db7;
 
 $button-intent-primary: $intent-primary;
 $button-intent-primary-hover: #02345d;
@@ -14,9 +14,9 @@ $button-intent-secondary-active: rgba(255, 255, 255, 0.5);
 $button-intent-secondary-disabled: rgba(255, 255, 255, 0.5);
 
 $button-intent-success: $intent-success;
-$button-intent-success-hover: #68a254;
-$button-intent-success-active: #83c36d;
-$button-intent-success-disabled: #b0b0b0;
+$button-intent-success-hover: rgba(16, 125, 183, 0.9);
+$button-intent-success-active: rgba(16, 125, 183, 0.9);
+$button-intent-success-disabled: #6d767e;
 
 $button-intent-danger: #e84b40;
 $button-intent-danger-hover: #c8382e;
