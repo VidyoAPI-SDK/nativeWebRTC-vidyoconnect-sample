@@ -89,9 +89,8 @@ function* handleRemoteMicrophones(action) {
       }
     } catch (err) {}
   }
-  const selectedRemoteStethoscope = yield select(
-    (state) => state.feature_stethoscope.selectedRemoteStethoscope
-  );
+  const { selectedRemoteStethoscope, isRemoteStethoscopeStarted } =
+    yield select((state) => state.feature_stethoscope);
   if (
     selectedRemoteStethoscope &&
     remoteStethoscopes.every((d) => d.id !== selectedRemoteStethoscope.id)
@@ -99,6 +98,9 @@ function* handleRemoteMicrophones(action) {
     yield put({
       type: actionTypes.SELECTED_REMOTE_STETHOSCOPE_REMOVED,
     });
+    if (isRemoteStethoscopeStarted) {
+      yield callProvider.enableDynamicAudioSources();
+    }
   }
   yield put(actions.updateRemoteStethoscopes(remoteStethoscopes));
 }
@@ -230,6 +232,7 @@ function* startRemoteStethoscope(action) {
       action.remoteStethoscope,
       selectedSpeaker
     );
+    yield callProvider.disableDynamicAudioSources();
     yield put({
       type: actionTypes.START_REMOTE_STETHOSCOPE_SUCCEEDED,
       result,
@@ -252,6 +255,7 @@ function* stopRemoteStethoscope() {
       selectedRemoteStethoscope,
       selectedSpeaker
     );
+    yield callProvider.enableDynamicAudioSources();
     yield put({
       type: actionTypes.STOP_REMOTE_STETHOSCOPE_SUCCEEDED,
       result,
@@ -329,38 +333,6 @@ function* unsubscribeFromUnprocessedAudioUpdates() {
   }
 }
 
-function* enableDynamicAudioSources() {
-  try {
-    yield callProvider.enableDynamicAudioSources();
-
-    yield put({
-      type: actionTypes.ENABLE_DYNAMIC_AUDIO_SOURCES_SUCCEEDED,
-      payload: true,
-    });
-  } catch (e) {
-    yield put({
-      type: actionTypes.ENABLE_DYNAMIC_AUDIO_SOURCES_FAILED,
-      message: e.message,
-    });
-  }
-}
-
-function* disableDynamicAudioSources() {
-  try {
-    yield callProvider.disableDynamicAudioSources();
-
-    yield put({
-      type: actionTypes.DISABLE_DYNAMIC_AUDIO_SOURCES_SUCCEEDED,
-      payload: true,
-    });
-  } catch (e) {
-    yield put({
-      type: actionTypes.DISABLE_DYNAMIC_AUDIO_SOURCES_FAILED,
-      message: e.message,
-    });
-  }
-}
-
 function* actionWatcher() {
   yield takeLatest(
     callActionTypes.GET_CALL_PROPERTIES_SUCCEEDED,
@@ -408,14 +380,6 @@ function* actionWatcher() {
   yield takeLatest(
     actionTypes.UNPROCESSED_AUDIO_UPDATES_UNSUBSCRIBE,
     unsubscribeFromUnprocessedAudioUpdates
-  );
-  yield takeLatest(
-    actionTypes.ENABLE_DYNAMIC_AUDIO_SOURCES,
-    enableDynamicAudioSources
-  );
-  yield takeLatest(
-    actionTypes.DISABLE_DYNAMIC_AUDIO_SOURCES,
-    disableDynamicAudioSources
   );
 }
 

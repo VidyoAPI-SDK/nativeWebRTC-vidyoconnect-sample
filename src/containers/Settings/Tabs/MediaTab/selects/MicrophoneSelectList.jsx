@@ -14,6 +14,8 @@ const MicrophoneSelectList = () => {
     (state) => state.devices.selectedMicrophone
   );
 
+  const { urlInitializeWebView } = useSelector(state => state.config);
+
   const microphoneMuteControlToggle = useSelector(
     (state) => state.config.urlMicrophoneMuteControl.value
   );
@@ -47,7 +49,7 @@ const MicrophoneSelectList = () => {
       <GeneralSelectList
         title={t("MICROPHONE")}
         icon={mic}
-        disabled={!microphoneMuteControlToggle}
+        disabled={!microphoneMuteControlToggle && !urlInitializeWebView}
         items={sortedMicrophones}
         customRenderItem={customRenderItem}
         className="microphone-select"

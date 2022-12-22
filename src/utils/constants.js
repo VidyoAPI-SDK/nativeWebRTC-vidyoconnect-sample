@@ -26,3 +26,6 @@ export const tcData = {
   LOCAL_VERSION: "tcConsentVersion",
   SERVER_TIMEOUT: 10 * 1000,
 };
+
+export const tabletsGridParticipantLimit = 3;
+export const participantLimit = 8;

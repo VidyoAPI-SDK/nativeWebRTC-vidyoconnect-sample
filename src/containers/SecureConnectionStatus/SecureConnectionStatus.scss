@@ -18,8 +18,12 @@
 .secure-status-wrap {
   display: flex;
   align-items: center;
+}
 
-  .bp3-popover-wrapper {
-    display: flex;
-  }
+.bp4-popover.secure-connection-status-popupover .bp4-popover-content {
+  padding: 10px 12px;
+  font-size: 15px;
+  line-height: 15px;
+  color: #3c3c3c;
+  background: #e7e7e7;
 }

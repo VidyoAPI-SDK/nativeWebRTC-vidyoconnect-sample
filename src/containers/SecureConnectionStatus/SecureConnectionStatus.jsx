@@ -2,7 +2,8 @@ import React from "react";
 
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Tooltip, Position } from "@blueprintjs/core";
+import { Tooltip, Position, Popover } from "@blueprintjs/core";
+import { useIsTouchScreen } from "utils/hooks";
 import { test } from "utils/helpers";
 import "./SecureConnectionStatus.scss";
 
@@ -14,34 +15,49 @@ const connectionStatus = () => {
 
 const SecureConnectionStatus = ({ secureConnection }) => {
   const { t } = useTranslation();
-
+  const isTouchScreen = useIsTouchScreen();
   return secureConnection ? (
     <div className="secure-status-wrap">
-      <Tooltip
+      <Popover
         content={t("THIS_CONFERENCE_IS_SECURE")}
         position={Position.BOTTOM}
+        popoverClassName="secure-connection-status-popupover"
+        disabled={!isTouchScreen}
       >
-        <div className="secure-status-container">
-          <div
-            className="secure-status-icon"
-            {...test("SECURE_CONNECTION_ICON")}
-          ></div>
-        </div>
-      </Tooltip>
+        <Tooltip
+          content={t("THIS_CONFERENCE_IS_SECURE")}
+          position={Position.BOTTOM}
+          portalClassName="device-tooltip"
+        >
+          <div className="secure-status-container">
+            <div
+              className="secure-status-icon"
+              {...test("SECURE_CONNECTION_ICON")}
+            ></div>
+          </div>
+        </Tooltip>
+      </Popover>
     </div>
   ) : (
     <div className="secure-status-wrap">
-      <Tooltip
+      <Popover
         content={t("THIS_CONFERENCE_IS_NOT_SECURE")}
         position={Position.BOTTOM}
+        disabled={!isTouchScreen}
       >
-        <div className="secure-status-container">
-          <div
-            className="secure-status-icon unsecure"
-            {...test("UNSECURE_CONNECTION_ICON")}
-          ></div>
-        </div>
-      </Tooltip>
+        <Tooltip
+          content={t("THIS_CONFERENCE_IS_NOT_SECURE")}
+          position={Position.BOTTOM}
+          portalClassName="device-tooltip"
+        >
+          <div className="secure-status-container">
+            <div
+              className="secure-status-icon unsecure"
+              {...test("UNSECURE_CONNECTION_ICON")}
+            ></div>
+          </div>
+        </Tooltip>
+      </Popover>
     </div>
   );
 };

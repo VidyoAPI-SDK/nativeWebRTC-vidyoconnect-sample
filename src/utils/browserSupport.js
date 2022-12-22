@@ -8,6 +8,9 @@ import {
   osVersion,
 } from "react-device-detect";
 
+const searchParams = new URLSearchParams(window.location.search);
+const skipBrowserCheck = searchParams.get("skipBrowserCheck");
+
 const supportedBrowsers = {
   desktop: {
     chrome: {
@@ -17,12 +20,12 @@ const supportedBrowsers = {
       minVersion: 70,
     },
     safari: {
-      minVersion: 13,
+      minVersion: 14,
     },
   },
   ios: {
     safari: {
-      minVersion: 13,
+      minVersion: 14,
     },
   },
   android: {
@@ -60,6 +63,15 @@ if (isIOS && !isSafari) {
 
 if (!navigator.mediaDevices) {
   browserNotSupported = true;
+}
+
+if (skipBrowserCheck === "true" || skipBrowserCheck === "1") {
+  if (browserNotSupported) {
+    console.warn(
+      `Browser is not supported, but "skipBrowserCheck" parameter present in the URL`
+    );
+  }
+  browserNotSupported = false;
 }
 
 const isIOS15 = isIOS && parseInt(osVersion, 10) >= 15;

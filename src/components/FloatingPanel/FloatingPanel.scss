@@ -28,7 +28,7 @@
       display: none;
     }
 
-    .bp3-popover-wrapper {
+    .bp4-popover-wrapper {
       * {
         &:focus {
           outline: none;
@@ -110,8 +110,8 @@
     padding: 10px 15px;
   }
 
-  .bp3-popover-wrapper,
-  .bp3-popover-target {
+  .bp4-popover-wrapper,
+  .bp4-popover-target {
     display: block;
   }
 }

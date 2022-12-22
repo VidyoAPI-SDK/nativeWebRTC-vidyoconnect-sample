@@ -8,14 +8,18 @@
   overflow: auto;
 
   .log-levels {
-    .bp3-popover-target + .bp3-overlay .bp3-popover {
+    .bp4-popover-target + .bp4-overlay .bp4-popover {
       width: fit-content;
       max-width: 90vw;
 
-      .bp3-popover-content {
+      .bp4-popover-content {
         padding: 20px 8px 20px 20px;
       }
     }
+  }
+
+  .stats-analyzer-link {
+    margin-top: 8px;
   }
 }
 
@@ -29,7 +33,7 @@
   (orientation: landscape) and (max-width: 760px) {
   .vidyo-advanced-settings {
     .log-levels {
-      .bp3-popover-target + .bp3-overlay .bp3-popover {
+      .bp4-popover-target + .bp4-overlay .bp4-popover {
         max-width: 280px;
       }
     }

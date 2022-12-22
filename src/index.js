@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { Provider } from "react-redux";
 import RouterComponent from "./router";
 import logger from "utils/logger";
@@ -7,19 +7,31 @@ import { loadScript } from "utils/loaders.js";
 import store from "./store";
 import { diactivateTab } from "store/actions/app";
 import { updateAvailableResources } from "store/actions/call";
-import { isBlurEffectSupported } from "utils/useBlurEffect";
-
+import { isBackgroundEffectSupported } from "utils/useBackgroundEffect";
 import runMultipleTabsDetection from "utils/multipleTabsDetection";
-import { isIOS, isMobileSafari, deviceDetect } from "react-device-detect";
+import {
+  isIOS,
+  isMobileSafari,
+  deviceDetect,
+  isSafari,
+  isMobile,
+} from "react-device-detect";
 import { Stethoscope } from "features";
+import storage from "./utils/storage";
 
 import "./translations/i18n";
 import "./styles/index.scss";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
 
 const environment = deviceDetect();
+window.isSafariBrowser = isSafari; // for banuba plugin only
+window.isMobileOrTablet = isMobile || OperatingSystemInfoProvider.IsTabletDevice(); // for banuba plugin
 
 logger.warn(`App version is ${window.appConfig.APP_VERSION}`);
 logger.warn({ environment });
+logger.warn(
+  `Is device tablet = ${OperatingSystemInfoProvider.IsTabletDevice()}`
+);
 
 if (process.env.NODE_ENV !== "production") {
   logger.warn("not in production mode");
@@ -36,11 +48,15 @@ window.addEventListener("resize", () => {
   }, 500);
 });
 
-if (isBlurEffectSupported) {
-  window.addEventListener("load", () => {
-    loadScript("./banuba/BanubaPlugin.js", true);
-  });
-  window.banubaIsSupported = true;
+if (isBackgroundEffectSupported && (!window.isMobileOrTablet || (window.isMobileOrTablet && storage.getItem("selectedCameraEffect")))) {
+  const params = new URLSearchParams(window.location.search);
+  const urlInitializeWebView = params.get("initializeWebView");
+  if (!urlInitializeWebView) {
+    window.addEventListener("load", () => {
+      loadScript("./banuba/BanubaPlugin.js", true);
+    });
+    window.banubaIsLoaded = true;
+  }
 }
 
 function calcMobileWinSize() {
@@ -80,10 +96,10 @@ window.availableResourcesChange = (
   );
 };
 
-ReactDOM.render(
+const root = createRoot(document.getElementById("root"));
+root.render(
   <Provider store={store}>
     <RouterComponent />
     <Stethoscope.Global />
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );

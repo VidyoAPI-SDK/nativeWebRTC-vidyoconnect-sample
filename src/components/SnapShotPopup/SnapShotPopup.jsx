@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import CSSSpinner from "components/CSSSpinner/CSSSpinner";
 import { useTranslation } from "react-i18next";
 import { test } from "utils/helpers";
 import "./SnapShotPopup.scss";
@@ -28,6 +29,9 @@ const SnapShotPopup = ({
           </span>
         </div>
         <div className="snapshot-popup__container">
+          <div className="snapshot-popup__loader">
+            <div className="snapshot-popup__loader-box">{<CSSSpinner />}</div>
+          </div>
           <div className="snapshot-popup__preview">
             <div className="snapshot-popup__preview-inner">
               <img src={imageData} alt="snapshot" />

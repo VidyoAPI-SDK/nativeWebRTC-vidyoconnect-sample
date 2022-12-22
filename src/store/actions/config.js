@@ -12,6 +12,14 @@ import {
   SEND_SMS,
   SET_JWT_TOKEN,
   SET_REFRESH_TOKEN,
+  SET_PARTICIPANT_LIMIT,
+  SET_DISABLE_PARTICIPANT_RESTRICTIONS_TABLET,
+  EPIC_CALL_SESSION_INITIALIZED,
+  EPIC_CALL_SESSION_STARTED,
+  EPIC_CALL_SET_DOCUMENT_TYPES,
+  EPIC_CALL_RESET_SESSION,
+  SET_GEOLOCATION_URL,
+  SET_PRODUCT_INFO,
 } from "./types/config";
 
 export const setExtData = (payload) => ({
@@ -29,6 +37,16 @@ export const setStatisticsOverlay = (show) => ({
   show,
 });
 
+export const setParticipantLimit = (limit) => ({
+  type: SET_PARTICIPANT_LIMIT,
+  limit,
+});
+
+export const setDisableTabletParticipantLimitRestrictions = (disable) => ({
+  type: SET_DISABLE_PARTICIPANT_RESTRICTIONS_TABLET,
+  disable,
+});
+
 export const setUrlParams = (url) => {
   const payload = {};
 
@@ -36,7 +54,7 @@ export const setUrlParams = (url) => {
 
   if (searchParams.has("portal")) {
     payload.urlPortal = { isDefault: false };
-    payload.urlPortal.value = searchParams.get("portal") || "";
+    payload.urlPortal.value = decodeURIComponent(searchParams.get("portal") || "");
   }
   if (searchParams.has("roomKey")) {
     payload.urlRoomKey = { isDefault: false };
@@ -46,6 +64,12 @@ export const setUrlParams = (url) => {
     payload.urlDisplayName = { isDefault: false };
     payload.urlDisplayName.value =
       searchParams.get("displayName") || searchParams.get("dispName") || "";
+  }
+  if (searchParams.has("doNotSaveDisplayName")) {
+    payload.urlDoNotSaveDisplayName = { isDefault: false };
+    payload.urlDoNotSaveDisplayName.value = transformToBoolean(
+      searchParams.get("doNotSaveDisplayName")
+    );
   }
   if (searchParams.has("roomPin")) {
     payload.urlPin = { isDefault: false };
@@ -162,6 +186,67 @@ export const setUrlParams = (url) => {
     payload.urlModeratorPin.value = searchParams.get("moderatorPIN") || "";
   }
 
+  if (searchParams.has("hwt")) {
+    payload.urlHWT = { isDefault: false };
+    payload.urlHWT.value = transformToBoolean(searchParams.get("hwt"));
+  }
+
+  if (searchParams.has("hwtStrictMode")) {
+    payload.urlHWTStrictMode = { isDefault: false };
+    payload.urlHWTStrictMode.value = transformToBoolean(
+      searchParams.get("hwtStrictMode")
+    );
+  }
+
+  if (searchParams.has("pin")) {
+    payload.urlAccessCode = { isDefault: false };
+    payload.urlAccessCode.value = transformToBoolean(searchParams.get("pin"));
+  }
+
+  if (searchParams.has("sessionToken")) {
+    payload.urlSessionToken = { isDefault: false };
+    payload.urlSessionToken.value = searchParams.get("sessionToken");
+  }
+
+  if (searchParams.has("clientId")) {
+    payload.urlEpicClientId = { isDefault: false };
+    payload.urlEpicClientId.value = searchParams.get("clientId");
+  }
+
+  if (searchParams.has("initializeWebView")) {
+    const value = transformToBoolean(searchParams.get("initializeWebView"));
+
+    payload.urlInitializeWebView = { isDefault: false };
+    payload.urlInitializeWebView.value = value;
+
+    if (value) {
+      payload.urlMuteMicrophoneOnJoin = { isDefault: false };
+      payload.urlMuteMicrophoneOnJoin.value = true;
+
+      payload.urlMuteCameraOnJoin = { isDefault: false };
+      payload.urlMuteCameraOnJoin.value = true;
+
+      payload.urlMicrophoneMuteControl = { isDefault: false };
+      payload.urlMicrophoneMuteControl.value = false;
+
+      payload.urlCameraMuteControl = { isDefault: false };
+      payload.urlCameraMuteControl.value = false;
+
+      payload.urlMuteSpeakerOnJoinToggle = { isDefault: false };
+      payload.urlMuteSpeakerOnJoinToggle.value = true;
+
+      payload.urlShowAudioMuteControl = { isDefault: false };
+      payload.urlShowAudioMuteControl.value = false;
+    }
+  }
+
+  if (searchParams.has("showAudioMuteControl")) {
+    payload.urlShowAudioMuteControl = { isDefault: true };
+    payload.urlShowAudioMuteControl.value = transformToBoolean(
+      searchParams.get("showAudioMuteControl")
+    );
+  }
+
   return {
     type: SET_URL_PARAMS,
     payload,
@@ -175,10 +260,11 @@ export const setPortalFeatures = (payload) => {
   };
 };
 
-export const getCustomParameters = (payload) => {
+export const getCustomParameters = (payload, callback = () => {}) => {
   return {
     type: GET_CUSTOM_PARAMETERS,
     payload,
+    callback,
   };
 };
 
@@ -231,4 +317,46 @@ export const setRefreshToken = (payload) => {
 
 const transformToBoolean = (value) => {
   return ["true", "1"].includes(value);
+};
+
+export const setEpicCallSessionInitialized = (payload) => {
+  return {
+    type: EPIC_CALL_SESSION_INITIALIZED,
+    payload,
+  };
+};
+
+export const setEpicCallSessionStarted = (payload) => {
+  return {
+    type: EPIC_CALL_SESSION_STARTED,
+    payload,
+  };
+};
+
+export const setEpicCallDocumentTypes = (payload) => {
+  return {
+    type: EPIC_CALL_SET_DOCUMENT_TYPES,
+    payload,
+  };
+};
+
+export const epicCallResetSession = (payload) => {
+  return {
+    type: EPIC_CALL_RESET_SESSION,
+    payload,
+  };
+};
+
+export const setGeolocationURL = (payload) => {
+  return {
+    type: SET_GEOLOCATION_URL,
+    payload,
+  };
+};
+
+export const setProductInfo = (payload) => {
+  return {
+    type: SET_PRODUCT_INFO,
+    payload,
+  };
 };

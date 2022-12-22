@@ -52,10 +52,6 @@ export const appLaunch = (typeLaunch) => ({
   typeLaunch,
 });
 
-export const exitAfterAloneInCall = () => ({
-  type: "CALL_EXIT_AFTER_ALONE",
-});
-
 export const browserIsNotSupported = (info) => ({
   type: "BROWSER_IS_NOT_SUPPORTED",
   info,
@@ -72,5 +68,51 @@ export const gaOpenPostCallURL = (roomType) => ({
 
 export const qaEpicWaitingRoomMediaContent = (info) => ({
   type: "EPIC_WAITING_ROOM_MEDIA_CONTENT",
+  info,
+});
+export const averageQualityOfSendingBandwidth = (info) => ({
+  type: "AVARAGE_SEND_BANDWITH",
+  info,
+});
+export const averageQualityOfReceivingBandwidth = (info) => ({
+  type: "AVARAGE_RECEIVE_BANDWITH",
+  info,
+});
+export const callQualityFeedback = (info) => ({
+  type: "CALL_QUALITY_FEEDBACK",
+  info,
+});
+export const hardwareCheckCamera = (status) => ({
+  type: "HARDWARE_CHECK_CAMERA",
+  status,
+});
+export const hardwareCheckMicrophone = (status) => ({
+  type: "HARDWARE_CHECK_MICROPHONE",
+  status,
+});
+export const hardwareCheckSpeaker = (status) => ({
+  type: "HARDWARE_CHECK_SPEAKER",
+  status,
+});
+export const hardwareCheckTestClose = () => ({
+  type: "VOLUANTRY_HARDWARE_CHECK_CLOSE",
+});
+export const hardwareCheckContactInfoClicked = () => ({
+  type: "HARDWARE_CHECK_CONTACT_INFO_CLICKED",
+});
+export const cameraPresetChange = (info) => ({
+  type: "CAMERA_PRESET_CHANGE",
+  info,
+});
+export const openFeccControls = (info) => ({
+  type: "FECC_OPEN",
+  info,
+});
+export const loadViewType = (info) => ({
+  type: "LOADED_VIEW_TYPE",
+  info,
+});
+export const selectViewType = (info) => ({
+  type: "SELECTED_VIEW_TYPE",
   info,
 });

@@ -48,7 +48,7 @@ export const Success = () => (
 
 export const White = () => (
   <Checkbox
-    className="bp3-intent-white"
+    className="bp4-intent-white"
     disabled={boolean("Disabled", false)}
     label={text("Label", "White")}
     onChange={action("changed")}

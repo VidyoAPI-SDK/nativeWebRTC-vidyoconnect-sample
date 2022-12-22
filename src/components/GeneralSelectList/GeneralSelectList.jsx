@@ -37,7 +37,7 @@ const GeneralSelectList = ({
   return (
     <div className={`general-select-content ${className || ""}`}>
       <SelectList
-        className={`bp3-select-list ${disabled ? "disabled" : ""}`}
+        className={`bp4-select-list ${disabled ? "disabled" : ""}`}
         icon={<img src={icon} width={18} height={18} alt="icon" />}
         disabled={disabled}
         name={title}

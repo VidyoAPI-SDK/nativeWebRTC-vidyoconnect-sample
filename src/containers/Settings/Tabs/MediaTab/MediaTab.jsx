@@ -1,54 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector, useDispatch } from "react-redux";
-import { cameraTurnOn, cameraTurnOff } from "store/actions/devices";
 import MicrophoneSelectList from "./selects/MicrophoneSelectList";
 import SpeakerSelectList from "./selects/SpeakerSelectList";
 import CameraSelectList from "./selects/CameraSelectList";
 import SelfView from "containers/SelfView";
 import "./MediaTab.scss";
-import { Checkbox, Classes } from "@blueprintjs/core";
-import storage from "../../../../utils/storage";
-import useBlurEffect, { isBlurEffectSupported } from "utils/useBlurEffect";
 import { Stethoscope } from "features";
+import CameraEffectsSelector from "containers/CameraEffectsSelector";
+import { useSelector } from 'react-redux';
 
 const MediaTab = () => {
   const { t } = useTranslation();
-  const [blurEffectAvailable] = useBlurEffect();
-  const [blurBackground, setBlurBackground] = useState(
-    !!storage.getItem("blurBackground")
-  );
   const [showSelfView, setShowSelfView] = useState(true);
-  const isCameraTurnedOn = useSelector(
-    (state) => state.devices.isCameraTurnedOn
-  );
-  const selectedCamera = useSelector((state) => state.devices.selectedCamera);
-  const dispatch = useDispatch();
+  const { urlInitializeWebView } = useSelector(state => state.config);
 
-  const onChangeBlurBackground = async (event = {}) => {
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      const isBanubaInited = window.banuba?.isBanubaInited;
-      setBlurBackground(isChecked);
-      storage.addItem("blurBackground", isChecked);
-      await window.banuba.applyEffect();
-      if (!isBanubaInited) {
-        if (selectedCamera && isCameraTurnedOn) {
-          // reset local camera
-          dispatch(cameraTurnOff({ selectedCamera }));
-          dispatch(cameraTurnOn({ selectedCamera }));
-        } else {
-          // reset self-view
-          setShowSelfView(false);
-          setTimeout(() => setShowSelfView(true), 100);
-        }
-      }
-    } else {
-      window.banuba.clearEffect();
-      setBlurBackground(isChecked);
-      storage.addItem("blurBackground", isChecked);
-    }
-  };
+  const onShowSelfView = useCallback((value) => {
+    setShowSelfView(value);
+  }, [setShowSelfView]);
 
   return (
     <div className="settings-tab-content media-tab-content">
@@ -62,21 +30,14 @@ const MediaTab = () => {
           <Stethoscope.SelectList />
         </div>
         <div className="tab-content-body-panel right-pane">
-          <CameraSelectList />
-          {showSelfView && <SelfView ignoreMuteState={true} />}
-          <div className="checkbox-section blur-checkbox">
-            {blurEffectAvailable && (
-              <Checkbox
-                checked={blurBackground}
-                onChange={onChangeBlurBackground}
-                className={`${Classes.INTENT_SUCCESS}`}
-                label={t("BLUR_BACKGROUND")}
-              />
-            )}
-            {!blurEffectAvailable && isBlurEffectSupported && (
-              <span>{t("LOADING_BLUR_EFFECT")}</span>
-            )}
-          </div>
+          {
+            !urlInitializeWebView.value &&
+              <>
+                {<CameraSelectList />}
+                {showSelfView && <SelfView ignoreMuteState={true} />}
+                {<CameraEffectsSelector showSelfView={onShowSelfView} />}
+              </>
+          }
         </div>
       </div>
     </div>

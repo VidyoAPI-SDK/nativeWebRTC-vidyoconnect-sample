@@ -39,6 +39,10 @@ import {
   CAMERA_SET_MODERATION_STATE,
   CAMERA_RESET_MODERATION_STATE,
   REGISTER_LOCAL_CAMERA_STREAM_INTERCEPTOR,
+  CAMERA_SET_HARDWARE_CHECK_STATE,
+  MICROPHONE_SET_HARDWARE_CHECK_STATE,
+  SPEAKER_SET_HARDWARE_CHECK_STATE,
+  DEVICES_RESET_HARDWARE_CHECK_STATE,
 } from "../actions/types/devices";
 
 export const updateCameras = (cameras) => ({
@@ -217,7 +221,22 @@ export const setCameraModerationState = (type) => ({
 export const resetCameraModerationState = () => ({
   type: CAMERA_RESET_MODERATION_STATE,
 });
-
 export const registerLocalCameraStreamInterceptor = () => ({
   type: REGISTER_LOCAL_CAMERA_STREAM_INTERCEPTOR,
+});
+export const setHardwareCheckCameraState = (payload) => ({
+  type: CAMERA_SET_HARDWARE_CHECK_STATE,
+  payload,
+});
+export const setHardwareCheckMicrophoneState = (payload) => ({
+  type: MICROPHONE_SET_HARDWARE_CHECK_STATE,
+  payload,
+});
+export const setHardwareCheckSpeakerState = (payload) => ({
+  type: SPEAKER_SET_HARDWARE_CHECK_STATE,
+  payload,
+});
+
+export const resetHardwareCheckDevicesState = () => ({
+  type: DEVICES_RESET_HARDWARE_CHECK_STATE,
 });

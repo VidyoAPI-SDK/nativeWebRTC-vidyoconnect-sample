@@ -2,10 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useTranslation } from "react-i18next";
-import { Redirect, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import * as callActionCreators from "store/actions/call";
-import { Spinner } from "@blueprintjs/core";
-import { test } from 'utils/helpers';
+import SVGSpinner from "components/SVGSpinner";
+import MainLogoWhite from "components/MainLogoWhite";
+import { test } from "utils/helpers";
 import "./JoiningCallScreen.scss";
 
 const mapStateToProps = ({ call }) => ({
@@ -23,17 +24,18 @@ const JoiningCallScreen = ({ isCallActive, disconnectReason }) => {
 
   if (disconnectReason) {
     return disconnectReason === "VIDYO_CONNECTORFAILREASON_InvalidToken" ? (
-      <Redirect
-        to={{
-          pathname: "/GuestAccessCodeScreen",
-          state: location.state,
-        }}
+      <Navigate
+        replace
+        to={"/GuestAccessCodeScreen"}
+        state={location.state}
       />
     ) : (
-      <Redirect
-        to={{
-          pathname: "/GuestBeautyScreen",
-          state: location.state,
+      <Navigate
+        replace
+        to={"/GuestBeautyScreen"}
+        state={{
+          ...location.state,
+          isRedirectFromAccessCodeScreen: false
         }}
       />
     );
@@ -41,22 +43,25 @@ const JoiningCallScreen = ({ isCallActive, disconnectReason }) => {
 
   if (isCallActive) {
     return (
-      <Redirect
-        to={{
-          pathname: "/GuestInCall",
-          state: location.state,
+      <Navigate
+        replace
+        to={"/GuestInCall"}
+        state={{
+          ...location.state,
+          isRedirectFromAccessCodeScreen: false
         }}
       />
     );
   }
 
   return (
-    <div className="joining-call-screen" {...test('GUEST_JOINING_SCREEN')}>
+    <div className="joining-call-screen" {...test("GUEST_JOINING_SCREEN")}>
       <div className="content">
-        {t("JOINING_CALL_DOTS")}
+        <MainLogoWhite />
         <div className="initial-loader">
-          <Spinner className="bp3-intent-white" />
+          <SVGSpinner strokeColor="#51575C" />
         </div>
+        <div className="message">{t("JOINING_CALL_DOTS")}</div>
       </div>
     </div>
   );

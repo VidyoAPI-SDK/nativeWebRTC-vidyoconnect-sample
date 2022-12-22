@@ -4,16 +4,61 @@ import { put, call, select, takeLatest, delay } from "redux-saga/effects";
 import { getCallAPIProvider } from "services/CallAPIProvider";
 import * as devicesActions from "../actions/devices";
 import * as callActionTypes from "../actions/types/call";
+import * as configActionTypes from "../actions/types/config";
 import * as googleAnalyticsActions from "../actions/googleAnalytics";
 import * as deviceActionTypes from "../actions/types/devices";
 import * as callActions from "../actions/call";
-import { deviceDisableReason } from "utils/constants";
+import * as configActions from "../actions/config";
+import {
+  deviceDisableReason,
+  participantLimit,
+  tabletsGridParticipantLimit,
+} from "utils/constants";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
+import APIClient from "services/APIClient";
 
 const callProvider = getCallAPIProvider();
 
+function* handleGeolocation(customParameters) {
+  const geolocationServiceURL =
+    customParameters?.unregistered?.geolocationServiceURL;
+  if (geolocationServiceURL) {
+    yield put(
+      configActions.setGeolocationURL({
+        geolocationServiceURL,
+      })
+    );
+  } else {
+    console.warn("geolocationServiceURL is not available");
+  }
+}
+
 function* startCall(action) {
   try {
+    const state = yield select();
+    if (state.config.customParameters?.unregistered) {
+      yield* handleGeolocation(state.config.customParameters);
+    } else {
+      try {
+        const customParameters = yield call(APIClient.getCustomParameters, {
+          host: state.config.urlPortal.value,
+        });
+        if (customParameters) {
+          yield* handleGeolocation(customParameters);
+          yield put({
+            type: configActionTypes.GET_CUSTOM_PARAMETERS_SUCCEEDED,
+            payload: customParameters,
+          });
+        }
+      } catch (error) {
+        console.error(
+          "Error while initialize Geolocation:",
+          error?.message ?? error
+        );
+      }
+    }
     yield put({ type: callActionTypes.MODERATION_EVENTS_SUBSCRIBE });
+    yield put({ type: callActionTypes.RECORDER_STATUS_CHANGES_SUBSCRIBE });
     const callChannel = yield call(createCallChannel, action);
     yield takeLatest(callChannel, handleCallStatus);
   } catch (e) {
@@ -64,14 +109,36 @@ function* handleCallStatus({ isCallStarted, reason, error }) {
     });
     yield put({ type: callActionTypes.GET_CALL_PROPERTIES });
     yield put({ type: callActionTypes.PARTICIPANTS_CHANGES_SUBSCRIBE });
-    yield put({ type: callActionTypes.RECORDER_STATUS_CHANGES_SUBSCRIBE });
     yield put({ type: callActionTypes.RESOURCE_MANAGER_CHANGES_SUBSCRIBE });
     yield put({ type: callActionTypes.LOCAL_WINDOW_SHARE_CHANGES_SUBSCRIBE });
     yield put({ type: callActionTypes.REMOTE_WINDOW_SHARE_CHANGES_SUBSCRIBE });
     yield put({ type: deviceActionTypes.REMOTE_CAMERAS_CHANGES_SUBSCRIBE });
     yield put({ type: deviceActionTypes.REMOTE_MICROPHONES_CHANGES_SUBSCRIBE });
     yield put(devicesActions.subscribeOnRemoteSpeakerChanges());
+    yield put({ type: callActionTypes.COMPOSITOR_VIEW_CHANGES_SUBSCRIBE });
+    yield put({ type: callActionTypes.CAMERA_PRESETS_CHANGES_SUBSCRIBE });
+    yield put({
+      type: callActionTypes.CAMERA_CONTROLS_PANEL_STATE_CHANGES_SUBSCRIBE,
+    });
     yield put(callActions.subscribeOnCompositorUpdates());
+
+    const selectedCompositorView = localStorage.getItem(
+      "VidyoCore::SelectedCompositorView"
+    );
+    if (selectedCompositorView) {
+      switch (selectedCompositorView) {
+        case "GRID":
+          yield put(googleAnalyticsActions.loadViewType("GRID"));
+          break;
+        case "GALLERY":
+          yield put(googleAnalyticsActions.loadViewType("STAGE"));
+          break;
+        default:
+          break;
+      }
+    } else {
+      yield put(googleAnalyticsActions.loadViewType("DEFAULT"));
+    }
   } else {
     if (error) {
       yield put({ type: callActionTypes.START_CALL_FAILED, reason });
@@ -88,6 +155,9 @@ function* handleCallStatus({ isCallStarted, reason, error }) {
       switch (reason) {
         case "VIDYO_CONNECTORDISCONNECTREASON_Disconnected":
           label = "userLeft";
+          if (callProvider.exitAfterAloneInCall) {
+            label = "exitAfterAloneInCall";
+          }
           break;
         case "VIDYO_CONNECTORDISCONNECTREASON_ConnectionLost":
         case "VIDYO_CONNECTORDISCONNECTREASON_ConnectionTimeout":
@@ -107,6 +177,7 @@ function* handleCallStatus({ isCallStarted, reason, error }) {
         default:
           break;
       }
+      callProvider.exitAfterAloneInCall = false;
       yield put(googleAnalyticsActions.callEndAnalytics(label));
       yield put(devicesActions.unsubscribeFromRemoteSpeakerChanges());
       yield put(callActions.unsubscribeFromCompositorUpdates());
@@ -162,6 +233,23 @@ function* enablePreview(action) {
   } catch (e) {
     yield put({
       type: callActionTypes.SHOW_PREVIEW_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function* showSharePreview(action) {
+  try {
+    const result = yield callProvider.showWindowSharePreview(
+      action.payload.showSharePreview
+    );
+    yield put({
+      type: callActionTypes.SHOW_SHARE_PREVIEW_SUCCEEDED,
+      result,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.SHOW_SHARE_PREVIEW_FAILED,
       message: e.message,
     });
   }
@@ -794,6 +882,196 @@ function* unsubscribeFromCompositorUpdates() {
   }
 }
 
+function* compositorSetGalleryView() {
+  try {
+    const result = yield callProvider.setCompositorGalleryView();
+
+    yield put({
+      type: callActionTypes.COMPOSITOR_SET_GALLERY_VIEW_SUCCEEDED,
+      payload: result,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.COMPOSITOR_SET_GALLERY_VIEW_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function* compositorSetGridView() {
+  try {
+    const result = yield callProvider.setCompositorGridView();
+
+    yield put({
+      type: callActionTypes.COMPOSITOR_SET_GRID_VIEW_SUCCEEDED,
+      payload: result,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.COMPOSITOR_SET_GRID_VIEW_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function* setFeccPresetsLabel(action) {
+  try {
+    const result = yield callProvider.setFeccPresetsLabel(action.payload);
+
+    yield put({
+      type: callActionTypes.FECC_PRESETS_SET_TITLE_SUCCEEDED,
+      payload: result,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.FECC_PRESETS_SET_TITLE_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function* setFeccPresetsSelectLabel(action) {
+  try {
+    const result = yield callProvider.setFeccPresetsSelectLabel(action.payload);
+
+    yield put({
+      type: callActionTypes.FECC_PRESETS_SELECT_SET_TITLE_SUCCEEDED,
+      payload: result,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.FECC_PRESETS_SELECT_SET_TITLE_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function* subscribeOnCompositorViewChange() {
+  try {
+    const compositorUpdatesChannel = createCompositorViewChangeChannel();
+    yield takeLatest(
+      compositorUpdatesChannel,
+      handleCompositorViewChangeUpdates
+    );
+
+    yield put({
+      type: callActionTypes.COMPOSITOR_VIEW_CHANGES_SUBSCRIBE_SUCCEEDED,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.COMPOSITOR_VIEW_CHANGES_SUBSCRIBE_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function createCompositorViewChangeChannel() {
+  return eventChannel((emit) => {
+    callProvider.subscribeOnCompositorViewChange(
+      (payload) => void emit(payload)
+    );
+
+    return () => {};
+  });
+}
+
+function* handleCompositorViewChangeUpdates(payload) {
+  if (OperatingSystemInfoProvider.IsTabletDevice()) {
+    if (payload?.view === "GRID") {
+      yield put(configActions.setParticipantLimit(tabletsGridParticipantLimit));
+    } else {
+      yield put(configActions.setParticipantLimit(participantLimit));
+    }
+  }
+
+  if (payload?.isUserInteraction) {
+    switch (payload?.view) {
+      case "GRID":
+        yield put(googleAnalyticsActions.selectViewType("GRID"));
+        break;
+      case "GALLERY":
+        yield put(googleAnalyticsActions.selectViewType("STAGE"));
+        break;
+      default:
+        break;
+    }
+  }
+
+  yield put(callActions.compositorViewChanged(payload?.view));
+}
+
+function* subscribeOnCameraPresetChange() {
+  try {
+    const presetsUpdatesChannel = createCameraPresetChangeChannel();
+    yield takeLatest(presetsUpdatesChannel, handleCameraPresetChangeUpdates);
+
+    yield put({
+      type: callActionTypes.CAMERA_PRESETS_CHANGES_SUBSCRIBE_SUCCEEDED,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.CAMERA_PRESETS_CHANGES_SUBSCRIBE_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function createCameraPresetChangeChannel() {
+  return eventChannel((emit) => {
+    callProvider.subscribeOnCameraPresetChange((payload) => void emit(payload));
+
+    return () => {};
+  });
+}
+
+function* handleCameraPresetChangeUpdates(payload) {
+  yield put(googleAnalyticsActions.cameraPresetChange());
+}
+
+function* subscribeOnCameraControlsPanelStateChange() {
+  try {
+    const presetsUpdatesChannel = createCameraControlsPanelStateChangeChannel();
+    yield takeLatest(
+      presetsUpdatesChannel,
+      handleCameraControlsPanelStateChangeUpdates
+    );
+
+    yield put({
+      type: callActionTypes.CAMERA_CONTROLS_PANEL_STATE_CHANGES_SUBSCRIBE_SUCCEEDED,
+    });
+  } catch (e) {
+    yield put({
+      type: callActionTypes.CAMERA_CONTROLS_PANEL_STATE_CHANGES_SUBSCRIBE_FAILED,
+      message: e.message,
+    });
+  }
+}
+
+function createCameraControlsPanelStateChangeChannel() {
+  return eventChannel((emit) => {
+    callProvider.subscribeOnCameraControlsPanelStateChange(
+      (payload) => void emit(payload)
+    );
+
+    return () => {};
+  });
+}
+
+function* handleCameraControlsPanelStateChangeUpdates(payload) {
+  if (payload.state === "OPEN") {
+    yield put(googleAnalyticsActions.openFeccControls());
+    yield put({
+      type: callActionTypes.FECC_STATE_TOGGLE,
+      payload: true,
+    });
+  } else {
+    yield put({
+      type: callActionTypes.FECC_STATE_TOGGLE,
+      payload: false,
+    });
+  }
+}
+
 function* actionWatcher() {
   yield takeLatest(callActionTypes.START_CALL, startCall);
   yield takeLatest(callActionTypes.END_CALL, endCall);
@@ -804,6 +1082,7 @@ function* actionWatcher() {
   yield takeLatest(callActionTypes.PIN_PARTICIPANT, pinParticipant);
   yield takeLatest(callActionTypes.UNPIN_PARTICIPANT, unpinParticipant);
   yield takeLatest(callActionTypes.SHOW_PREVIEW, enablePreview);
+  yield takeLatest(callActionTypes.SHOW_SHARE_PREVIEW, showSharePreview);
   yield takeLatest(
     callActionTypes.PARTICIPANTS_CHANGES_SUBSCRIBE,
     subscribeOnParticipantsChanges
@@ -883,6 +1162,31 @@ function* actionWatcher() {
   yield takeLatest(
     callActionTypes.COMPOSITOR_UPDATES_UNSUBSCRIBE,
     unsubscribeFromCompositorUpdates
+  );
+  yield takeLatest(
+    callActionTypes.COMPOSITOR_VIEW_CHANGES_SUBSCRIBE,
+    subscribeOnCompositorViewChange
+  );
+  yield takeLatest(
+    callActionTypes.CAMERA_PRESETS_CHANGES_SUBSCRIBE,
+    subscribeOnCameraPresetChange
+  );
+  yield takeLatest(
+    callActionTypes.CAMERA_CONTROLS_PANEL_STATE_CHANGES_SUBSCRIBE,
+    subscribeOnCameraControlsPanelStateChange
+  );
+  yield takeLatest(
+    callActionTypes.COMPOSITOR_SET_GALLERY_VIEW,
+    compositorSetGalleryView
+  );
+  yield takeLatest(
+    callActionTypes.COMPOSITOR_SET_GRID_VIEW,
+    compositorSetGridView
+  );
+  yield takeLatest(callActionTypes.FECC_PRESETS_SET_TITLE, setFeccPresetsLabel);
+  yield takeLatest(
+    callActionTypes.FECC_PRESETS_SELECT_SET_TITLE,
+    setFeccPresetsSelectLabel
   );
 }
 

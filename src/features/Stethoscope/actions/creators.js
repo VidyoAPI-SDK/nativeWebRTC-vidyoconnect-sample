@@ -12,8 +12,6 @@ import {
   UNSELECT_LOCAL_STETHOSCOPE,
   UNPROCESSED_AUDIO_UPDATES_SUBSCRIBE,
   UNPROCESSED_AUDIO_UPDATES_UNSUBSCRIBE,
-  ENABLE_DYNAMIC_AUDIO_SOURCES,
-  DISABLE_DYNAMIC_AUDIO_SOURCES,
 } from "./types";
 
 export const updateLocalStethoscopes = (localStethoscopes) => ({
@@ -73,12 +71,4 @@ export const subscribeOnUnprocessedAudioUpdates = () => ({
 
 export const unsubscribeFromUnprocessedAudioUpdates = () => ({
   type: UNPROCESSED_AUDIO_UPDATES_UNSUBSCRIBE,
-});
-
-export const enableDynamicAudioSources = () => ({
-  type: ENABLE_DYNAMIC_AUDIO_SOURCES,
-});
-
-export const disableDynamicAudioSources = () => ({
-  type: DISABLE_DYNAMIC_AUDIO_SOURCES,
 });

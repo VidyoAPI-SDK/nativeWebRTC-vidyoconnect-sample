@@ -8,26 +8,25 @@ import {
   RECONNECT_BACKOFF_CHANGED,
   SHOW_STATS_OVERLAY_CHANGED,
   SIMPLE_API_LOGGING_CHANGED,
-  SIMULCAST_CHANGED,
+  SCREENSHARE_SIMULCAST_CHANGED,
   STATS_DISABLED,
-  TRANSPORT_CC_CHANGED,
-  UNIFIED_PLAN_CHANGED,
+  VIDEO_SIMULCAST_CHANGED,
   LOG_LEVELS_CHANGED,
   LOG_CATEGORIES_CHANGED,
   ACTIVE_LOGS_CHANGED,
 } from "./actions/types";
 
 const initialState = {
+  statsServerUrl: window.appConfig.REACT_APP_LOKI_SERVER_DEFAULT_URL,
   isAudioOnlyModeEnabled: false,
   isAutoReconnectEnabled: false,
   isCompositorFixedParticipantsEnabled: false,
   isConnectorApiLoggingEnabled: false,
+  isScreenShareSimulcastEnabled: false,
   isSimpeApiLoggingEnabled: false,
-  isSimulcastEnabled: false,
   isStatsDisabled: false,
   isStatsOverlayDisplayed: false,
-  isTransportCcEnabled: false,
-  isUnifiedPlanEnabled: false,
+  isVideoSimulcastEnabled: false,
   maxReconnectAttempts: 0,
   participantLimit: 8,
   reconnectBackoff: 0,
@@ -74,22 +73,16 @@ const advancedConfig = (state = initialState, action) => {
         isSimpeApiLoggingEnabled: action.enabled,
       };
 
-    case SIMULCAST_CHANGED:
+    case VIDEO_SIMULCAST_CHANGED:
       return {
         ...state,
-        isSimulcastEnabled: action.enabled,
+        isVideoSimulcastEnabled: action.enabled,
       };
 
-    case TRANSPORT_CC_CHANGED:
+    case SCREENSHARE_SIMULCAST_CHANGED:
       return {
         ...state,
-        isTransportCcEnabled: action.enabled,
-      };
-
-    case UNIFIED_PLAN_CHANGED:
-      return {
-        ...state,
-        isUnifiedPlanEnabled: action.enabled,
+        isScreenShareSimulcastEnabled: action.enabled,
       };
 
     case MAX_RECONNECT_ATTEMPTS_CHANGED:

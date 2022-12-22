@@ -10,6 +10,9 @@ import logger, {
 } from "utils/logger";
 import storage from "utils/storage";
 import { isMobile } from "react-device-detect";
+import { participantLimit, tabletsGridParticipantLimit } from "utils/constants";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
+import { isBackgroundEffectSupported } from "utils/useBackgroundEffect";
 
 const VidyoClientCSS =
   window.appConfig.REACT_APP_VIDYOCLIENT_PATH + "/VidyoClient.css";
@@ -55,7 +58,9 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
               .CreateVidyoConnector({
                 viewId: null,
                 viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default",
-                remoteParticipants: 8,
+                remoteParticipants: OperatingSystemInfoProvider.IsTabletDevice()
+                  ? tabletsGridParticipantLimit
+                  : participantLimit,
                 logFileFilter:
                   "info@VidyoDevelopment info@VidyoClient info@VidyoSDP",
                 //logFileFilter: "all@VidyoDevelopment info@VidyoClient debug@VidyoSDP received@VidyoClient enter@VidyoClient info@VidyoResourceManager all@VidyoSignaling",
@@ -166,11 +171,21 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
     return this.vidyoConnector.Disconnect();
   }
 
+  setCompositorGridView() {
+    return this.vidyoConnector.CompositorSetGridView();
+  }
+
+  setCompositorGalleryView() {
+    return this.vidyoConnector.CompositorSetGalleryView();
+  }
+
   assignVideoRenderer({ viewId, showAudioMeters = false }) {
     return this.vidyoConnector
       .AssignViewToCompositeRenderer({
         viewId,
-        remoteParticipants: 8,
+        remoteParticipants: OperatingSystemInfoProvider.IsTabletDevice()
+          ? tabletsGridParticipantLimit
+          : participantLimit,
         viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default",
       })
       .then(() => {
@@ -187,6 +202,12 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
     });
   }
 
+  showWindowSharePreview(isShowSharePreview) {
+    return this.vidyoConnector.ShowWindowSharePreview({
+      preview: isShowSharePreview,
+    });
+  }
+
   toggleCamera(privacy) {
     return this.vidyoConnector.SetCameraPrivacy({
       privacy,
@@ -198,6 +219,13 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
   }
 
   cameraTurnOff() {
+    if (window.isSafariBrowser) {
+      // TODO remove when https://enghouseglobal.atlassian.net/browse/VIDVCW-182 wil be done
+      setTimeout(() => {
+        // eslint-disable-next-line no-unused-expressions
+        window.banuba?.stopStreams?.();
+      }, 50);
+    }
     return this.toggleCamera(true);
   }
 
@@ -274,6 +302,18 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
   selectSpeaker(localSpeaker) {
     return this.vidyoConnector.SelectLocalSpeaker({
       localSpeaker,
+    });
+  }
+
+  setFeccPresetsSelectLabel(label) {
+    return this.vidyoConnector.SetFeccPresetsSelectLabel({
+      label,
+    });
+  }
+
+  setFeccPresetsLabel(label) {
+    return this.vidyoConnector.SetFeccPresetsLabel({
+      label,
     });
   }
 
@@ -438,7 +478,7 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
   startResourceManagerEventListener(onChanged) {
     const notifyAvailableResourcesChanged = throttle(10000, (data) => {
       if (this.vidyoConnector) {
-        onChanged({ dataType: "availableResources", data });
+        // onChanged({ dataType: "availableResources", data });  // TODO temporary sotp global state update utill we will use this callback
         console.log(
           `AvailableResourcesChanged:cpuEncode: ${data.cpuEncode}, cpuDecode: ${data.cpuDecode}, bandwidthSend: ${data.bandwidthSend}, bandwidthReceive: ${data.bandwidthReceive}`
         );
@@ -472,7 +512,6 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
   handleAddedDevice(devices, device) {
     const savedDevice = this.filterDevices(devices, "saved");
     const defaultDevice = this.filterDevices(devices, "default");
-
     if (savedDevice) {
       this.selectLocalDevice(savedDevice);
     } else if (
@@ -496,7 +535,6 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
     if (!(selectedDevice && device)) {
       return;
     }
-
     if (device.id === selectedDevice.id) {
       if (
         device.objType === "VidyoLocalMicrophone" ||
@@ -574,6 +612,9 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
           for (let device_ of devices) {
             if (device) {
               device_.selected = device_.objId === device.objId;
+              if (device_.objId !== device.objId) {
+                device_.isStarted = false;
+              }
             } else {
               device_.selected = false;
             }
@@ -673,7 +714,8 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
         this.vidyoConnector,
         logCallbacks({
           context: "RemoteShare",
-          onAdded: (share) => {
+          onAdded: (share, participant) => {
+            share["participant"] = participant;
             shares.push(share);
             notify();
           },
@@ -703,6 +745,19 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
     return this.vidyoConnector.AnalyticsStop();
   }
 
+  setProductInfo({
+    applicationName = window.appConfig.REACT_APP_ANALYTICS_NAME,
+    applicationVersion = window.appConfig.APP_VERSION,
+  } = {}) {
+    return this.vidyoConnector.SetProductInfo({
+      productInfo: [
+        { name: "ApplicationName", value: applicationName },
+        { name: "ApplicationVersion", value: applicationVersion },
+      ],
+      supportedFeature: [],
+    });
+  }
+
   subscribeOnAdvancedSettingsChanges(onChanged) {
     if (
       typeof this.vidyoConnector._registerAdvancedSettingsEventListener ===
@@ -712,14 +767,11 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
         onDisableStatsChanged: (disableStats) => {
           onChanged({ disableStats });
         },
-        onEnableSimulcastChanged: (enableSimulcast) => {
-          onChanged({ enableSimulcast });
+        onEnableVideoSimulcastChanged: (enableVideoSimulcast) => {
+          onChanged({ enableVideoSimulcast });
         },
-        onEnableTransportCcChanged: (enableTransportCc) => {
-          onChanged({ enableTransportCc });
-        },
-        onEnableUnifiedPlanChanged: (enableUnifiedPlan) => {
-          onChanged({ enableUnifiedPlan });
+        onEnableScreenShareSimulcastChanged: (enableScreenShareSimulcast) => {
+          onChanged({ enableScreenShareSimulcast });
         },
         onParticipantLimitChanged: (participantLimit) => {
           onChanged({ participantLimit });
@@ -753,6 +805,7 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
           onChanged({ enableCompositorFixedParticipants });
         },
         onLogCategoryChanged: (logs) => {
+          // eslint-disable-next-line no-prototype-builtins
           if (logs.hasOwnProperty("logLevel")) {
             const { activeLogs, logCategory, logLevel } = logs;
             onChanged({ activeLogs, logCategory, logLevel });
@@ -880,16 +933,16 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
   registerLocalCameraStreamInterceptor() {
     if (window.banubaPluginReady) {
       return this.vidyoConnector.RegisterLocalCameraStreamInterceptor(
-        window.banuba.blurBackground
+        window.banuba.effectBackground
       );
-    } else if (window.banubaIsSupported) {
+    } else if (isBackgroundEffectSupported) {
       return new Promise((resolve, reject) => {
         window.addEventListener(
           "BanubaPluginReady",
           () => {
             this.vidyoConnector
               .RegisterLocalCameraStreamInterceptor(
-                window.banuba.blurBackground
+                window.banuba.effectBackground
               )
               .then((response) => resolve(response))
               .catch((err) => reject(err));
@@ -900,44 +953,6 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
     } else {
       return Promise.reject(new Error("Banuba is not supported"));
     }
-  }
-
-  subscribeOnCompositorUpdates(onUpdated) {
-    const tiles = new Map();
-
-    const notify = debounce(500, () => {
-      if (this.vidyoConnector) {
-        onUpdated([...tiles.values()]);
-      }
-    });
-
-    return this.vidyoConnector.RegisterVideoTileEventListener({
-      /**
-       * @param { element, isApplication, isLocal, isPinned, participantId, videoEnabled } payload
-       */
-      onAdded: (payload) => {
-        tiles.set(payload.element, payload);
-        notify();
-      },
-      /**
-       * @param { element, isApplication, participantId } payload
-       */
-      onRemoved: (payload) => {
-        tiles.delete(payload.element);
-        notify();
-      },
-      /**
-       * @param { element, isApplication, isLocal, isPinned, participantId, videoEnabled } payload
-       */
-      onStateUpdated: (payload) => {
-        tiles.set(payload.element, payload);
-        notify();
-      },
-    });
-  }
-
-  unsubscribeFromCompositorUpdates() {
-    return this.vidyoConnector.UnregisterVideoTileEventListener();
   }
 
   subscribeOnUnprocessedAudioUpdates(onUpdated) {
@@ -1004,7 +1019,6 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
             try {
               if (typeof v === "object") {
                 v = JSON.stringify(v);
-              } else {
               }
             } catch (e) {
               console.error(i);
@@ -1054,6 +1068,81 @@ class VidyoConnectorAPI extends BaseCallAPIProvider {
     return this.vidyoConnector.SetAdvancedConfiguration({
       disableDynamicAudioSources: true,
     });
+  }
+
+  subscribeOnCompositorViewChange(onChange) {
+    const notify = debounce(10, (payload) => {
+      if (this.vidyoConnector) {
+        onChange(payload);
+      }
+    });
+
+    return this.vidyoConnector.RegisterCompositorViewChangeEventListener({
+      onChange: (payload) => notify(payload),
+    });
+  }
+
+  subscribeOnCameraPresetChange(onChange) {
+    const notify = debounce(10, (payload) => {
+      if (this.vidyoConnector) {
+        onChange(payload);
+      }
+    });
+
+    return this.vidyoConnector.RegisterRemoteCameraPresetChangeEventListener({
+      onChange: (remoteCamera, presetIndex) =>
+        notify({ remoteCamera, presetIndex }),
+    });
+  }
+
+  subscribeOnCameraControlsPanelStateChange(onChange) {
+    const notify = debounce(10, (payload) => {
+      if (this.vidyoConnector) {
+        onChange(payload);
+      }
+    });
+
+    return this.vidyoConnector.RegisterCameraControlsPanelChangeEventListener({
+      onChange: (payload) => notify(payload),
+    });
+  }
+
+  subscribeOnCompositorUpdates(onUpdated) {
+    const tiles = new Map();
+
+    const notify = debounce(10, () => {
+      if (this.vidyoConnector) {
+        onUpdated([...tiles.values()]);
+      }
+    });
+
+    return this.vidyoConnector.RegisterVideoTileEventListener({
+      /**
+       * @param { element, isApplication, isLocal, isPinned, participantId, videoEnabled } payload
+       */
+      onAdded: (payload) => {
+        tiles.set(payload.element, payload);
+        notify();
+      },
+      /**
+       * @param { element, isApplication, participantId } payload
+       */
+      onRemoved: (payload) => {
+        tiles.delete(payload.element);
+        notify();
+      },
+      /**
+       * @param { element, isApplication, isLocal, isPinned, participantId, videoEnabled } payload
+       */
+      onStateUpdated: (payload) => {
+        tiles.set(payload.element, payload);
+        notify();
+      },
+    });
+  }
+
+  unsubscribeFromCompositorUpdates() {
+    return this.vidyoConnector.UnregisterVideoTileEventListener();
   }
 }
 

@@ -49,6 +49,10 @@ import {
   CAMERA_RESET_MODERATION_STATE,
   MICROPHONE_SET_MODERATION_STATE,
   MICROPHONE_RESET_MODERATION_STATE,
+  CAMERA_SET_HARDWARE_CHECK_STATE,
+  MICROPHONE_SET_HARDWARE_CHECK_STATE,
+  SPEAKER_SET_HARDWARE_CHECK_STATE,
+  DEVICES_RESET_HARDWARE_CHECK_STATE,
 } from "../actions/types/devices";
 
 const initialState = {
@@ -75,6 +79,9 @@ const initialState = {
   selectedCamera: null,
   selectedMicrophone: null,
   selectedSpeaker: null,
+  hardwareCheckCameraState: {},
+  hardwareCheckMicrophoneState: {},
+  hardwareCheckSpeakerState: {},
 };
 
 const devices = (state = initialState, action) => {
@@ -87,6 +94,7 @@ const devices = (state = initialState, action) => {
         selectedCamera: selectedCamera ? { ...selectedCamera } : null,
       };
     }
+
     case UPDATE_REMOTE_CAMERAS:
       return {
         ...state,
@@ -94,12 +102,14 @@ const devices = (state = initialState, action) => {
       };
 
     case SET_MICROPHONES:
-    case UPDATE_MICROPHONES:
+    case UPDATE_MICROPHONES: {
+      const selectMicrophone = action.microphones.find((d) => d.selected);
       return {
         ...state,
         microphones: [...action.microphones],
-        selectedMicrophone: action.microphones.find((d) => d.selected) || null,
+        selectedMicrophone: selectMicrophone ? { ...selectMicrophone } : null,
       };
+    }
 
     case UPDATE_REMOTE_MICROPHONES:
       return {
@@ -107,12 +117,14 @@ const devices = (state = initialState, action) => {
         remoteMicrophones: [...action.remoteMicrophones],
       };
 
-    case UPDATE_SPEAKERS:
+    case UPDATE_SPEAKERS: {
+      const selectedSpeaker = action.speakers.find((d) => d.selected);
       return {
         ...state,
         speakers: [...action.speakers],
-        selectedSpeaker: action.speakers.find((d) => d.selected) || null,
+        selectedSpeaker: selectedSpeaker ? { ...selectedSpeaker } : null,
       };
+    }
 
     case UPDATE_REMOTE_SPEAKER:
       return {
@@ -395,6 +407,32 @@ const devices = (state = initialState, action) => {
       return {
         ...state,
         microphoneModerationState: {},
+      };
+
+    case CAMERA_SET_HARDWARE_CHECK_STATE:
+      return {
+        ...state,
+        hardwareCheckCameraState: action.payload,
+      };
+
+    case MICROPHONE_SET_HARDWARE_CHECK_STATE:
+      return {
+        ...state,
+        hardwareCheckMicrophoneState: action.payload,
+      };
+
+    case SPEAKER_SET_HARDWARE_CHECK_STATE:
+      return {
+        ...state,
+        hardwareCheckSpeakerState: action.payload,
+      };
+
+    case DEVICES_RESET_HARDWARE_CHECK_STATE:
+      return {
+        ...state,
+        hardwareCheckCameraState: {},
+        hardwareCheckMicrophoneState: {},
+        hardwareCheckSpeakerState: {},
       };
 
     default:

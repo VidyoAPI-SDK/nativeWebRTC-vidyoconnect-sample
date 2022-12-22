@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Position, Tooltip } from "@blueprintjs/core";
-
+import { Position, Tooltip, Popover } from "@blueprintjs/core";
+import { useIsTouchScreen } from "utils/hooks";
 import "./RecorderStatus.scss";
 
 const mapState = ({ call }, props) => {
@@ -13,15 +13,24 @@ const mapState = ({ call }, props) => {
 
 const RecorderStatus = ({ recorderOn }) => {
   const { t } = useTranslation();
+  const isTouchScreen = useIsTouchScreen();
   return recorderOn ? (
-    <Tooltip
+    <Popover
       content={t("THE_CONFERENCE_IS_BEING_RECORDED")}
       position={Position.BOTTOM}
+      popoverClassName="recorder-status-popupover"
+      disabled={!isTouchScreen}
     >
-      <div className="recorder-status-container">
-        <div className="recorder-status-icon active"></div>
-      </div>
-    </Tooltip>
+      <Tooltip
+        content={t("THE_CONFERENCE_IS_BEING_RECORDED")}
+        position={Position.BOTTOM}
+        portalClassName="device-tooltip"
+      >
+        <div className="recorder-status-container">
+          <div className="recorder-status-icon active"></div>
+        </div>
+      </Tooltip>
+    </Popover>
   ) : null;
 };
 

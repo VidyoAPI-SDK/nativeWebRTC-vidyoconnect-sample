@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { isMobileSafari, isAndroid } from "react-device-detect";
+import { isMobileSafari, isAndroid, isMobile, isSafari } from "react-device-detect";
+import OperatingSystemInfoProvider from "utils/deviceDetect";
 import { useMobileDimension } from "utils/hooks";
 import { debounce } from "throttle-debounce";
 import { useTranslation } from "react-i18next";
@@ -9,10 +10,18 @@ import logger from "utils/logger";
 import Spinner from "components/Spinner";
 import Video from "components/Video";
 import { test } from "utils/helpers";
-import useBlurEffect from "utils/useBlurEffect";
+import useBackgroundEffect from "utils/useBackgroundEffect";
 import "./SelfView.scss";
 
 const prefix = "SELFVIEW:";
+const isMobileOrTablet = isMobile || OperatingSystemInfoProvider.IsTabletDevice();
+// same constrains tha VC use when it gets user media
+const DEFAULT_VIDEO_CONSTARINS = {
+  height: isMobileOrTablet ? 360 : 720,
+  width: isMobileOrTablet ? 640 : 1280,
+  frameRate: 30
+}
+let originalStream = null;
 
 const mapStateToProps = ({ devices, config }) => ({
   selectedCamera: devices.selectedCamera,
@@ -37,7 +46,7 @@ const SelfView = ({
   const [facingMode, setFacingMode] = useState("");
   const [stream, setStream] = useState(null);
   const isMounted = useRef(false);
-  const [blurEffectAvailable] = useBlurEffect();
+  const [backgroundEffectAvailable] = useBackgroundEffect();
 
   const isCameraOff = !ignoreMuteState && !isCameraTurnedOn;
   const isNotPermitted = cameraDisableReasons.includes(
@@ -49,8 +58,7 @@ const SelfView = ({
     if (selectedCamera) {
       const deviceId = selectedCamera.id;
       logger.info(
-        `${prefix} asking stream ${
-          retry ? "on retry" : ""
+        `${prefix} asking stream ${retry ? "on retry" : ""
         } for device ${deviceId}`
       );
       if (window.banuba?.getLastStream) {
@@ -68,7 +76,7 @@ const SelfView = ({
         }
       }
       navigator.mediaDevices
-        .getUserMedia({ video: { deviceId /*width: { ideal: 480 } */ } })
+        .getUserMedia({ video: { deviceId, ...DEFAULT_VIDEO_CONSTARINS } })
         .then((stream) => {
           if (isMounted.current) {
             logger.info(
@@ -79,23 +87,40 @@ const SelfView = ({
                 `${prefix} oninactive for stream ${stream.id} inactive for device ${deviceId}`
               );
             };
-            setStream(stream);
             stream.getVideoTracks().forEach((track) => {
               setFacingMode(track.getSettings().facingMode || "desktop");
             });
+            if (window.banuba?.effectBackground && !stream.fromCache) {
+              window.banuba.effectBackground(stream, true).then((effectStream) => {
+                originalStream = stream;
+                if (isSafari) {
+                  setTimeout(() => {
+                    // workaround, sometimes on Safari it take more time to get working stream from canvas and we need some delay berore tye to assign it to the video element
+                    setStream(effectStream);
+                  }, 300)
+                } else {
+                  setStream(effectStream);
+                }
+              });
+            } else {
+              setStream(stream);
+            }
           } else {
             logger.info(
               `${prefix} Stream ${stream.id} stopped for device ${deviceId} as component is not mounted`
             );
             setTimeout(() => {
               stream.getVideoTracks().forEach((track) => track.stop());
+              if (originalStream) {
+                stream.getVideoTracks().forEach((track) => track.stop());
+                originalStream = null;
+              }
             });
           }
         })
         .catch((e) => {
           logger.error(
-            `${prefix} Stream ${
-              stream.id
+            `${prefix} Stream ${stream.id
             } for device ${deviceId} is not started. ${e.toString()}`
           );
           setStream(null);
@@ -112,9 +137,20 @@ const SelfView = ({
     if (stream) {
       logger.info(`${prefix} Stream ${stream.id} stopped`);
       setStream(null);
-      setTimeout(() => {
+      setPlaying(false);
+      const stopTracks = () => {
         stream.getVideoTracks().forEach((track) => track.stop());
-      });
+        if (originalStream) {
+          stream.getVideoTracks().forEach((track) => track.stop());
+          originalStream = null;
+        }
+      }
+      if (ignoreMuteState) {
+        stopTracks();
+        return;
+      }
+      setTimeout(stopTracks);
+      
     }
   };
 
@@ -136,20 +172,16 @@ const SelfView = ({
   }, []);
 
   useEffect(() => {
-    if (ignoreMuteState) {
-      if (!isCameraDisabled) {
+    if (!isCameraDisabled && isCameraTurnedOn) {
+      if (selectedCamera && selectedCamera.isStarted) {
         startSource();
-      }
-    } else {
-      if (!isCameraDisabled && isCameraTurnedOn) {
-        if (selectedCamera && selectedCamera.isStarted !== false) {
-          startSource();
-        } else {
-          stopSource();
-        }
       } else {
         stopSource();
       }
+    } else if (!isCameraDisabled && ignoreMuteState) {
+      startSource();
+    } else {
+      stopSource();
     }
     return () => {
       startSource.cancel();
@@ -159,6 +191,10 @@ const SelfView = ({
         );
         setTimeout(() => {
           stream.getVideoTracks().forEach((track) => track.stop());
+          if (originalStream) {
+            stream.getVideoTracks().forEach((track) => track.stop());
+            originalStream = null;
+          }
         });
       }
     };
@@ -168,7 +204,7 @@ const SelfView = ({
     isCameraDisabled,
     isCameraTurnedOn,
     selectedCamera,
-    blurEffectAvailable,
+    backgroundEffectAvailable,
   ]);
 
   const Loading = () => {

@@ -67,11 +67,6 @@ const callDeviceChange = trackEvent((action) => ({
   label: action.device,
 }));
 
-const exitAfterAloneInCall = trackEvent((action) => ({
-  action: "exitAfterAloneInCall",
-  category: "Conference",
-}));
-
 const browserIsNotSupported = trackEvent((action) => ({
   action: "browserIsNotSupported",
   category: "Application",
@@ -94,16 +89,90 @@ const epicWaitingRoomMediaContent = trackEvent((action) => ({
   category: "Conference",
   label: action.info,
 }));
+const averageQualityOfSendingBandwidth = trackEvent((action) => ({
+  action: "averageQualityOfSendingBandwidth",
+  category: "callStats",
+  label: action.info,
+}));
+
+const averageQualityOfReceivingBandwidth = trackEvent((action) => ({
+  action: "averageQualityOfReceivingBandwidth",
+  category: "callStats",
+  label: action.info,
+}));
+
+const callQualityFeedBack = trackEvent((action) => ({
+  action: "CallQualityFeedback",
+  category: "Conference",
+  label: action.info,
+}));
+const hardwareCheckCamera = trackEvent((action) => ({
+  action: "camera",
+  category: "hardwareCheck",
+  label: action.status,
+}));
+
+const hardwareCheckMicrophone = trackEvent((action) => ({
+  action: "microphone",
+  category: "hardwareCheck",
+  label: action.status,
+}));
+
+const hardwareCheckSpeaker = trackEvent((action) => ({
+  action: "speaker",
+  category: "hardwareCheck",
+  label: action.status,
+}));
+
+const hardwareCheckTestClose = trackEvent(() => ({
+  action: "testInterrupted",
+  category: "hardwareCheck",
+}));
+
+const hardwareCheckContactInfoClicked = trackEvent(() => ({
+  action: "contactInfoClicked",
+  category: "hardwareCheck",
+}));
+
+const cameraPresetChange = trackEvent((action) => ({
+  action: "cameraPresetChanged",
+  category: "FECC",
+  label: action.info,
+}));
+
+const openFeccControls = trackEvent((action) => ({
+  action: "open",
+  category: "FECC",
+  label: action.info || "",
+}));
+
+const loadViewType = trackEvent((action) => ({
+  action: "loadLayoutType",
+  category: "Conference",
+  label: action.info,
+}));
+
+const selectViewType = trackEvent((action) => ({
+  action: "selectLayoutType",
+  category: "Conference",
+  label: action.info,
+}));
 
 // Match the event definition to a Redux action:
 const eventsMap = {
   CALL_END: callEnd,
-  CALL_EXIT_AFTER_ALONE: exitAfterAloneInCall,
   CALL_CONTENT_SHARE: contentShare,
   CALL_JOIN: callJoin,
   CALL_CHAT: callChat,
   CALL_DEVICES_STATE: callDeviceState,
   CALL_ROOMTYPE: callRoomType,
+  CALL_QUALITY_FEEDBACK: callQualityFeedBack,
+
+  HARDWARE_CHECK_CAMERA: hardwareCheckCamera,
+  HARDWARE_CHECK_MICROPHONE: hardwareCheckMicrophone,
+  HARDWARE_CHECK_SPEAKER: hardwareCheckSpeaker,
+  VOLUANTRY_HARDWARE_CHECK_CLOSE: hardwareCheckTestClose,
+  HARDWARE_CHECK_CONTACT_INFO_CLICKED: hardwareCheckContactInfoClicked,
 
   APP_LAUNCH: appLaunch,
   BROWSER_IS_NOT_SUPPORTED: browserIsNotSupported,
@@ -114,6 +183,12 @@ const eventsMap = {
   CALL_DEVICE_CHANGE: callDeviceChange,
   OPEN_POST_CALL_URL: openPostCallUrl,
   EPIC_WAITING_ROOM_MEDIA_CONTENT: epicWaitingRoomMediaContent,
+  AVARAGE_SEND_BANDWITH: averageQualityOfSendingBandwidth,
+  AVARAGE_RECEIVE_BANDWITH: averageQualityOfReceivingBandwidth,
+  CAMERA_PRESET_CHANGE: cameraPresetChange,
+  FECC_OPEN: openFeccControls,
+  LOADED_VIEW_TYPE: loadViewType,
+  SELECTED_VIEW_TYPE: selectViewType,
 };
 
 // Create the middleware

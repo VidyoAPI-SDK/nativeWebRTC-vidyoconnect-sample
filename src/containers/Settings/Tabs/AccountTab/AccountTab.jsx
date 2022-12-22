@@ -87,7 +87,7 @@ const AccountTab = () => {
           {window.appConfig.REACT_APP_SIGN_IN_ENABLED && (
             <div className="account-tab-content__login">
               <button
-                className="bp3-button bp3-fill bp3-intent-success"
+                className="bp4-button bp4-fill bp4-intent-success"
                 onClick={singInClickHanlder}
                 {...test("SIGNIN")}
               >

@@ -32,56 +32,61 @@
     </script>
     <!-- Google Analytics -->
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      if (!window.appConfig.REACT_APP_ANALYTICS_ENABLED) {
+        window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
+      } else {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-      let portalURL = '';
-      if(window.location.search != '')
-      {
-        const urlParams = new URLSearchParams(window.location.search);
-        portalURL = urlParams.get('portal') ?
-          urlParams.get('portal').trim().toLowerCase()
-            .replace(/^(https?|http):\/\//, '') :
-          ""
-        ;
-        const disableGA = ["true", "1"].includes(urlParams.get('disableGA'));
+        let portalURL = '';
+        if(window.location.search != '')
+        {
+          const urlParams = new URLSearchParams(window.location.search);
+          portalURL = urlParams.get('portal') ?
+            urlParams.get('portal').trim().toLowerCase()
+              .replace(/^(https?|http):\/\//, '') :
+            ""
+          ;
+          const disableGA = ["true", "1"].includes(urlParams.get('disableGA'));
 
-        const isPortalBlacklisted = window.appConfig.REACT_APP_ANALYTICS_BLACKLIST_ENABLED ?
-          (window.appConfig.REACT_APP_ANALYTICS_BLACKLIST||[]).some((listItem) => {
-            if (listItem.startsWith('*.')) {
-              return portalURL.endsWith(listItem.slice(1));
-            } else {
-              return listItem === portalURL;
-            }
-          }) : false;
-        ;
+          const isPortalBlacklisted = window.appConfig.REACT_APP_ANALYTICS_BLACKLIST_ENABLED ?
+            (window.appConfig.REACT_APP_ANALYTICS_BLACKLIST||[]).some((listItem) => {
+              if (listItem.startsWith('*.')) {
+                return portalURL.endsWith(listItem.slice(1));
+              } else {
+                return listItem === portalURL;
+              }
+            }) : false;
+          ;
 
-        if (disableGA || isPortalBlacklisted) {
-          window[`ga-disable-${window.appConfig.REACT_APP_ANALYTICS_ID}`] = true;
-        } else {
-          window[`ga-disable-${window.appConfig.REACT_APP_ANALYTICS_ID}`] = false;
+          if (disableGA || isPortalBlacklisted) {
+            window[`ga-disable-${window.appConfig.REACT_APP_ANALYTICS_ID}`] = true;
+          } else {
+            window[`ga-disable-${window.appConfig.REACT_APP_ANALYTICS_ID}`] = false;
+          }
         }
+
+        ga('create', window.appConfig.REACT_APP_ANALYTICS_ID, 'auto');
+        ga('set', 'appName', window.appConfig.REACT_APP_ANALYTICS_NAME);
+
+        ga('set', 'appVersion', window.appConfig.APP_VERSION);
+
+        ga('set', 'location', window.location.origin + window.location.pathname);
+
+        // Sets the page value on the tracker.
+        ga('set', 'page', document.location.pathname);
+        // Sending the pageview no longer requires passing the page
+        // value since it's now stored on the tracker object.
+
+        ga('set', {
+        'dimension1': portalURL, // Portal URL
+        'dimension2': 0 // Guest user
+        });
+
+        ga('send', 'pageview');
       }
-
-      ga('create', window.appConfig.REACT_APP_ANALYTICS_ID, 'auto');
-      ga('set', 'appName', window.appConfig.REACT_APP_ANALYTICS_NAME);
-
-      ga('set', 'appVersion', window.appConfig.APP_VERSION);
-
-      // Sets the page value on the tracker.
-      ga('set', 'page', document.location.pathname);
-      // Sending the pageview no longer requires passing the page
-      // value since it's now stored on the tracker object.
-
-      ga('set', {
-      'dimension1': portalURL, // Portal URL
-      'dimension2': 0 // Guest user
-      });
-
-      ga('send', 'pageview');
-
     </script>
   <!-- End Google Analytics -->
   </head>
@@ -98,13 +103,5 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-
-    <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "aftjpgko5x");
-    </script>
   </body>
 </html>

@@ -7,14 +7,24 @@ import * as deviceActions from "../actions/devices";
 import * as actionTypes from "../actions/types/app";
 import * as appActions from "../actions/app";
 import * as googleAnalyticsActions from "../actions/googleAnalytics";
+import * as configActions from "../actions/config";
 
 const callProvider = getCallAPIProvider();
 const chatProvider = getChatAPIProvider();
+
+
+// In product info we also ca set extData in a feature
+const productInfo = { 
+  applicationName: window.appConfig.REACT_APP_ANALYTICS_NAME, 
+  applicationVersion: window.appConfig.APP_VERSION
+ };
 
 function* init(action) {
   try {
     yield callProvider.init(action.payload);
     yield chatProvider.init(action.payload);
+
+    yield put(configActions.setProductInfo(productInfo));
 
     if (!action.payload.skipPermissionsCheck) {
       yield put(appActions.subscribeOnPermissionsChanges());

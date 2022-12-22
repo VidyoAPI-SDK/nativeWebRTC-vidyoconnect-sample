@@ -28,6 +28,8 @@ import {
   COMPOSITOR_UPDATED,
   COMPOSITOR_UPDATES_SUBSCRIBE,
   COMPOSITOR_UPDATES_UNSUBSCRIBE,
+  COMPOSITOR_VIEW_TYPE_CHANGED,
+  FECC_STATE_TOGGLE,
 } from "../actions/types/call";
 
 const initialState = {
@@ -44,6 +46,7 @@ const initialState = {
   },
   callStartedTime: 0,
   compositorTiles: [],
+  compositorViewType: null,
   recorderOn: false,
   availibleResources: null,
   remoteWindowShares: [],
@@ -51,6 +54,7 @@ const initialState = {
   selectedShare: null,
   disconnectReason: null,
   moderationPanelOpened: false,
+  feccOpen: false,
   roomInfo: {},
 };
 
@@ -164,7 +168,7 @@ const call = (state = initialState, action) => {
       return {
         ...state,
         participants: {
-          list: [...state.participants.list],
+          list: state.participants.list,
           participantLeft: state.participants.participantLeft,
           participantJoined: state.participants.participantJoined,
           pinned: action.payload.participant,
@@ -182,7 +186,7 @@ const call = (state = initialState, action) => {
       return {
         ...state,
         participants: {
-          list: [...state.participants.list],
+          list: state.participants.list,
           participantLeft: state.participants.participantLeft,
           participantJoined: state.participants.participantJoined,
           pinned: null,
@@ -255,11 +259,23 @@ const call = (state = initialState, action) => {
         compositorTiles: [...action.compositorTiles],
       };
 
+    case COMPOSITOR_VIEW_TYPE_CHANGED:
+      return {
+        ...state,
+        compositorViewType: action.payload,
+      };
+
     case COMPOSITOR_UPDATES_SUBSCRIBE:
     case COMPOSITOR_UPDATES_UNSUBSCRIBE:
       return {
         ...state,
         compositorTiles: [],
+      };
+
+    case FECC_STATE_TOGGLE:
+      return {
+        ...state,
+        feccOpen: action.payload,
       };
 
     default:

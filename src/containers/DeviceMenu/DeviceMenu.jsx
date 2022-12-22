@@ -19,6 +19,7 @@ const DeviceMenu = ({
   children,
   clickOnArrowBtnNextToDeviceIcon,
   active = true,
+  deviceMenuStyle = "",
 }) => {
   const [deviceListMenuState, setDeviceListMenuState] = useState(false);
   const [isMobileDimension] = useMobileDimension();
@@ -53,7 +54,7 @@ const DeviceMenu = ({
         <DeviceMenuList deviceType={deviceType} menuHeader={menuHeader} />
       }
       interactionKind="click"
-      popoverClassName="device-menu-popover"
+      popoverClassName={`device-menu-popover ${deviceMenuStyle}`}
       targetClassName="device-menu-popover-target"
       isOpen={deviceListMenuState}
       onInteraction={(state) => toggleDeviceListMenu(state)}

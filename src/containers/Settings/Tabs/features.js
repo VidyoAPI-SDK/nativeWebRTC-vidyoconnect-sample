@@ -1,7 +1,6 @@
 const { default: AboutTab } = require("./AboutTab");
 const { default: GeneralTab } = require("./GeneralTab");
 const { default: HelpTab } = require("./HelpTab");
-const { default: IntegrationsTab } = require("./IntegrationsTab");
 const { default: MediaTab } = require("./MediaTab");
 
 const AccountTab =
@@ -14,6 +13,5 @@ module.exports = {
   AccountTab,
   GeneralTab,
   HelpTab,
-  IntegrationsTab,
   MediaTab,
 };

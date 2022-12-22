@@ -49,4 +49,43 @@
       padding: 20px 40px;
     }
   }
+
+  .blur-checkbox {
+    display: flex;
+    span {
+      margin-left: 10px;
+    }
+  }
+}
+
+.bottom.webview {
+  .settings-tab-content-body {
+    padding: 10px 20px;
+  }
+
+  .about-neo-logo {
+    max-width: 200px;
+  }
+
+  .account-tab-content__guest-box {
+    margin-top: 0;
+  }
+
+  .about-tab-content .tab-content-body-panel {
+    max-height: unset;
+  }
+
+  .help-tab-content {
+    display: block;
+    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: 0px;
+
+    button {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      text-align: center;
+    }
+  }
 }

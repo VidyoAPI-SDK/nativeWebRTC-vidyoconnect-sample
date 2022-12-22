@@ -7,6 +7,7 @@ import callActionWatcher from "./call";
 import appActionWatcher from "./app";
 import userActionWatcher from "./user";
 import configActionWatcher from "./config";
+import webViewActionWatcher from "./webView";
 
 function* devicesActionWatcher() {
   yield all([
@@ -24,5 +25,6 @@ export default function* rootSaga() {
     devicesActionWatcher(),
     configActionWatcher(),
     userActionWatcher(),
+    webViewActionWatcher(),
   ]);
 }

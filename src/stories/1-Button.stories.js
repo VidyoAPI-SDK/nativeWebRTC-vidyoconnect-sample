@@ -43,7 +43,7 @@ export const Secondary = () => (
     small={boolean("Small", false)}
     large={boolean("Large", false)}
     disabled={boolean("Disabled", false)}
-    className="bp3-intent-secondary"
+    className="bp4-intent-secondary"
     onClick={action("clicked")}
   >
     {text("Label", "Secondary")}
@@ -83,7 +83,7 @@ export const Share = () => (
       small={boolean("Small", false)}
       large={boolean("Large", false)}
       disabled={boolean("Disabled", false)}
-      className="bp3-intent-share"
+      className="bp4-intent-share"
       onClick={action("clicked")}
     >
       {text("Label", "Share")}

@@ -7,19 +7,28 @@ import FlipCameraButton from "containers/FlipCameraButton";
 import { Position } from "@blueprintjs/core";
 import "./QuickMediaSettings.scss";
 
-const QuickMediaSettings = () => {
+const QuickMediaSettings = ({ deviceMenuStyle }) => {
   return (
     <div className="quick-media-settings">
+      <SelfView externalControls={<FlipCameraButton />} />
       <div className="media-devices">
         <SpeakerToggle
           showLabel={true}
           showTestSound={true}
-          tooltipPosition={Position.RIGHT}
+          tooltipPosition={Position.TOP}
+          deviceMenuStyle={deviceMenuStyle}
         />
-        <MicrophoneToggle showLabel={true} tooltipPosition={Position.RIGHT} />
-        <CameraToggle showLabel={true} tooltipPosition={Position.RIGHT} />
+        <MicrophoneToggle
+          showLabel={true}
+          tooltipPosition={Position.TOP}
+          deviceMenuStyle={deviceMenuStyle}
+        />
+        <CameraToggle
+          showLabel={true}
+          tooltipPosition={Position.TOP}
+          deviceMenuStyle={deviceMenuStyle}
+        />
       </div>
-      <SelfView externalControls={<FlipCameraButton />} />
     </div>
   );
 };

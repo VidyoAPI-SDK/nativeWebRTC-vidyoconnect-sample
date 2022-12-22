@@ -15,7 +15,6 @@ const getPath = (title, customClass) => {
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
         >
-          <title>icon_arr_down</title>
           <g
             id="v2"
             stroke="none"
@@ -57,7 +56,6 @@ const getPath = (title, customClass) => {
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
         >
-          <title>icon_arr_up</title>
           <g
             id="v2"
             stroke="none"

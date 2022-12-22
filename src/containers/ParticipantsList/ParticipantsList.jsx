@@ -44,8 +44,6 @@ const ParticipantsList = ({
   remoteMicrophones,
   isCameraTurnedOn,
   isMicrophoneTurnedOn,
-  resetPinParticipant,
-  pinParticipantSuccess,
   conferenceID,
   roomPIN,
   participantsDetails,
@@ -64,55 +62,6 @@ const ParticipantsList = ({
       return item.participant.name === name;
     });
   };
-
-  /**
-   * Resetting participant pin(local state) when he was pinned and his camera has been turned off
-   */
-  useEffect(() => {
-    if (pinnedParticipant) {
-      if (
-        !remoteCameras.some((c) => c?.participant?.id === pinnedParticipant?.id)
-      ) {
-        resetPinParticipant();
-      }
-    }
-  }, [remoteCameras, pinnedParticipant, resetPinParticipant]);
-
-  /**
-   * Handle click on Tile pin button
-   */
-  const tilePinButtonHandler = useCallback(
-    (event) => {
-      const pinBtn = event?.target?.closest?.(".pin-participant");
-      const feccBtn = event?.target?.closest?.(".control-participant");
-      if (pinBtn || feccBtn) {
-        const tile = event.target.closest(".video-container");
-        const participantID = tile?.dataset?.participantId;
-
-        if (!tile || !participantID) return;
-
-        if (tile.classList.contains("pinned-video")) {
-          if (pinBtn) {
-            resetPinParticipant();
-          }
-        } else {
-          const participant = participants.list.find(
-            (p) => p.id === participantID
-          );
-          pinParticipantSuccess(participant);
-        }
-      }
-    },
-    [participants.list, pinParticipantSuccess, resetPinParticipant]
-  );
-
-  useEffect(() => {
-    document.addEventListener("click", tilePinButtonHandler, true);
-
-    return () => {
-      document.removeEventListener("click", tilePinButtonHandler, true);
-    };
-  }, [tilePinButtonHandler]);
 
   const checkMicrophoneMuteState = (name) => {
     return remoteMicrophones.some((item) => {

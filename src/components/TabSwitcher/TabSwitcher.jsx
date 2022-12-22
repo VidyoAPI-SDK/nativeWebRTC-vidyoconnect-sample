@@ -47,7 +47,11 @@ const TabSwitcher = (props) => {
   });
 
   return (
-    <div className={`tab-switcher ${props.bottom ? "bottom" : ""}`}>
+    <div
+      className={`tab-switcher ${props.bottom ? "bottom" : ""} ${
+        props.className ?? ""
+      }`}
+    >
       <div className="tab-bar">{tabs}</div>
       <div className="tab-content">{activeTab}</div>
     </div>

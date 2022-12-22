@@ -32,6 +32,32 @@ function* setCompositorFixedParticipants(action) {
   }
 }
 
+function* setParticipantLimit(action) {
+  try {
+    yield callProvider.setAdvancedConfiguration({
+      participantLimit: action.limit,
+    });
+  } catch (e) {
+    yield put({
+      type: actionTypes.SET_PARTICIPANT_LIMIT_FAILED,
+      message: e.message || e,
+    });
+  }
+}
+
+function* disableTabletParticipantLimitRestrictions(action) {
+  try {
+    yield callProvider.setAdvancedConfiguration({
+      disableTabletParticipantLimitRestrictions: action.disable,
+    });
+  } catch (e) {
+    yield put({
+      type: actionTypes.SET_DISABLE_PARTICIPANT_RESTRICTIONS_TABLET_FAILED,
+      message: e.message || e,
+    });
+  }
+}
+
 function* setStatisticsOverlay(action) {
   try {
     yield callProvider.setAdvancedConfiguration({
@@ -53,16 +79,19 @@ function* getCustomParameters(action) {
   try {
     const result = yield call(APIClient.getCustomParameters, action.payload);
     if (result) {
+      action.callback(result);
       yield put({
         type: actionTypes.GET_CUSTOM_PARAMETERS_SUCCEEDED,
         payload: result,
       });
     } else {
+      action.callback(false);
       yield put({
         type: actionTypes.GET_CUSTOM_PARAMETERS_FAILED,
       });
     }
   } catch (e) {
+    action.callback(false);
     yield put({
       type: actionTypes.GET_CUSTOM_PARAMETERS_FAILED,
       message: e.message,
@@ -140,6 +169,34 @@ function* getEndpointBehaviour() {
   }
 }
 
+function* setGeolocationURL(action) {
+  try {
+    yield callProvider.setAdvancedConfiguration(action.payload);
+    yield put({
+      type: actionTypes.SET_GEOLOCATION_URL_SUCCEEDED,
+    });
+  } catch (e) {
+    yield put({
+      type: actionTypes.SET_GEOLOCATION_URL_FAILED,
+      message: e.message || e,
+    });
+  }
+}
+
+function* setProductInfo(action) {
+  try {
+    yield callProvider.setProductInfo(action.payload);
+    yield put({
+      type: actionTypes.SET_PRODUCT_INFO_SUCCEEDED,
+    });
+  } catch (e) {
+    yield put({
+      type: actionTypes.SET_PRODUCT_INFO_FAILED,
+      message: e.message || e,
+    });
+  }
+}
+
 function* actionWatcher() {
   yield takeLatest(actionTypes.SET_EXT_DATA, setExtData);
   yield takeLatest(
@@ -151,6 +208,13 @@ function* actionWatcher() {
   yield takeLatest(actionTypes.GET_GCP_SERVICES_LIST, getGCPServicesList);
   yield takeLatest(actionTypes.GET_ENDPOINT_BEHAVIOUR, getEndpointBehaviour);
   yield takeLatest(actionTypes.SEND_SMS, sendSMS);
+  yield takeLatest(actionTypes.SET_PARTICIPANT_LIMIT, setParticipantLimit);
+  yield takeLatest(
+    actionTypes.SET_DISABLE_PARTICIPANT_RESTRICTIONS_TABLET,
+    disableTabletParticipantLimitRestrictions
+    );
+  yield takeLatest(actionTypes.SET_GEOLOCATION_URL, setGeolocationURL);
+  yield takeLatest(actionTypes.SET_PRODUCT_INFO, setProductInfo);
 }
 
 export default actionWatcher;

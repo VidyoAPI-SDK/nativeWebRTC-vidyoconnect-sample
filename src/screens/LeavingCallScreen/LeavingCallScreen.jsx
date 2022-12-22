@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useTranslation } from "react-i18next";
-import { Redirect, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import * as callActionCreators from "store/actions/call";
 import { Spinner } from "@blueprintjs/core";
 import "./LeavingCallScreen.scss";
@@ -22,11 +22,10 @@ const LeavingCallScreen = ({ isCallLeaving }) => {
 
   if (!isCallLeaving) {
     return (
-      <Redirect
-        to={{
-          pathname: "/GuestPostCall",
-          state: location.state,
-        }}
+      <Navigate
+        replace
+        to={"/GuestPostCall"}
+        state={location.state}
       />
     );
   }

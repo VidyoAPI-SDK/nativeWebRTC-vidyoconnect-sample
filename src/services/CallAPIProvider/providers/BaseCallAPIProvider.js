@@ -150,6 +150,15 @@ class BaseCallAPIProvider {
   async subscribeOnModerationEvents(OnModerationCommandReceived) {
     return notImplemented("subscribeOnModerationEvents");
   }
+  async subscribeOnCompositorViewChange(onChange) {
+    return notImplemented("subscribeOnCompositorViewChange");
+  }
+  async subscribeOnCameraControlsPanelStateChange(onChange) {
+    return notImplemented("subscribeOnCameraControlsPanelStateChange");
+  }
+  async subscribeOnCameraPresetChange(onChange) {
+    return notImplemented("subscribeOnCameraPresetChange");
+  }
   async unsubscribeFromModerationEvents() {
     return notImplemented("unsubscribeFromModerationEvents");
   }
@@ -188,6 +197,21 @@ class BaseCallAPIProvider {
   }
   async disableDynamicAudioSources() {
     return notImplemented("disableDynamicAudioSources");
+  }
+  async showWindowSharePreview() {
+    return notImplemented("showWindowSharePreview");
+  }
+  async setCompositorGridView() {
+    return notImplemented("setCompositorGridView");
+  }
+  async setCompositorGalleryView() {
+    return notImplemented("setCompositorGalleryView");
+  }
+  async setFeccPresetsLabel() {
+    return notImplemented("setFeccPresetsLabel");
+  }
+  async setFeccPresetsSelectLabel() {
+    return notImplemented("setFeccPresetsSelectLabel");
   }
 
   sendChatMessage(params) {}

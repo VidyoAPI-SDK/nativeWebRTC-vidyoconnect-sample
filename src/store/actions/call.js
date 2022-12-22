@@ -35,10 +35,16 @@ import {
   MODERATION_EVENTS_UNSUBSCRIBE,
   MODERATION_EVENTS_SUBSCRIBE,
   SAVE_PARTICIPANTS_DETAILS,
+  SHOW_PREVIEW,
   COMPOSITOR_UPDATES_SUBSCRIBE,
   COMPOSITOR_UPDATES_UNSUBSCRIBE,
   COMPOSITOR_UPDATED,
-  SHOW_PREVIEW,
+  SHOW_SHARE_PREVIEW,
+  COMPOSITOR_SET_GRID_VIEW,
+  COMPOSITOR_SET_GALLERY_VIEW,
+  COMPOSITOR_VIEW_TYPE_CHANGED,
+  FECC_PRESETS_SET_TITLE,
+  FECC_PRESETS_SELECT_SET_TITLE,
 } from "./types/call";
 
 export const startCall = (payload) => ({
@@ -148,6 +154,13 @@ export const enablePreview = (showPrev) => ({
   },
 });
 
+export const showSharePreview = (showSharePreview) => ({
+  type: SHOW_SHARE_PREVIEW,
+  payload: {
+    showSharePreview,
+  },
+});
+
 // for API pinning
 export const pinParticipant = (participant) => ({
   type: PIN_PARTICIPANT,
@@ -232,4 +245,27 @@ export const unsubscribeFromCompositorUpdates = () => ({
 export const compositorUpdated = (compositorTiles) => ({
   type: COMPOSITOR_UPDATED,
   compositorTiles,
+});
+
+export const compositorViewChanged = (payload) => ({
+  type: COMPOSITOR_VIEW_TYPE_CHANGED,
+  payload,
+});
+
+export const setCompositorGridView = () => ({
+  type: COMPOSITOR_SET_GRID_VIEW,
+});
+
+export const setCompositorGalleryView = () => ({
+  type: COMPOSITOR_SET_GALLERY_VIEW,
+});
+
+export const setFeccPresetsLabel = (label) => ({
+  type: FECC_PRESETS_SET_TITLE,
+  payload: label,
+});
+
+export const setFeccPresetsSelectLabel = (label) => ({
+  type: FECC_PRESETS_SELECT_SET_TITLE,
+  payload: label,
 });

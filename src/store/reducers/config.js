@@ -17,6 +17,10 @@ import {
   SEND_SMS,
   SET_JWT_TOKEN,
   SET_REFRESH_TOKEN,
+  EPIC_CALL_SESSION_INITIALIZED,
+  EPIC_CALL_SESSION_STARTED,
+  EPIC_CALL_SET_DOCUMENT_TYPES,
+  EPIC_CALL_RESET_SESSION,
 } from "../actions/types/config";
 
 const initialState = {
@@ -40,6 +44,10 @@ const initialState = {
   },
   urlDisplayName: {
     value: "",
+    isDefault: true,
+  },
+  urlDoNotSaveDisplayName: {
+    value: false,
     isDefault: true,
   },
   urlExtData: {
@@ -118,11 +126,42 @@ const initialState = {
     value: "",
     isDefault: true,
   },
+  urlHWT: {
+    value: "",
+    isDefault: true,
+  },
+  urlHWTStrictMode: {
+    value: "",
+    isDefault: true,
+  },
+  urlAccessCode: {
+    value: false,
+    isDefault: true,
+  },
+  urlSessionToken: {
+    value: "",
+    isDefault: true,
+  },
   customParameters: {},
   listOfGCPServices: {},
   endpointBehaviour: {},
   jwtToken: "",
   refreshToken: "",
+  epicCallSessionInitialized: false,
+  epicCallSessionStarted: false,
+  epicCallDocumentTypes: null,
+  urlMuteSpeakerOnJoinToggle: {
+    value: false,
+    isDefault: false,
+  },
+  urlShowAudioMuteControl: {
+    value: true,
+    isDefault: true,
+  },
+  urlInitializeWebView: {
+    value: false,
+    isDefault: false,
+  },
 };
 
 const config = (state = initialState, action) => {
@@ -230,6 +269,32 @@ const config = (state = initialState, action) => {
       return {
         ...state,
         refreshToken: action.payload,
+      };
+
+    case EPIC_CALL_SESSION_INITIALIZED:
+      return {
+        ...state,
+        epicCallSessionInitialized: action.payload,
+      };
+
+    case EPIC_CALL_SESSION_STARTED:
+      return {
+        ...state,
+        epicCallSessionStarted: action.payload,
+      };
+
+    case EPIC_CALL_SET_DOCUMENT_TYPES:
+      return {
+        ...state,
+        epicCallDocumentTypes: action.payload,
+      };
+
+    case EPIC_CALL_RESET_SESSION:
+      return {
+        ...state,
+        epicCallSessionInitialized: false,
+        epicCallSessionStarted: false,
+        epicCallDocumentTypes: null,
       };
 
     default:
