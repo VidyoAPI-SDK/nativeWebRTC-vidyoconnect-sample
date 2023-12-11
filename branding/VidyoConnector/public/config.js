@@ -10,7 +10,7 @@ window.appConfig = {
 	REACT_APP_CALL_QUALITY_RATING_POPUP_ENABLED: false,
 	REACT_APP_COMPOSITOR_FIXED_PARTICIPANTS: false,
 	REACT_APP_LOGIN_URL: "https://login.vidyoclouddev.com",
-	REACT_APP_BACKGROUND_EFFECT_ENABLED: true,
+	REACT_APP_BACKGROUND_EFFECT_ENABLED: false,
 	REACT_APP_SIGN_IN_ENABLED: false,
 	REACT_APP_STATS_ANALYZER_URL: "https://applications.vidyoclouddev.com/stats.new.format/index.html#/",
 	REACT_APP_LOKI_SERVER_DEFAULT_URL: "https://vis-dev-01-loki.vidyoclouddev.com/loki/api/v1/push",
