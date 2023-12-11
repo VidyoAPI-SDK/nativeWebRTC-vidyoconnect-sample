@@ -1,16 +1,29 @@
-## Available Scripts
+## Prerequisites
+- Node 18
+- yarn
 
-In the project directory, you can run:
+## MacOS
 
-### `sudo yarn start`
-* https://localhost:443
+Do the following from the root project directory:
 
+1. Install dependencies
+### `sudo yarn install`
+
+2. Build component locally
 ### `yarn build`
 
-* https://create-react-app.dev/docs/deployment/
+3. Start local server and navigate to the URL listed in the terminal window to run the application
+### `sudo yarn start`
 
+## Windows
 
-## Branding
+Do the following from the root project directory:
 
-### `sudo REACT_APP_VERSION=20.2.0.9999 yarn start`
-### `REACT_APP_VERSION=20.2.0.9999 yarn build`
+1. Install dependencies
+### `yarn install`
+
+2. Build component locally
+### `yarn build`
+
+3. Start local server and navigate to the URL listed in the terminal window to run the application
+### `yarn start`
