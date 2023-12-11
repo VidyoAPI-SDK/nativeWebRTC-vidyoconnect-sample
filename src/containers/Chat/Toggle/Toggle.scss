@@ -1,0 +1,42 @@
+.chat-toggle {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  background-image: url("../../../assets/images/buttons/in-call-details.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 20px 20px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  outline: none;
+  &.active {
+    background-image: url("../../../assets/images/buttons/in-call-details_active.svg");
+  }
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    border: 1px solid hsla(0, 0%, 50%, 1);
+  }
+
+  .unread-message-counter {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    text-align: center;
+    background-color: #009bde;
+    border-radius: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    font-size: 12px;
+    color: #fff;
+    top: calc(50% - 20px);
+    left: calc(100% - 24px);
+  }
+}

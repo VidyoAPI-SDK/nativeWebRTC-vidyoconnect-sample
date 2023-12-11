@@ -1,0 +1,136 @@
+.chat-message-wrapper {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  color: #999;
+  position: relative;
+
+  .message-avatar-wrapper {
+    height: 100%;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    position: absolute;
+    z-index: 3;
+  }
+
+  .message-content {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-left: 52px;
+    margin: 0 2px;
+
+    .message-header {
+      display: none;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+      color: #51575c;
+      margin-bottom: 3px;
+    }
+    .message-bubble {
+      -webkit-user-select: auto;
+      background-color: #e8ebed;
+      position: relative;
+      border-radius: 4px 4px 4px 0px;
+      padding: 8px 8px;
+      margin-top: 1px;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+      color: #292c2f;
+      word-break: break-word;
+    }
+    .message-footer {
+      display: none;
+      padding: 4px 0;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 14px;
+      color: #a9b2b9;
+    }
+  }
+
+  &.message-group-top {
+    .message-content {
+      .message-header {
+        display: block;
+      }
+    }
+  }
+
+  &.message-group-bottom {
+    margin-bottom: 10px;
+
+    .message-avatar-wrapper {
+      display: flex;
+      .message-sender-avatar {
+        transform: translateY(-22px);
+      }
+    }
+
+    .message-content {
+      .message-footer {
+        display: block;
+      }
+    }
+  }
+
+  &.message-sent {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+
+    .message-avatar-wrapper {
+      display: none;
+    }
+    .message-content {
+      align-items: flex-end;
+
+      .message-bubble {
+        color: white;
+        background-color: #009bde;
+        border-radius: 4px 4px 0px 4px;
+        word-break: break-word;
+        a {
+          color: white !important;
+        }
+      }
+    }
+  }
+
+  &.message-expanded {
+    .message-header {
+      display: block;
+      font-size: 10px;
+    }
+    .message-footer {
+      display: block;
+      font-size: 10px;
+      padding-top: 1px;
+      padding-bottom: 2px;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+
+    .message-avatar-wrapper {
+      .message-sender-avatar {
+        display: flex;
+        transform: translateY(-22px);
+      }
+    }
+    .message-footer {
+      display: block;
+      font-size: 12px;
+      padding: 4px 0;
+      font-weight: 400;
+      line-height: 14px;
+      text-align: right;
+      color: #a9b2b9;
+    }
+  }
+}

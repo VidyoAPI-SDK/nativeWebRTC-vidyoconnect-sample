@@ -1,0 +1,56 @@
+.media-tab-content {
+  .settings-tab-content-body {
+    justify-content: space-between;
+    flex-direction: row;
+    .tab-content-body-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      align-items: center;
+
+      &.left-pane {
+        padding-right: 20px;
+      }
+      &.right-pane {
+        padding-left: 20px;
+      }
+
+      .device-select-container {
+        width: 240px;
+        padding-bottom: 20px;
+      }
+
+      .self-view {
+        width: 240px;
+        height: 136px;
+      }
+
+      .blur-checkbox {
+        align-self: flex-start;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .media-tab-content {
+    .settings-tab-content-body {
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .tab-content-body-panel {
+        flex: 0 1;
+        align-items: flex-start;
+
+        &.left-pane {
+          padding-right: 20px;
+        }
+        &.right-pane {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+}

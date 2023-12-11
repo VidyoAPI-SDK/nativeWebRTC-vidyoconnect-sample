@@ -1,0 +1,110 @@
+// It shifts notifications down to avoid the settings button overlapping
+body div.bp5-toast-container-top.notification {
+  top: 35px;
+  overflow-y: hidden;
+  bottom: 64px;
+}
+
+.notification {
+  .bp5-toast {
+    width: 385px;
+    background: #e7e7e7;
+    &.order-1 {
+      order: 1;
+    }
+    &.order-2 {
+      order: 2;
+    }
+    &.disable-animation-if-not-on-top:not(:first-child) {
+      transform: none !important;
+    }
+    &.hide-default-btn {
+      .bp5-button-group {
+        display: none;
+      }
+    }
+
+    .bp5-toast-message {
+      display: block;
+      padding: 0;
+      min-height: 56px;
+    }
+  }
+}
+
+.notification-content {
+  display: table;
+  font-size: 13px;
+  color: #666;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  .notification-icon {
+    width: 44px;
+    height: 56px;
+    padding-left: 12px;
+    display: table-cell;
+    vertical-align: middle;
+    img {
+      display: block;
+      width: 32px;
+      height: 32px;
+    }
+  }
+  .notification-body {
+    padding: 0 12px;
+    display: table-cell;
+    vertical-align: middle;
+    color: #666;
+    .notification-title {
+      font-weight: 400;
+    }
+  }
+}
+
+.undismissable {
+  .bp5-button-group {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .notification {
+    .bp5-toast {
+      width: 335px;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .notification.web-view {
+    .bp5-toast {
+      width: 240px;
+      min-width: 240px;
+      .notification-content {
+        padding: 0;
+        .notification-body {
+          padding: 0 0 0 6px;
+        }
+        .notification-icon {
+          padding-left: 6px;
+        }
+        .notification-title,
+        .notification-message {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 165px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .notification {
+    .bp5-toast {
+      width: 280px;
+      min-width: 280px;
+    }
+  }
+}

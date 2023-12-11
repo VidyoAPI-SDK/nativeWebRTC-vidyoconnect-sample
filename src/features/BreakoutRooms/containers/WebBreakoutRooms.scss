@@ -1,0 +1,40 @@
+.br-transfer-dialog {
+  &.bp5-alert.bp5-dialog {
+    min-height: auto;
+
+    .bp5-alert-body,
+    .bp5-alert-contents {
+      width: 100%;
+    }
+    .message-header {
+      text-align: center;
+      width: 100%;
+      color: #464646;
+    }
+    .bp5-alert-footer {
+      display: none;
+    }
+    .message-content {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+
+      .spinner {
+        width: 22px;
+        height: 22px;
+      }
+    }
+  }
+}
+
+.broadcast-notification {
+  .header,
+  .message {
+    font-size: 14px;
+  }
+
+  .header {
+    font-weight: 600;
+    white-space: normal;
+  }
+}

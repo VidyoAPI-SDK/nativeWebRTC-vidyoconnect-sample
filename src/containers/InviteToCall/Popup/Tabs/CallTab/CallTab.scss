@@ -1,0 +1,84 @@
+@import "../../../../../styles/variables.scss";
+.call-tab-content {
+  display: block;
+
+  .dial-out {
+    margin-top: 30px;
+  }
+
+  .invite-to-call-content-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .invite-phone-field {
+    line-height: 40px;
+    background: #fff;
+    box-sizing: border-box;
+    border-radius: 5px;
+    display: flex;
+  }
+
+  .phone-input {
+    width: 430px;
+    height: 30px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #436084;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .invitation-label {
+    margin-top: 20px;
+  }
+
+  .btn-invite-section {
+    display: inline-block;
+    width: 100%;
+    padding: 20px 0 12px;
+    text-align: center;
+    button[data-invalid="true"] {
+      background-color: $button-intent-success-disabled;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+
+  &.wrong-configs {
+    .invite-phone-field,
+    .sms-message-wrapper {
+      color: #a4b2c3;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+  }
+}
+
+@media (min-width: 400px) and (max-width: 500px) {
+  .call-tab-content .phone-input {
+    width: 85vw;
+  }
+}
+
+@media (min-width: 376px) and (max-width: 400px) {
+  .call-tab-content .phone-input {
+    width: 84vw;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 376px) {
+  .call-tab-content .phone-input {
+    width: 81vw;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .call-tab-content .phone-input {
+    width: 78.5vw;
+  }
+}

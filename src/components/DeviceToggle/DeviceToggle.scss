@@ -1,0 +1,88 @@
+.toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: none;
+  outline: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  &:focus {
+    outline: none;
+  }
+  &.speaker {
+    background-image: url("../../assets/images/buttons/icon_speaker.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 36px 36px;
+    &[data-on="false"] {
+      background-image: url("../../assets/images/buttons/icon_speaker_inactive.svg");
+    }
+    &[disabled] {
+      background-image: url("../../assets/images/buttons/icon_speaker_disabled.svg");
+    }
+  }
+  &.camera {
+    background-image: url("../../assets/images/buttons/icon_camera.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 36px 36px;
+    &[data-on="false"] {
+      background-image: url("../../assets/images/buttons/icon_camera_inactive.svg");
+    }
+    &[disabled] {
+      background-image: url("../../assets/images/buttons/icon_camera_disabled.svg");
+    }
+  }
+  &.microphone {
+    background-image: url("../../assets/images/buttons/icon_microphone.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 36px 36px;
+    &[data-on="false"] {
+      background-image: url("../../assets/images/buttons/icon_microphone_inactive.svg");
+      icon-microphone-energy-level {
+        display: none;
+      }
+    }
+    &[disabled] {
+      background-image: url("../../assets/images/buttons/icon_microphone_disabled.svg");
+      icon-microphone-energy-level {
+        display: none;
+      }
+    }
+  }
+
+  &.inactive {
+    cursor: not-allowed;
+  }
+}
+
+.device-tooltip {
+  .bp5-popover-transition-container {
+    .bp5-popover {
+      border-radius: 10px;
+      max-width: 273px;
+      .bp5-popover-content {
+        border-radius: 10px;
+        background: #51575c;
+        color: #ffffff;
+        font-size: 12px;
+        line-height: 16px;
+      }
+      .bp5-popover-arrow-border {
+        fill: #51575c;
+      }
+      .bp5-popover-arrow-fill {
+        fill: #51575c;
+      }
+      .bp5-popover-arrow {
+        &:before {
+          background-color: #51575c;
+        }
+      }
+    }
+  }
+}

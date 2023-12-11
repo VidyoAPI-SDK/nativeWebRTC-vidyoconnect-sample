@@ -1,0 +1,47 @@
+.bp5-alert.bp5-dialog {
+  .bp5-alert-contents {
+    .message-header {
+      flex: 1 1 auto;
+      font-size: 20px;
+      text-align: center;
+      padding: 0 0 8px 0;
+      margin-bottom: 4px;
+    }
+    .message-content {
+      flex: 1 1 auto;
+      font-size: 14px;
+      text-align: left;
+      padding: 8px 0 16px 0;
+
+      a,
+      a:active,
+      a:visited,
+      a:focus {
+        text-decoration: underline;
+      }
+    }
+    .bp5-control.bp5-checkbox .bp5-control-indicator {
+      box-shadow: inset 0 0 0 1px #51575c;
+    }
+  }
+  &.popup-without-button {
+    padding: 30px;
+    align-items: center;
+    justify-content: center;
+    .bp5-alert-footer {
+      display: none;
+    }
+    .bp5-alert-contents .message-content {
+      text-align: center;
+    }
+  }
+  &.popup-with-button {
+    padding: 30px;
+    align-items: center;
+    justify-content: center;
+
+    .bp5-alert-contents .message-content {
+      text-align: center;
+    }
+  }
+}

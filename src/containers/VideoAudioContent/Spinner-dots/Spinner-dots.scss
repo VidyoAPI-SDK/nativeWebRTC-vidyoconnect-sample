@@ -1,0 +1,64 @@
+.spinner-dots .circle {
+  display: inline-block;
+  padding: 8px;
+  margin: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #d8d8d8;
+  opacity: 0.1;
+  -webkit-animation-name: blinker;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-name: blinker;
+  -moz-animation-duration: 4s;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: infinite;
+  animation-name: blinker;
+  animation-duration: 4s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  &:nth-child(2) {
+    animation-delay: 1s;
+  }
+  &:nth-child(3) {
+    animation-delay: 2s;
+  }
+}
+
+@-moz-keyframes blinker {
+  0% {
+    opacity: 0.1;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+@-webkit-keyframes blinker {
+  0% {
+    opacity: 0.1;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes blinker {
+  0% {
+    opacity: 0.1;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}

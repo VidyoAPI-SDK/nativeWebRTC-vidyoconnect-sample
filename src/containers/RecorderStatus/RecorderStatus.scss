@@ -1,0 +1,21 @@
+.recorder-status-container {
+  margin: 0;
+  padding: 0;
+  .recorder-status-icon {
+    width: 24px;
+    height: 24px;
+    background: url("../../assets/images/indicators/recording_inactive.svg")
+      no-repeat center center;
+    &.active {
+      background: url("../../assets/images/indicators/recording_active.svg")
+        no-repeat center center;
+    }
+  }
+}
+.bp5-popover.recorder-status-popupover .bp5-popover-content {
+  padding: 10px 12px;
+  font-size: 15px;
+  line-height: 15px;
+  color: #3c3c3c;
+  background: #e7e7e7;
+}

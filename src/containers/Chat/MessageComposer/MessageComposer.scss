@@ -1,0 +1,76 @@
+.message-composer {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  flex: 1;
+  .bp5-popover-wrapper {
+    width: 100%;
+    .bp5-popover-target {
+      width: 100%;
+    }
+  }
+  .bp5-input-group {
+    display: contents;
+
+    .bp5-input {
+      height: 36px;
+      box-shadow: none;
+      box-shadow: inset 0 0 0 1px rgba($color: #fff, $alpha: 0.1);
+      border: 1px solid #107db7;
+      border-radius: 4px;
+      width: 100%;
+      padding: 1px 10px;
+      padding-right: 32px;
+      &:focus {
+        border: 2px solid #107db7;
+        padding: 1px 9px;
+        padding-right: 31px;
+      }
+      &::-webkit-input-placeholder {
+        color: #a9b2b9;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .bp5-button.send-message {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 20px;
+    &,
+    &:hover {
+      box-shadow: none;
+      background: none;
+      outline: none;
+      border: none;
+    }
+    &:active {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    &[disabled] {
+      background: none;
+      cursor: default;
+    }
+  }
+}
+.bp5-tooltip.red-border,
+.bp5-tooltip.red-border .bp5-popover-arrow::before {
+  border: 1px solid #d40e00;
+  border-radius: 4px;
+}
+
+.bp5-tooltip.red-border .bp5-popover-arrow {
+  top: 21px !important;
+}
+
+.bp5-tooltip.red-border .bp5-popover-arrow::before {
+  height: 17px;
+  width: 16px;
+  background-color: #e4281b;
+}
+
+.bp5-tooltip.red-border .bp5-popover-arrow .bp5-popover-arrow-border,
+.bp5-tooltip.red-border .bp5-popover-arrow .bp5-popover-arrow-fill {
+  fill: #e4281b;
+}

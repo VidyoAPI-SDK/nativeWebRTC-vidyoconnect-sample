@@ -1,0 +1,45 @@
+.make-snapshot {
+  $b: &;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg width='18px' height='14px' viewBox='0 0 18 14' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpath d='M16.5703 2.25L13.677 2.25C12.172 0.5625 11.6979 0 11.1211 0L6.97266 0C6.39544 0 5.93358 0.5625 4.41698 2.25L3.79688 2.25L3.79688 1.5L2.20313 1.5L2.20313 2.25L1.57031 2.25C0.743203 2.25 0 2.86955 0 3.68831L0 11.9392C0 12.7579 0.743203 13.5 1.57031 13.5L16.5703 13.5C17.3974 13.5 18 12.7579 18 11.9391L18 3.68831C18 2.86955 17.3974 2.25 16.5703 2.25L16.5703 2.25Z' id='path_1' /%3E%3CclipPath id='clip_1'%3E%3Cuse xlink:href='%23path_1' /%3E%3C/clipPath%3E%3C/defs%3E%3Cg id='Group-5'%3E%3Cg id='Combined-Shape'%3E%3Cg clip-path='url(%23clip_1)'%3E%3Cuse xlink:href='%23path_1' fill='none' stroke='%23FFFFFF' stroke-width='2.25' /%3E%3C/g%3E%3C/g%3E%3Cpath d='M3.21429 5.14285C4.27941 5.14285 5.14286 4.2794 5.14286 3.21428C5.14286 2.14916 4.27941 1.28571 3.21429 1.28571C2.14917 1.28571 1.28572 2.14916 1.28572 3.21428C1.28572 4.2794 2.14917 5.14285 3.21429 5.14285ZM3.21429 6.42857C1.43908 6.42857 0 4.98949 0 3.21429C0 1.43908 1.43908 0 3.21429 0C4.98949 0 6.42857 1.43908 6.42857 3.21429C6.42857 4.98949 4.98949 6.42857 3.21429 6.42857Z' transform='translate(5.785713 4.178589)' id='Oval' fill='%23FFFFFF' stroke='none' /%3E%3C/g%3E%3C/svg%3E");
+  background-size: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+  margin-left: 5px;
+  position: relative;
+
+  @media screen and (max-width: 1024px) {
+    margin-left: 15px;
+  }
+
+  &.hide {
+    display: none;
+  }
+
+  &:hover {
+    #{$b} {
+      &__tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+
+  &__tooltip {
+    display: none;
+  }
+}
+
+.video-container.video-type:not(.pinned-video) {
+  .make-snapshot__tooltip {
+    display: block;
+  }
+}
+
+.media-grid[data-tiles="1"] {
+  .video-container.video-type:not(.pinned-video) {
+    .make-snapshot__tooltip {
+      display: none;
+    }
+  }
+}

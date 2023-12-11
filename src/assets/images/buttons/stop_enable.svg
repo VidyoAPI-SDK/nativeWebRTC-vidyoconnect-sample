@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>stop</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="A4" transform="translate(-1432.000000, -1452.000000)" fill-rule="nonzero" fill="#FFFFFF">
+            <g id="A-02.-Recording-started" transform="translate(1140.000000, 740.000000)">
+                <g id="screen-copy" transform="translate(30.000000, 174.000000)">
+                    <g id="In-call---no-left-panel">
+                        <g filter="url(#filter-1)" id="recording-copy-6">
+                            <g transform="translate(0.000000, 531.000000)">
+                                <g id="stop" transform="translate(272.000000, 13.000000)">
+                                    <g id="Layer_1">
+                                        <path d="M15.5583333,0 L0.441666667,0 C0.195833333,0 0,0.195833333 0,0.441666667 L0,15.5583333 C0,15.8041667 0.195833333,16 0.441666667,16 L15.5583333,16 C15.8,16 16,15.8041667 16,15.5583333 L16,0.441666667 C16,0.195833333 15.8,0 15.5583333,0 Z" id="Shape"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

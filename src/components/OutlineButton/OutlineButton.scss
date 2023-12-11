@@ -1,0 +1,27 @@
+.vc-btn {
+  box-shadow: none;
+  outline: none;
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
+  border-radius: 3px;
+  cursor: default;
+  font-size: 14px;
+  padding: 10px 20px;
+  text-align: center;
+  min-width: 30px;
+  flex-grow: 1;
+  white-space: nowrap;
+
+  &:hover {
+    @media (min-width: 845px) {
+      background-color: #254b74;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,92 @@
+.settings-content {
+  width: 690px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  background: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.5);
+  &.mobile {
+    height: 100%;
+    width: 100%;
+  }
+
+  .settings-close button {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-image: url("../../assets/images/settings/icon_close.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border: none;
+    background-color: #6e1e1400;
+  }
+
+  .settings-tab-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    .settings-tab-content-header {
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 25px;
+      font-size: 20px;
+      color: #13253b;
+    }
+
+    .settings-tab-content-body {
+      height: calc(100% - 45px);
+      display: flex;
+      padding: 20px 40px;
+      overflow: auto;
+    }
+  }
+
+  .blur-checkbox {
+    display: flex;
+    span {
+      margin-left: 10px;
+    }
+  }
+}
+
+.bottom.webview {
+  .settings-tab-content-body {
+    padding: 10px 20px;
+  }
+
+  .about-neo-logo {
+    max-width: 200px;
+  }
+
+  .account-tab-content__guest-box {
+    margin-top: 0;
+  }
+
+  .about-tab-content .tab-content-body-panel {
+    max-height: unset;
+  }
+
+  .help-tab-content {
+    display: block;
+    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: 0px;
+
+    button {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      text-align: center;
+    }
+  }
+}

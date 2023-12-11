@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "eslint:recommended"
+  ],
+  "rules": {
+    "import/no-anonymous-default-export": 0,
+    "no-empty": 0,
+    "no-useless-catch": 0
+  }
+}

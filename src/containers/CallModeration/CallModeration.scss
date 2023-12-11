@@ -1,0 +1,50 @@
+.cm-mobile {
+  padding: 13px 13px 0 13px;
+
+  &__title {
+    color: #b4c3d0;
+    font-size: 16px;
+    padding: 5px 0;
+    border-bottom: 1px solid #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 15px 15px 0;
+    list-style-type: none;
+  }
+}
+
+.vtcl-cm-lock {
+  background-image: url("../../assets/images/callModeration/lock.svg");
+}
+.vtcl-cm-unlock {
+  background-image: url("../../assets/images/callModeration/unlock.svg");
+}
+.vtcl-cm-hard-mute-microphones {
+  background-image: url("../../assets/images/callModeration/icon_mic_hard_mute_off.svg");
+}
+.vtcl-cm-hard-unmute-microphones {
+  background-image: url("../../assets/images/callModeration/icon_mic_hard_mute_on.svg");
+}
+.vtcl-cm-hard-mute-cameras {
+  background-image: url("../../assets/images/callModeration/icon_cam_hard_mute_off.svg");
+}
+.vtcl-cm-hard-unmute-cameras {
+  background-image: url("../../assets/images/callModeration/icon_cam_hard_mute_on.svg");
+}
+.vtcl-cm-soft-mute-microphones {
+  background-image: url("../../assets/images/callModeration/icon_mic_soft_mute.svg");
+}
+.vtcl-cm-soft-mute-cameras {
+  background-image: url("../../assets/images/callModeration/icon_cam_soft_mute.svg");
+}
+.vtcl-cm-disconnect-all {
+  background-image: url("../../assets/images/callModeration/disconnect-all.svg");
+}
+.vtcl-cm-open-link {
+  background-image: url("../../assets/images/callModeration/open-link.svg");
+}

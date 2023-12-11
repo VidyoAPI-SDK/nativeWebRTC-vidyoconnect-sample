@@ -1,0 +1,24 @@
+$general-select-width: 240px;
+
+.general-select-content {
+  .bp5-button {
+    width: $general-select-width;
+  }
+  .general-select-footer {
+    padding-top: 8px;
+  }
+}
+
+.general-select-portal {
+  .bp5-popover-content {
+    width: $general-select-width;
+  }
+}
+
+.default-device-message {
+  padding: 10px 5px;
+  color: #666;
+  text-align: left;
+  white-space: normal;
+  font-size: 12px;
+}

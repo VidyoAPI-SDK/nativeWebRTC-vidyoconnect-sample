@@ -1,0 +1,18 @@
+{
+  "FRAME_AGREE": "Agree",
+  "FRAME_RESTART_PAIRING": "Restart pairing",
+  "FRAME_GENERATE_QR_CODE": "Generate QR Code",
+  "FRAME_SCAN_QR_CODE_TEXT": "Scan the QR code with your Tyto device and follow the instructions on your Tyto device",
+  "FRAME_SKIP_NETWORK_DETAILS": "Skip network details",
+  "FRAME_TYTOCARE_NETWORK_ACCESS": "Tyto would like to access your Wi-Fi network",
+  "FRAME_PAIRED": "Paired",
+  "FRAME_PAIRING": "Pairing...",
+  "FRAME_FAILED": "Unavailable. Trying again...",
+  "FRAME_SEE_LAST_ERROR": "Error details",
+  "FRAME_WIFI_NETWORK": "Wi-Fi network",
+  "FRAME_WIFI_PASSWORD": "Wi-Fi password",
+  "FRAME_UNABLE_TO_GENERATE_QR_CODE": "Unable to generate QR code. <br/>Please restart pairing.",
+  "FRAME_WIFI_NETWORK_PLACEHOLDER": "Please enter network name",
+  "FRAME_WIFI_PASSWORD_PLACEHOLDER": "Please enter Wi-Fi password",
+  "FRAME_WIFI_MESSAGE": "Your wi-fi credentials will be used for one-time connection and will never be stored outside of your device."
+}

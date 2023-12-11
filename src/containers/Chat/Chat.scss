@@ -1,0 +1,116 @@
+.chat {
+  flex: 0 0 0;
+  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+  flex-direction: column;
+  display: flex;
+  &.open {
+    flex: 0 0 300px;
+  }
+  &:not(.open) > div {
+    visibility: hidden;
+  }
+
+  .chat-header {
+    width: 100%;
+    text-align: center;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+
+    &.show-shadow {
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      z-index: 1;
+    }
+
+    .chat-label {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+    }
+  }
+  .chat-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: #fff;
+    min-width: 300px;
+    overflow: auto;
+    flex: 1;
+    .chat-disclaimer {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 14px;
+      text-align: center;
+      padding: 0 16px 16px 16px;
+      color: #6d767e;
+    }
+  }
+
+  .chat-footer {
+    display: flex;
+    min-height: 64px;
+    background: hsla(0, 0%, 96%, 1);
+    border-top: 1px solid #e5e5e5;
+    min-width: 300px;
+  }
+
+  button {
+    &.mobile-chat-toggle {
+      position: absolute;
+      right: 16px;
+      top: 12px;
+      min-width: 20px;
+      min-height: 20px;
+      width: 24px;
+      height: 24px;
+      background-image: url("../../assets/images/buttons/black_x.svg");
+      background-repeat: no-repeat;
+      background-position: center center;
+      border: none;
+      background-color: #6e1e1400;
+      box-shadow: none;
+      background-size: 24px;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #73879a;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:horizontal:hover,
+  ::-webkit-scrollbar-thumb:vertical:hover {
+    background: #73879a;
+    cursor: pointer;
+  }
+  ::-webkit-scrollbar-thumb:horizontal:active,
+  ::-webkit-scrollbar-thumb:vertical:active {
+    background: #73879a;
+  }
+}
+
+@media screen and (max-width: 845px) {
+  .chat {
+    .chat-content {
+      padding-top: 32px;
+    }
+    &.open {
+      flex: 0 0 100%;
+      button {
+        &.mobile-chat-toggle {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}

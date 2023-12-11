@@ -1,0 +1,34 @@
+.leaving-call-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .content {
+    color: black;
+
+    .initial-loader {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+
+      .bp5-spinner {
+        .bp5-spinner-head {
+          stroke: black;
+        }
+        .bp5-spinner-track {
+          stroke: rgba(95, 107, 124, 0.5);
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-height: 450px) {
+  .joining-call-screen {
+    .content {
+      transform: translateY(-40px);
+    }
+  }
+}

@@ -1,0 +1,405 @@
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/select/lib/css/blueprint-select.css";
+@import "./variables.scss";
+
+.bp5-button {
+  &[class*="bp5-intent-"] {
+    height: 36px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: $button-text-color;
+    background-image: none;
+    box-shadow: none;
+    outline: none;
+    border: none;
+
+    &:not(.bp5-fill) {
+      width: 150px;
+
+      &.bp5-small {
+        width: 82px;
+      }
+      &.bp5-large {
+        width: 224px;
+      }
+    }
+
+    &.bp5-small {
+      height: 24px;
+    }
+
+    &:hover,
+    &:active,
+    &.bp5-active {
+      box-shadow: none;
+    }
+
+    &:disabled,
+    &.bp5-disabled {
+      background-image: none;
+      pointer-events: all;
+      box-shadow: none;
+    }
+  }
+
+  &.bp5-intent-primary {
+    background-color: $button-intent-primary;
+    &:hover {
+      background-color: $button-intent-primary-hover;
+    }
+    &:active,
+    &.bp5-active {
+      background-color: $button-intent-primary-active;
+    }
+    &:disabled,
+    &.bp5-disabled {
+      background-color: $button-intent-primary-disabled;
+    }
+  }
+
+  &.bp5-intent-success {
+    background-color: $button-intent-success;
+    &:hover {
+      background-color: $button-intent-success-hover;
+    }
+    &:active,
+    &.bp5-active {
+      background-color: $button-intent-success-active;
+    }
+    &:disabled,
+    &.bp5-disabled {
+      background-color: $button-intent-success-disabled;
+    }
+  }
+
+  &.bp5-intent-danger {
+    background-color: $button-intent-danger;
+    &:hover {
+      background-color: $button-intent-danger-hover;
+    }
+    &:active,
+    &.bp5-active {
+      background-color: $button-intent-danger-active;
+    }
+    &:disabled,
+    &.bp5-disabled {
+      background-color: $button-intent-danger-disabled;
+    }
+  }
+
+  &.bp5-intent-secondary,
+  &.bp5-outlined {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: transparent;
+    color: $button-text-color;
+    &:hover {
+      border: 1px solid rgba(255, 255, 255, 1);
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    &:active,
+    &.bp5-active {
+      border: 1px solid rgba(255, 255, 255, 1);
+      background-color: transparent;
+    }
+    &:disabled,
+    &.bp5-disabled {
+      border: 1px solid rgba(255, 255, 255, 1);
+      background-color: transparent;
+      color: $button-text-color;
+      opacity: 0.5;
+    }
+  }
+
+  &.bp5-intent-share {
+    background-color: $button-intent-share;
+    color: $button-text-color;
+    &:hover {
+      background-color: $button-intent-share-hover;
+    }
+    &:active,
+    &.bp5-active {
+      background-color: $button-intent-share-active;
+    }
+    &:disabled,
+    &.bp5-disabled {
+      background-color: $button-intent-share-disabled;
+      color: $button-text-color;
+    }
+  }
+}
+
+.bp5-control {
+  &.bp5-checkbox {
+    .bp5-control-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      box-shadow: none;
+      outline: none;
+    }
+    input:checked ~ .bp5-control-indicator {
+      border-radius: 3px;
+      box-shadow: none;
+      outline: none;
+      border: none;
+      &:hover,
+      &:active {
+        box-shadow: none;
+        outline: none;
+        border: none;
+      }
+      &::before {
+        outline: none;
+      }
+    }
+    input:not(:disabled):active:checked ~ .bp5-control-indicator {
+      background: white;
+      box-shadow: none;
+      outline: none;
+      border: none;
+    }
+    input:active ~ .bp5-control-indicator {
+      background: white;
+      box-shadow: none;
+      outline: none;
+    }
+
+    &.bp5-intent-primary {
+      .bp5-control-indicator {
+        background: white;
+        border: 2px solid $checkbox-intent-primary;
+        outline: none;
+      }
+      input:checked ~ .bp5-control-indicator {
+        background: white;
+        &::before {
+          mask-image: url(../assets/images/buttons/checked-white-fill.svg);
+          background: $checkbox-intent-primary;
+        }
+      }
+    }
+
+    &.bp5-intent-success {
+      .bp5-control-indicator {
+        background: white;
+        border: 2px solid $checkbox-intent-success;
+        outline: none;
+      }
+      input:checked ~ .bp5-control-indicator {
+        background: white;
+        &::before {
+          mask-image: url(../assets/images/buttons/checked-white-fill.svg);
+          background: $checkbox-intent-success;
+        }
+      }
+    }
+
+    &.bp5-intent-white {
+      color: white;
+      .bp5-control-indicator {
+        background: transparent;
+        border: 2px solid $checkbox-intent-white;
+        outline: none;
+      }
+      input:checked ~ .bp5-control-indicator {
+        background: transparent;
+        &:hover,
+        &:active {
+          background: transparent;
+        }
+        &::before {
+          mask-image: url(../assets/images/buttons/checked-white-fill.svg);
+          background: $checkbox-intent-white;
+        }
+      }
+      input:not(:disabled):active:checked ~ .bp5-control-indicator {
+        background: transparent;
+      }
+      input:active ~ .bp5-control-indicator {
+        background: transparent;
+      }
+    }
+
+    &.bp5-disabled {
+      opacity: 0.5;
+    }
+  }
+}
+
+.bp5-popover {
+  &.bp5-tooltip {
+    .bp5-popover-content {
+      font-size: 15px;
+      line-height: 15px;
+      color: #3c3c3c;
+      background: #e7e7e7;
+    }
+    .bp5-popover-arrow-border,
+    .bp5-popover-arrow-fill {
+      fill: #e7e7e7;
+    }
+    &.bp5-intent-text {
+      .bp5-popover-arrow-fill {
+        fill: #cdcdcd;
+      }
+      .bp5-popover-content {
+        background-color: #cdcdcd;
+        color: #464646;
+      }
+    }
+
+    &.bp5-intent-menu {
+      .bp5-popover-arrow-fill {
+        fill: #5a5a5a;
+      }
+      .bp5-popover-content {
+        background-color: #5a5a5a;
+        color: #f5f8fa;
+      }
+    }
+
+    &.bp5-intent-call {
+      .bp5-popover-arrow-fill {
+        fill: #1f3c59;
+      }
+      .bp5-popover-content {
+        background-color: #1f3c59;
+        color: #f5f8fa;
+      }
+    }
+
+    &.bp5-intent-call-menu {
+      .bp5-popover-arrow-fill {
+        fill: #3d5878;
+      }
+      .bp5-popover-content {
+        background-color: #3d5878;
+        color: #f5f8fa;
+      }
+    }
+    &.bp5-intent-danger .bp5-popover-content {
+      background-color: #e4281b;
+      color: #fff;
+    }
+  }
+}
+
+.bp5-select-list {
+  .bp5-popover-target {
+    display: flex;
+
+    .bp5-button {
+      height: 26px;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #fbfbfb;
+      border: solid 1px #e8e8e8;
+      border-radius: 3px;
+      outline: none;
+
+      .bp5-button-text {
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.bp5-spinner {
+  &.bp5-intent-primary {
+    .bp5-spinner-head {
+      stroke: $intent-primary;
+    }
+    .bp5-spinner-track {
+      stroke: rgba($color: $intent-primary, $alpha: 0.2);
+    }
+  }
+  &.bp5-intent-success {
+    .bp5-spinner-head {
+      stroke: $intent-success;
+    }
+    .bp5-spinner-track {
+      stroke: rgba($color: $intent-success, $alpha: 0.2);
+    }
+  }
+  &.bp5-intent-white {
+    .bp5-spinner-head {
+      stroke: white;
+    }
+    .bp5-spinner-track {
+      stroke: rgba($color: white, $alpha: 0.2);
+    }
+  }
+}
+
+.bp5-alert.bp5-dialog {
+  width: 370px;
+  @media screen and (max-width: 400px) {
+    width: 335px;
+  }
+  min-height: 200px;
+  color: #666;
+  background: $alert-backround;
+  .bp5-alert-footer {
+    flex-direction: row;
+    justify-content: center;
+    .bp5-button {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 8px 5px;
+      background-color: $button-intent-alert-confirm;
+      padding: 12px 8px;
+      border-radius: 4px;
+      color: #fff;
+      text-transform: uppercase;
+      min-width: 120px;
+      background-image: none;
+      text-align: center;
+    }
+    .bp5-intent-danger {
+      background-color: #d40e00;
+    }
+  }
+}
+
+// Call moderation popups
+.bp5-dialog-container .bp5-alert.cm-popup {
+  max-width: 400px;
+  width: 400px;
+  min-height: 170px;
+
+  @media screen and (max-width: 420px) {
+    max-width: calc(100% - 30px);
+  }
+
+  .bp5-alert-footer {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 0 10px 0px;
+  }
+
+  .message-content {
+    font-size: 17px;
+  }
+
+  .bp5-button {
+    max-width: 240px;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 19px;
+    word-wrap: break-word;
+    height: auto;
+    flex: 1 0 0;
+    white-space: nowrap;
+    width: auto;
+  }
+}
+
+.bp5-dialog-container .bp5-alert.cm-popup--center {
+  .message-content {
+    text-align: center;
+  }
+}

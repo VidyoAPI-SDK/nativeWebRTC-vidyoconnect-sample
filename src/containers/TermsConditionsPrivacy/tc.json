@@ -1,0 +1,38 @@
+{
+  "version": "06/04/2018",
+  "links": [
+    {
+      "name": "terms",
+      "link": "https://www.vidyo.com/cloudservices-user-terms-and-conditions",
+      "version": "09/28/2016"
+    },
+    {
+      "name": "privacy",
+      "link": "https://www.vidyo.com/privacy-policy",
+      "version": "05/24/2018"
+    }
+  ],
+  "domains": {
+    "*vidyocloud.com": "vidyocloud.com",
+    "*vidyo.com": "vidyocloud.com",
+    "*vidyoconnect.com": "vidyocloud.com",
+    "*health.vidyoconnect.com": "vidyocloud.com",
+    "*eu.vidyoconnect.com": "vidyocloud.com",
+    "*health.vidyoworks.com": "vidyocloud.com",
+    "*xpressvue.net": "vidyocloud.com",
+    "*telviva.com": "vidyocloud.com",
+    "*xtelepresence.com": "vidyocloud.com",
+    "*cloud.vsgi.com": "vidyocloud.com",
+    "*meetngreet.ca": "vidyocloud.com",
+    "*mivid.mitel.com": "vidyocloud.com",
+    "*video.mitel.com": "vidyocloud.com",
+    "*glowpoint.com": "vidyocloud.com",
+    "*dmgt.com": "vidyocloud.com",
+    "*mitel.com": "vidyocloud.com",
+    "*vidyocloudqa.com": "vidyocloud.com",
+    "*beta.vidyo.com": "vidyocloud.com",
+    "*vidyocloudstaging.com": "vidyocloud.com",
+    "*vidyoclouddev.com": "vidyocloud.com",
+    "*vvp5.vidyoqa.com": "vidyocloud.com"
+  }
+}

@@ -1,0 +1,117 @@
+.adhoc-beauty-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  color: #51575c;
+
+  .guest-settings-icon {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+  }
+
+  .bp5-icon-info-sign {
+    position: fixed;
+    color: #777;
+    left: 32px;
+    top: 36px;
+
+    &:hover {
+      color: #555;
+    }
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+
+    .content-blocks {
+      width: 224px;
+      min-height: 200px;
+
+      .block-1 {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .block-2 {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+@media only screen and (min-height: 450px) {
+  .adhoc-beauty-screen {
+    .content-blocks {
+      transform: translateY(-40px);
+    }
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  .adhoc-beauty-screen {
+    padding-top: 60px;
+
+    .content {
+      height: calc(100vh - 60px);
+
+      .content-blocks {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 414px) and (max-height: 540px),
+  only screen and (max-width: 414px) and (max-height: 640px) {
+  .adhoc-beauty-screen {
+    .content {
+      justify-content: flex-start;
+
+      .content-blocks {
+        transform: translateY(0px);
+      }
+    }
+  }
+}
+
+.adhoc-initial-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .content {
+    width: 224px;
+
+    .loading-block {
+      background-color: transparent !important;
+    }
+
+    .initial-loader {
+      margin-top: 20px;
+    }
+  }
+}
+
+@media only screen and (min-height: 450px) {
+  .adhoc-initial-screen {
+    .content {
+      transform: translateY(-40px);
+    }
+  }
+}

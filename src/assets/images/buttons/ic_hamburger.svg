@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 53.2 (72643) - https://sketchapp.com -->
+    <title>922AA740-DF2C-4375-ACC9-9795C8BBC6A1</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M3,6 L21,6 L21,8 L3,8 L3,6 Z M3,11 L21,11 L21,13 L3,13 L3,11 Z M3,16 L21,16 L21,18 L3,18 L3,16 Z" id="path-1"></path>
+    </defs>
+    <g id="Asset-Artboard-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon-Style/Icons/In-call-top-bar/ic_hamburger">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="ic_hamburger" fill="#FFFFFF" xlink:href="#path-1"></use>
+            <g id="Icon-color-Style/Сolors/Gray/neutral-10" mask="url(#mask-2)" fill="#FFFFFF">
+                <rect id="color" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

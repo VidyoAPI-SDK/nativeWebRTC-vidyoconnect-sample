@@ -1,0 +1,206 @@
+.invite-to-call-content {
+  width: 600px;
+  height: 460px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  background: #17314c;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+
+  .inv-out-line {
+    width: 100%;
+    box-shadow: 0px 7px 6px 2px rgba(0, 0, 0, 0.2);
+    height: 1px;
+  }
+
+  button.invite-btn {
+    position: relative;
+    margin-bottom: 12px;
+    padding: 10px 20px;
+    background: #83c36d;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    color: #fff;
+    border-radius: 5px;
+    width: 70%;
+    text-transform: uppercase;
+    cursor: pointer;
+    &:disabled {
+      background: #979797;
+    }
+    .spinner {
+      animation: none;
+    }
+  }
+
+  &.mobile {
+    height: 100%;
+    width: 100%;
+  }
+
+  .invite-to-call-header {
+    width: 100%;
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 4px 4px 0 0;
+    background: #3d5878;
+    z-index: 1;
+  }
+
+  .invite-to-call-close button {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-image: url("../../../assets/images/buttons/white_x.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border: none;
+    outline: none;
+    background-color: #6e1e1400;
+  }
+
+  .invite-to-call-tab-content {
+    height: 100%;
+    box-sizing: border-box;
+
+    .invite-to-call-content-header {
+      font-size: 16px;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .invite-to-call-content-body {
+      display: flex;
+      flex-direction: column;
+      margin: 0 30px;
+      text-align: center;
+      height: 100%;
+    }
+  }
+
+  .tab-switcher {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+
+    &.bottom {
+      .btn-invite-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        flex: 1;
+      }
+    }
+  }
+
+  .dial-out,
+  .inv-sms {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .tab-switcher .tab-content {
+    color: #fff;
+    height: auto;
+  }
+
+  .tab-switcher .tab-bar .tab {
+    width: 90px;
+    height: 70px;
+    background-size: 24px 25px;
+    background-color: transparent;
+  }
+
+  .tab-switcher.bottom .tab-bar .tab {
+    height: 78px;
+  }
+  .tab-switcher .tab-bar {
+    background-color: #3d5878;
+  }
+
+  .tab-switcher .tab-bar .tab-label {
+    font-size: 14px;
+  }
+
+  .tab-switcher .tab-bar .tab[data-active="true"] {
+    background-color: #17314c;
+    &:first-child {
+      box-shadow: 0px 1px 0px 0px #73879a;
+    }
+  }
+  .error-msg {
+    display: inline-block;
+    background-color: #fa0a0a;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px 20px;
+    position: relative;
+    bottom: 10px;
+    z-index: 1;
+    transition: opacity 0.3s;
+  }
+
+  .error-msg::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #fa0a0a transparent transparent transparent;
+  }
+
+  .invite-phone-field-wrap {
+    position: relative;
+
+    .error-msg {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(100% + 10px);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      line-height: 1;
+      padding: 12px 20px;
+      white-space: nowrap;
+
+      @media screen and (max-width: 768px) {
+        white-space: normal;
+      }
+    }
+  }
+
+  /*Override intl-tel-input*/
+  .iti {
+    color: #000;
+
+    .iti__country-list {
+      width: 450px;
+      overflow-y: auto;
+      line-height: 18px;
+      color: #000000;
+    }
+
+    .iti__selected-flag {
+      outline: none;
+    }
+  }
+
+  .landscape-container {
+    width: 77%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,19 @@
+.message-sender-avatar {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6d767e;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 44px;
+  font-size: 15px;
+  color: #fff;
+
+  img,
+  span {
+    width: 100%;
+    height: 100%;
+  }
+}

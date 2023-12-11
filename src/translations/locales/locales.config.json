@@ -1,0 +1,22 @@
+{
+  "availableLanguages": [
+    "en",
+    "fr",
+    "de",
+    "es",
+    "it",
+    "pl",
+    "zh",
+    "ja",
+    "oo",
+    "ar",
+    "uk",
+    "ko"
+  ],
+  "pluralRules": {
+    "binary": ["en", "de", "es", "it", "oo"],
+    "binaryWithSingleZero": ["fr"],
+    "triple": ["ru", "uk", "pl"],
+    "single": ["zh", "ja", "ko"]
+  }
+}

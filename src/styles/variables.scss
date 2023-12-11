@@ -1,0 +1,43 @@
+$radial-gradient-background: #ffffff;
+
+$intent-primary: #094a80;
+$intent-success: #107db7;
+
+$button-intent-primary: $intent-primary;
+$button-intent-primary-hover: #02345d;
+$button-intent-primary-active: #094a80;
+$button-intent-primary-disabled: #0c60a6;
+
+$button-intent-secondary: rgba(255, 255, 255, 0.5);
+$button-intent-secondary-hover: rgba(0, 0, 0, 0.5);
+$button-intent-secondary-active: rgba(255, 255, 255, 0.5);
+$button-intent-secondary-disabled: rgba(255, 255, 255, 0.5);
+
+$button-intent-success: $intent-success;
+$button-intent-success-hover: rgba(16, 125, 183, 0.9);
+$button-intent-success-active: rgba(16, 125, 183, 0.9);
+$button-intent-success-disabled: #6d767e;
+
+$button-intent-danger: #e84b40;
+$button-intent-danger-hover: #c8382e;
+$button-intent-danger-active: #e84b40;
+$button-intent-danger-disabled: rgba(232, 75, 64, 0.5);
+
+$button-intent-share: #4a90e2;
+$button-intent-share-hover: #3073c2;
+$button-intent-share-active: #4a90e2;
+$button-intent-share-disabled: rgba(74, 144, 226, 0.5);
+
+$button-intent-alert-confirm: #666;
+$button-intent-alert-confirm-hover: #666;
+$button-intent-alert-confirm-active: #666;
+$button-intent-alert-confirm-disabled: rgba(74, 144, 226, 0.5);
+
+$checkbox-intent-primary: #4a90e2;
+$checkbox-intent-success: #6ec45d;
+$checkbox-intent-white: white;
+
+$button-text-color: #fff;
+$alert-backround: #e6e6e6;
+
+$general-select-width: 240px;

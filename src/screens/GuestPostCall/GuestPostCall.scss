@@ -1,0 +1,59 @@
+.guest-post-call-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .guest-settings-icon {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+  }
+
+  .content {
+    width: 100%;
+    width: 224px;
+    color: #51575c;
+    font-size: 20px;
+    text-align: center;
+
+    .guest-bottom-text {
+      min-width: 224px;
+    }
+
+    .guest-logout-message-title {
+      margin-bottom: 20px;
+      font-weight: 400;
+      font-size: 14px;
+    }
+
+    .guest-logout-message-description {
+      font-weight: 400;
+      font-size: 12px;
+      a {
+        color: #0080ff;
+      }
+    }
+
+    .guest-error-message {
+      padding-bottom: 10px;
+      text-align: center;
+      color: darkred;
+      font-size: 6pt;
+    }
+
+    #guest-logout-message {
+      padding: 15px 0;
+    }
+  }
+}
+
+@media only screen and (min-height: 450px) {
+  .guest-post-call-screen {
+    .content {
+      transform: translateY(-30px);
+    }
+  }
+}

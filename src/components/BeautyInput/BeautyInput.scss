@@ -1,0 +1,23 @@
+.beauty-input {
+  margin-bottom: 20px;
+  .bp5-input-group {
+    .bp5-input {
+      height: 36px;
+      line-height: 36px;
+      color: #51575c;
+      box-shadow: 0 0 0 1px #107db7;
+      border-radius: 10px;
+
+      &::-webkit-input-placeholder {
+        color: #a9b2b9;
+      }
+
+      &::placeholder {
+        color: #a9b2b9;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #107db7;
+      }
+    }
+  }
+}

@@ -1,0 +1,125 @@
+@import "../../../../../styles/variables.scss";
+.sms-tab-content {
+  .inv-sms {
+    margin-top: 30px;
+  }
+
+  .invite-phone-field {
+    line-height: 40px;
+    background: #fff;
+    box-sizing: border-box;
+    border-radius: 5px;
+    display: flex;
+    position: relative;
+  }
+
+  .phone-input {
+    width: 430px;
+    height: 30px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #436084;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .sms-message-wrapper {
+    height: 90px;
+    width: 100%;
+    background-color: #fff;
+    color: #436084;
+    text-align: left;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 16px;
+    line-height: 22px;
+    border-radius: 5px;
+    word-break: break-word;
+
+    &.onlyread {
+      pointer-events: none;
+      color: #a4b2c3;
+    }
+
+    .sms-message {
+      outline: none;
+    }
+
+    .room-link {
+      display: inline-block;
+      color: #a4b2c3;
+    }
+  }
+
+  .invitation-section .sms-size {
+    text-align: right;
+
+    &.hide {
+      display: none;
+    }
+  }
+
+  .hint-section {
+    display: flex;
+    text-align: left;
+    font-size: 11px;
+    line-height: 14px;
+    padding-top: 5px;
+    .has-pin-message {
+      flex: 1;
+    }
+  }
+
+  .invitation-label {
+    padding-top: 20px;
+  }
+
+  .btn-invite-section {
+    display: inline-block;
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    button[data-invalid="true"] {
+      background-color: $button-intent-success-disabled;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+
+  &.wrong-configs {
+    .invite-phone-field,
+    .sms-message-wrapper {
+      color: #a4b2c3;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+  }
+}
+
+@media (min-width: 400px) and (max-width: 500px) {
+  .sms-tab-content .phone-input {
+    width: 85vw;
+  }
+}
+
+@media (min-width: 376px) and (max-width: 400px) {
+  .sms-tab-content .phone-input {
+    width: 84vw;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 376px) {
+  .sms-tab-content .phone-input {
+    width: 81vw;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .sms-tab-content .phone-input {
+    width: 78.5vw;
+  }
+}

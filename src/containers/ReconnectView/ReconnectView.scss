@@ -1,0 +1,106 @@
+.reconnect-view-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 14px;
+  color: #BFBFBF;
+  line-height: 16px;    
+  background: hsla(0,0%,14%,1);
+  /*-webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);*/
+  text-align: center;
+  z-index: 3;
+}
+
+.reconnect-view-container>div {
+  padding: 10px 0px
+}
+
+
+.reconnect-view-container .message {}
+
+.reconnect-view-container .reconnect-spinner {
+  /* display: inline; */
+}
+
+.reconnect-view-container .reconnect-spinner .circle {
+  display: inline-block;
+  padding: 8px;
+  margin: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #D8D8D8;
+  opacity: 0.1;
+  -webkit-animation-name: blinker;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-name: blinker;
+  -moz-animation-duration: 4s;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: infinite;
+  animation-name: blinker;
+  animation-duration: 4s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.reconnect-view-container .reconnect-spinner .circle:nth-child(2) {
+  animation-delay: 1s
+}
+
+.reconnect-view-container .reconnect-spinner .circle:nth-child(3) {
+  animation-delay: 2s
+}
+
+@-moz-keyframes blinker {
+  0% {
+      opacity: 0.1;
+  }
+  25% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0.1;
+  }
+}
+
+@-webkit-keyframes blinker {
+  0% {
+      opacity: 0.1;
+  }
+  25% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0.1;
+  }
+}
+
+@keyframes blinker {
+  0% {
+      opacity: 0.1;
+  }
+  25% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0.1;
+  }
+}
+
+.reconnect-view-container .leave-button {
+  margin: 10px;
+  padding: 10px;
+  background: rgba(118, 18, 11, 0.60);
+  border: 1px solid #D0011B;
+  border-radius: 4px;
+  color: #FFFFFF;
+  display: inline-block;
+}

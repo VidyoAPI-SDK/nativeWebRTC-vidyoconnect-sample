@@ -1,0 +1,224 @@
+.change-role {
+  position: relative;
+  width: 100%;
+  display: flex;
+
+  &__box {
+    position: absolute;
+    bottom: calc(100% + 30px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% + 20px);
+    background-color: #1f3c59;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+    min-width: 340px;
+
+    @media screen and (max-width: 845px) {
+      min-width: auto;
+    }
+
+    &:after {
+      content: " ";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-bottom: none;
+      border-top: 10px solid #1f3c59;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      left: 50%;
+      bottom: 0%;
+      transform: translate(-50%, 9px);
+    }
+  }
+
+  &__top-title {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  &__bottom-title {
+    font-size: 14px;
+    line-height: 16px;
+    padding: 0 25px;
+  }
+
+  &__form {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+  }
+
+  &__input-wrap,
+  &__submit {
+    width: calc(50% - 5px);
+    flex-shrink: 0;
+  }
+
+  &__input,
+  &__submit {
+    outline: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__input-wrap {
+    position: relative;
+
+    .bp5-popover-wrapper,
+    .bp5-popover-target {
+      width: 100%;
+    }
+  }
+
+  &__error-msg {
+    .bp5-popover.bp5-tooltip .bp5-popover-content {
+      background-color: #fa0a0a;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #fff;
+      padding: 12px 20px;
+    }
+
+    .bp5-popover.bp5-tooltip .bp5-popover-arrow-border,
+    .bp5-popover.bp5-tooltip .bp5-popover-arrow-fill {
+      fill: #fa0a0a;
+    }
+  }
+
+  &__input {
+    height: 50px;
+    border: 2px solid #fff;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 14px;
+    line-height: 45px;
+    padding: 0 0 0 10px;
+    min-width: 95px;
+    width: 100%;
+
+    &.error {
+      border-color: #fa0a0a;
+    }
+  }
+
+  &__submit {
+    border-radius: 4px;
+    background-color: #4a90e2;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 47px;
+    text-align: center;
+    padding: 0 20px;
+    box-shadow: none;
+    border: none;
+    text-transform: uppercase;
+
+    &:disabled {
+      background-color: #cecece;
+    }
+    &[data-invalid="true"] {
+      background-color: #cecece;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    &:hover,
+    &:focus {
+      box-shadow: none;
+      border: none;
+    }
+  }
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 100%;
+    font-size: 22px;
+    background-color: #aaa;
+    width: 55px;
+    height: 55px;
+    color: #fff;
+
+    img {
+      display: block;
+      object-fit: contain;
+      border-radius: 100%;
+      width: 100%;
+    }
+  }
+
+  &__owner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__owner-info {
+    margin-left: 15px;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  &__owner-name,
+  &__owner-title {
+    display: block;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__owner-name {
+    margin-bottom: 0;
+  }
+
+  &__owner-title {
+    color: #c4c4c4;
+    font-size: 11px;
+  }
+
+  &__owner-box {
+    margin: 20px 0;
+
+    svg circle {
+      fill: transparent;
+      stroke-width: 5;
+      transform-origin: 50px 50px;
+      will-change: transform;
+      animation-name: preloader;
+      animation-duration: 3s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+
+      &:nth-of-type(1) {
+        animation-delay: -0.25s;
+        stroke-dasharray: 100;
+      }
+      &:nth-of-type(2) {
+        animation-delay: -0.5s;
+        stroke-dasharray: 70;
+      }
+      &:nth-of-type(3) {
+        animation-delay: -0.75s;
+        stroke-dasharray: 120;
+      }
+      &:nth-of-type(4) {
+        stroke-dasharray: 80;
+      }
+    }
+  }
+}
+
+@keyframes preloader {
+  50% {
+    transform: rotate(360deg);
+  }
+}

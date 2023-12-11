@@ -1,0 +1,27 @@
+.log-levels-popup {
+  width: 100%;
+  overflow: auto;
+
+  th,
+  tr {
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: center;
+    min-width: 40px;
+
+    .log-level-title {
+      transform: translateX(-5px);
+      font-size: 9px;
+      line-height: 9px;
+      margin-bottom: 5px;
+      color: gray;
+    }
+  }
+  .row-start {
+    display: flex;
+    width: 200px;
+  }
+  .bp4-control {
+    margin: 0;
+  }
+}

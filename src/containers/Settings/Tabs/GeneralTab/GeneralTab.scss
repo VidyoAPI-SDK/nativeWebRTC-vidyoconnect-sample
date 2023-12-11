@@ -1,0 +1,204 @@
+.general-tab-content {
+  .settings-tab-content-body {
+    justify-content: start;
+    flex-direction: column;
+  }
+
+  .accordion-button {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  .setting-divider {
+    width: 100%;
+    height: 1px;
+    background-color: #dedede;
+    margin-bottom: 18px;
+    padding-top: 1px;
+  }
+
+  .accordion {
+    .accordion-content {
+      flex-wrap: wrap;
+      margin-top: 20px;
+      display: flex;
+
+      .right-content {
+        margin-left: 22px;
+      }
+
+      .right-content,
+      .left-content {
+        width: calc(50% - 16px);
+
+        .select-list-header {
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .font-selector {
+      padding: 0px 0px 3px 0px;
+
+      .font-heading {
+        color: #666666;
+        font-size: 14px;
+        line-height: 21px;
+        margin: 0;
+        padding-top: 12px;
+        font-weight: 500;
+      }
+
+      .nice-select {
+        margin-top: 5px;
+      }
+
+      .caption-preview {
+        background-color: #ffffff;
+        font-size: 24px;
+        font-family: Arial, Helvetica, sans-serif;
+        height: 72px;
+        width: 502px;
+        color: #000000;
+        border: solid #000000;
+        overflow: auto;
+        position: relative;
+        justify-content: center;
+        align-content: center;
+        display: flex;
+      }
+
+      .caption-preview div {
+        margin: auto;
+        text-align: center;
+      }
+    }
+  }
+
+  .accordion-tab {
+    padding-left: 20px;
+    position: relative;
+
+    .device-header {
+      font-size: 14px;
+      font-weight: 500;
+      color: #666666;
+      padding: 0 0 5px 0;
+      display: flex;
+
+      .device-icon {
+        width: 18px;
+        height: 18px;
+        margin: 0 5px 0 0;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .device-icon.caption-icon {
+        background-image: url("../../../../assets/images/buttons/ic_cc_setting.svg");
+      }
+
+      .device-heading {
+        color: #676767;
+        font-size: 11pt;
+        font-weight: bold;
+        line-height: 12pt;
+      }
+    }
+  }
+
+  .accordion-tab::before {
+    border-bottom: 2px solid #666666;
+    border-right: 2px solid #666666;
+    content: "";
+    display: block;
+    height: 8px;
+    margin-top: -7px;
+    width: 8px;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform-origin: 66% 66%;
+    transform: rotate(-45deg);
+    transition: all 0.15s ease-in-out;
+    box-sizing: border-box;
+  }
+
+  .accordion-tab.active::before {
+    transform: rotate(45deg);
+  }
+}
+
+.settings-content.mobile {
+  .general-tab-content {
+    .accordion.portrait {
+      .right-content {
+        margin-left: 0px;
+      }
+
+      .right-content,
+      .left-content {
+        width: 100%;
+      }
+      .font-selector.select-container {
+        width: 100%;
+        .caption-preview {
+          width: 100%;
+        }
+      }
+    }
+
+    .accordion.landscape {
+      .right-content {
+        margin-left: 0px;
+      }
+
+      .accordion-content {
+        height: 20px;
+      }
+
+      .right-content,
+      .left-content {
+        width: calc(50%);
+      }
+
+      .right-content {
+        float: right;
+        .js-select-caption-background {
+          float: right;
+        }
+      }
+
+      .font-selector {
+        width: 100%;
+
+        .caption-preview {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.settings-tab-content-body.portrait {
+  .general-select-content.language-select {
+    .bp5-select-list {
+      .bp5-popover-target div {
+        width: 100%;
+        .bp5-button {
+          width: 100%;
+        }
+      }
+      .bp5-popover-content {
+        width: 100%;
+      }
+    }
+  }
+}

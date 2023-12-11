@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="15px" height="32px" viewBox="0 0 15 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.1 (33804) - http://www.bohemiancoding.com/sketch -->
+    <title>selected meeting</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="27.-Schedule-a-Meeting" transform="translate(-305.000000, -307.000000)" fill="#FFFFFF">
+            <g id="control-panel">
+                <g id="upcoming-meetings" transform="translate(0.000000, 165.000000)">
+                    <polygon id="selected-meeting" transform="translate(312.500000, 158.000000) rotate(-90.000000) translate(-312.500000, -158.000000) " points="312.5 150.5 328.5 165.5 296.5 165.5"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

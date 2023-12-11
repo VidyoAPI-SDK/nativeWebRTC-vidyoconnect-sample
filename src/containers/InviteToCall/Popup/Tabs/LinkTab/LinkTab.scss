@@ -1,0 +1,16 @@
+.invite-link {
+  margin-top: 35px;
+  color: #b4c3d0;
+
+  &__text {
+    font-size: 14px;
+  }
+
+  &__url {
+    font-size: 16px;
+    margin-bottom: 15px;
+    margin-top: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

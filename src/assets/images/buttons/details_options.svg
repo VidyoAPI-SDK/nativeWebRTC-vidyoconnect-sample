@@ -1,0 +1,26 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="300px" height="300px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+    <g>
+        <g id="Layer33">
+            <g>
+                <path d="M51.5625,206.25C69.6843,206.25 84.375,220.941 84.375,239.062C84.375,257.184 69.6843,271.875 51.5625,271.875C33.4407,271.875 18.75,257.184 18.75,239.062C18.75,220.941 33.4407,206.25 51.5625,206.25Z" style="fill:white;"/>
+            </g>
+            <g>
+                <path d="M51.5625,117.188C69.6843,117.188 84.375,131.878 84.375,150C84.375,168.122 69.6843,182.812 51.5625,182.812C33.4407,182.812 18.75,168.122 18.75,150C18.75,131.878 33.4407,117.188 51.5625,117.188Z" style="fill:white;"/>
+            </g>
+            <g>
+                <path d="M51.5625,28.125C69.6843,28.125 84.375,42.8157 84.375,60.9375C84.375,79.0593 69.6843,93.75 51.5625,93.75C33.4407,93.75 18.75,79.0593 18.75,60.9375C18.75,42.8157 33.4407,28.125 51.5625,28.125Z" style="fill:white;"/>
+            </g>
+            <g>
+                <rect x="112.5" y="44.1437" width="168.75" height="24.2126" style="fill:white;"/>
+            </g>
+            <g>
+                <rect x="112.5" y="137.894" width="168.75" height="24.2126" style="fill:white;"/>
+            </g>
+            <g>
+                <rect x="112.5" y="231.644" width="168.75" height="24.2126" style="fill:white;"/>
+            </g>
+        </g>
+    </g>
+</svg>
